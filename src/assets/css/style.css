@@ -1,0 +1,23 @@
+:root {
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    -webkit-text-size-adjust: 100%;
+    /* gradient orange */
+    --gradient-orange: linear-gradient(to bottom right, #ff822f, #ff6600 80%, #ff7418);
+}
+
+/* scroll smooth */
+
+html {
+    scroll-behavior: smooth;
+}
+
+.bg-orange, .badge-orange, .btn-orange {
+    background-image: var(--gradient-orange);
+    color: #f5f5f5 !important;
+}
+
+.card-orange {
+    background-color: #ff6600;
+    color: #ececec;
+}
