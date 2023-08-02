@@ -4,49 +4,51 @@
             <div class="services">
                 <div class="row">
                     <div class="col-md-12">
-                        <h1 class="text-center">Our Services</h1>
+                        <h1 class="text-center font-weight-bold">Our Services</h1>
                     </div>
                 </div>
-                <div class="row">
-                    <div class="col-md-4">
+                <div class="row mt-3">
+                    <!-- d-flex-lg -->
+                    <div class="col-md-4 p-2">
                         <div class="service">
-                            <div class="service-img">
-                                <img src="https://picsum.photos/500" alt="service" />
+                            <div class="service-image">
+                                <img src="@/assets/imgs/services/service1.jpg" alt="Service Image" />
                             </div>
-                            <div class="service-content">
-                                <h3 class="text-center">Tire Repair</h3>
-                                <p class="text-center">
-                                    Lorem ipsum dolor sit amet consectetur adipisicing elit. Quisquam, voluptatum.
+                            <div class="service-info text-lg-center">
+                                <h3>Tire Rotation</h3>
+                                <p>
+                                    Lorem ipsum dolor sit amet consectetur, adipisicing elit. Accusantium voluptatibus cumque eos optio suscipit blanditiis inventore iusto aspernatur voluptates, soluta dolores rerum dolore iste in, odio nulla tenetur sequi eius.
                                 </p>
-                            </div>
+                            </div>  
                         </div>
                     </div>
-                    <div class="col-md-4">
+                    <div class="col-md-4 p-2">
                         <div class="service">
-                            <div class="service-img">
-                                <img src="https://picsum.photos/500" alt="service" />
+                            <div class="service-image">
+                                <img src="@/assets/imgs/services/service2.jpg" alt="Service Image" />
                             </div>
-                            <div class="service-content">
-                                <h3 class="text-center">Tire Repair</h3>
-                                <p class="text-center">
-                                    Lorem ipsum dolor sit amet consectetur adipisicing elit. Quisquam, voluptatum.
+                            <div class="service-info text-lg-center">
+                                <h3>Brake Service</h3>
+                                <p>
+                                    Lorem ipsum dolor sit amet consectetur adipisicing elit. Quo ducimus nostrum fugiat sequi nisi veritatis veniam fuga voluptates. Quibusdam delectus perspiciatis, id voluptas totam qui exercitationem eaque rem odio, quia, non accusamus ipsum repellendus commodi quo! Sint enim ipsam, tempora debitis molestias iste perspiciatis itaque quisquam, omnis rem, illum ducimus.
                                 </p>
-                            </div>
+                            </div>  
                         </div>
                     </div>
-                    <div class="col-md-4">
+                    <div class="col-md-4 p-2">
                         <div class="service">
-                            <div class="service-img">
-                                <img src="https://picsum.photos/500" alt="service" />
+                            <div class="service-image">
+                                <img src="@/assets/imgs/services/service3.jpg" alt="Service Image" />
                             </div>
-                            <div class="service-content">
-                                <h3 class="text-center">Tire Repair</h3>
-                                <p class="text-center">
-                                    Lorem ipsum dolor sit amet consectetur adipisicing elit. Quisquam, voluptatum.
+                            <div class="service-info text-lg-center">
+                                <h3>Engine Repair</h3>
+                                <p>
+                                    Lorem ipsum dolor sit amet consectetur adipisicing elit. Ab sequi odit sint. Et, eum hic dolorem eius voluptatum aliquam magni temporibus sequi repellendus quaerat ducimus, iusto blanditiis, possimus tempora consequatur repudiandae ipsam consequuntur accusantium omnis iure? Magni quaerat eaque dolorum!
                                 </p>
-                            </div>
+                            </div>  
                         </div>
                     </div>
+                    
                 </div>
             </div>
         </div>
@@ -59,37 +61,35 @@
     .services {
         padding: 100px 0;
     }
-    .services .service {
-        margin-bottom: 30px;
-    }
-    .services .service .service-img {
+    .service {
+        padding: 20px;   
+        box-shadow: 0 1px 5px rgba(0, 0, 0, 0.2);
+        transition: all 0.3s ease-in-out;
         height: 100%;
+    }
+    .service-image {
+        height: 200px;
         overflow: hidden;
     }
-    .services .service .service-img img {
+    .service-image img {
         height: 100%;
+        width: 100%;
         object-fit: cover;
+        transition: all 0.3s ease-in-out;
     }
-    .services .service .service-content {
-        padding: 20px;
+    
+    .service:hover img {
+        transform: scale(1.05);
     }
-    .services .service .service-content h3 {
-        font-size: 20px;
-        font-weight: 600;
-        margin-bottom: 10px;
+    .service-info {
+        padding: 20px 0;
     }
-    .services .service .service-content p {
-        font-size: 14px;
-        font-weight: 400;
+    .service-info h3 {
+        font-size: 1.5rem;
+    }
+    .service-info p {
+        font-size: 1rem;
+        margin: 0;
     }
 
-    @media (max-width: 768px) {
-        .services .service .service-img {
-            height: 150px;
-        }
-
-        .services .service .service-content h3 {
-            font-size: 16px;
-        }
-    }
 </style>
