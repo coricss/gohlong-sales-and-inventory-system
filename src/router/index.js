@@ -1,6 +1,6 @@
 import { createRouter, createWebHistory } from 'vue-router';
 
-const Home = () => import('@/pages/Home.vue');
+const LandingPage = () => import('@/pages/LandingPage.vue');
 const LogIn = () => import('@/pages/LogIn.vue');
 const Dashboard = () => import('@/pages/Dashboard.vue');
 const UserManagement = () => import('@/pages/UserManagement.vue');
@@ -9,13 +9,13 @@ const routes = [
     {
       path: '/',
       redirect: {path: '/'},
-      component: Home,
+      component: LandingPage,
       children: [
         {
           path: '/',
           name: 'home',
           title: 'Home',
-          component: Home 
+          component: LandingPage 
         }
       ]
     },
