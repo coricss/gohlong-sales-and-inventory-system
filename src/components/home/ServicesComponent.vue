@@ -53,10 +53,10 @@
 
 <style scoped>
 
-    /* .container {
+    .container {
         margin-top: 120px;
-        min-height: 100vh !important;
-    } */
+       /*  min-height: 100vh !important; */
+    }
     .services {
         padding: 100px 0;
     }
