@@ -20,7 +20,10 @@
                                 </a>
                             </li>
                         </ul>
-                        <button class="btn btn-primary ml-auto btn-get-quote font-weight" data-toggle="modal" data-target="#loginModal"><strong>Get a Quote</strong></button>
+                        <div class="ml-auto">
+                        <button class="btn btn-outline-primary mr-1 btn-login font-weight" @click="login()" data-toggle="modal" data-target="#"><strong>Log in</strong></button>
+                        <button class="btn btn-primary ml-auto btn-get-quote font-weight" data-toggle="modal" data-target="#"><strong>Get a Quote</strong></button>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -29,7 +32,13 @@
  </template>
 
 <script setup>
+    import { useRouter } from "vue-router";
+    
+    const router = useRouter();
 
+    const login = () => {
+        router.push("/login");
+    };
 </script>
 
 <style>
@@ -54,6 +63,19 @@
     }
     .top-header .header-contact ul li a:hover {
         color: #ff5e14;
+    }
+
+    .btn-login {
+        border-radius: 0%;
+        outline: none !important;
+        border: none !important;
+        background-color: none !important;
+        background: transparent !important;
+    }
+
+    .btn-login:hover, .btn-login:focus, .btn-login:active {
+        background: transparent !important;
+        color: #0066ff !important;
     }
 
     .btn-get-quote {

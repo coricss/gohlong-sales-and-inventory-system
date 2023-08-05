@@ -1,6 +1,6 @@
 <template>
     <div id="brands"></div>
-        <div class="container-fluid mb-5">
+        <div class="container-fluid">
             <div class="brands mb-3">
                 <div class="row">
                     <div class="col-md-12">
@@ -31,7 +31,6 @@
         perMove: 5,
         gap: '1px',
         drag: 'free',
-        focus: 'left',
         autoplay: true,
         waitForTransition: true,
         wheelMinThreshold: 10,
@@ -39,7 +38,11 @@
         pauseOnHover: true,
         resetProgress: false,
         arrows: false,
-        pagination: false,
+        pagination: true,
+        classes: {
+            pagination: 'splide__pagination',
+            page: 'brand__pagination__page',
+        },
         breakpoints: {
             640: {
                 perPage: 1,
@@ -175,17 +178,18 @@
 
 <style scoped>
 
-    /* .container-fluid {
+    .container-fluid {
+        background-color: #f7f7f7;
         margin-top: 120px;
-        min-height: 100vh !important;
-    } */
+        min-height: 50vh !important;
+    }
     .brands {
         padding: 50px 0;
     }
     .carousel__item {
         height: 200px;
         width: 200px;
-        background-color: #fff;
+       /*  background-color: #fff; */
         padding: 10px;
         cursor: grab;
     }
@@ -200,6 +204,7 @@
         display: flex;
         justify-content: center;
         align-items: center;
+        margin-bottom: 30px;
     }
 
 </style>

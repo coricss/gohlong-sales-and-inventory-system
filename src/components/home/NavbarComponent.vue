@@ -20,9 +20,9 @@
                         <li>
                             <a href="#brands">Brands</a>
                         </li>
-                        <li>
+                        <!-- <li>
                             <a href="#updates">Updates</a>
-                        </li>
+                        </li> -->
                         <li>
                             <a href="#gallery">Gallery</a>
                         </li>
@@ -45,9 +45,9 @@
                         <li>
                             <a href="#brands">Brands</a>
                         </li>
-                        <li>
+                        <!-- <li>
                             <a href="#updates">Updates</a>
-                        </li>
+                        </li> -->
                         <li>
                             <a href="#gallery">Gallery</a>
                         </li>
