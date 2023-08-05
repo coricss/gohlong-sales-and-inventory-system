@@ -32,7 +32,6 @@ html {
     background: transparent;
     margin: 0 2px;
     cursor: pointer;
-    transition: all .3s ease-in-out;
     border: 1px solid #ff6600;
 }
 
