@@ -1,19 +1,5 @@
 <template>
     <div class="home" id="home">
-        <!-- Carousel Slider -->
-      <!--   <div id="carouselExampleIndicators" class="carousel slide" data-ride="carousel">
-            <div class="carousel-inner">
-                <div class="carousel-item" v-for="item in items" ref="carousel">
-                    <img class="d-block w-100" :src="item.image"/>
-                </div>
-            </div>
-            <a class="carousel-control-prev" href="#carouselExampleIndicators" role="button" data-slide="prev">
-                <i class="fa fa-chevron-left fa-lg"></i>
-            </a>
-            <a class="carousel-control-next" href="#carouselExampleIndicators" role="button" data-slide="next">
-                <i class="fa fa-chevron-right fa-lg"></i>
-            </a>
-        </div> -->
         <Splide :options="splideOptions">
             <SplideSlide v-for="item in items" :key="item.id">
                 <div class="carousel__item">
@@ -42,6 +28,10 @@
         resetProgress: false,
         arrows: true,
         pagination: true,
+        classes: {
+            pagination: 'splide__pagination',
+            page: 'brand__pagination__page',
+        },
         breakpoints: {
             640: {
                 perPage: 1,

@@ -21,3 +21,21 @@ html {
     background-color: #ff6600;
     color: #ececec;
 }
+
+.brand__pagination {
+    margin-top: 200px !important;
+}
+
+.brand__pagination__page {
+    padding: 3px;
+    border-radius: 50%;
+    background: transparent;
+    margin: 0 2px;
+    cursor: pointer;
+    transition: all .3s ease-in-out;
+    border: 1px solid #ff6600;
+}
+
+.brand__pagination__page.is-active {
+    background-color: #ff6600;
+}
