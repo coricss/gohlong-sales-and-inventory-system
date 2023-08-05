@@ -12,7 +12,7 @@ export const useStore = defineStore('main', {
             created_at: '',
             updated_at: ''
         },
-    });
+    }),
     actions: {
         setUser(user) {
             this.user = user;
