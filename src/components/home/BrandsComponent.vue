@@ -31,7 +31,6 @@
         perMove: 5,
         gap: '1px',
         drag: 'free',
-        /* focus: 'left', */
         autoplay: true,
         waitForTransition: true,
         wheelMinThreshold: 10,
