@@ -9,55 +9,54 @@
                 </div>
                 <div class="row mt-3">
                     <!-- d-flex-lg -->
-                    <div class="col-md-4 p-2">
+                    <div class="col-md-4 p-2" v-for="item in items" :key="item.id">
                         <div class="service">
                             <div class="service-image">
-                                <img src="@/assets/imgs/services/service1.jpg" alt="Service Image" />
+                                <img :src="item.image" :alt="item.title" />
                             </div>
                             <div class="service-info text-lg-center">
-                                <h3>Tire Rotation</h3>
-                                <p>
-                                    Lorem ipsum dolor sit amet consectetur, adipisicing elit. Accusantium voluptatibus cumque eos optio suscipit blanditiis inventore iusto aspernatur voluptates, soluta dolores rerum dolore iste in, odio nulla tenetur sequi eius.
-                                </p>
-                            </div>  
-                        </div>
-                    </div>
-                    <div class="col-md-4 p-2">
-                        <div class="service">
-                            <div class="service-image">
-                                <img src="@/assets/imgs/services/service2.jpg" alt="Service Image" />
+                                <h3>{{ item.title }}</h3>
+                                <p>{{ item.description }}</p>
                             </div>
-                            <div class="service-info text-lg-center">
-                                <h3>Brake Service</h3>
-                                <p>
-                                    Lorem ipsum dolor sit amet consectetur adipisicing elit. Quo ducimus nostrum fugiat sequi nisi veritatis veniam fuga voluptates. Quibusdam delectus perspiciatis, id voluptas totam qui exercitationem eaque rem odio, quia, non accusamus ipsum repellendus commodi quo! Sint enim ipsam, tempora debitis molestias iste perspiciatis itaque quisquam, omnis rem, illum ducimus.
-                                </p>
-                            </div>  
                         </div>
-                    </div>
-                    <div class="col-md-4 p-2">
-                        <div class="service">
-                            <div class="service-image">
-                                <img src="@/assets/imgs/services/service3.jpg" alt="Service Image" />
-                            </div>
-                            <div class="service-info text-lg-center">
-                                <h3>Engine Repair</h3>
-                                <p>
-                                    Lorem ipsum dolor sit amet consectetur adipisicing elit. Ab sequi odit sint. Et, eum hic dolorem eius voluptatum aliquam magni temporibus sequi repellendus quaerat ducimus, iusto blanditiis, possimus tempora consequatur repudiandae ipsam consequuntur accusantium omnis iure? Magni quaerat eaque dolorum!
-                                </p>
-                            </div>  
-                        </div>
-                    </div>
-                    
+                    </div>  
                 </div>
             </div>
         </div>
 </template>
 
 <script setup>
+    import { ref } from "vue";
+
+    const items = ref([
+        {
+            id: 1,
+            title: "Tire Repair",
+            description: "Lorem ipsum dolor sit amet consectetur adipisicing elit. Accusantium voluptatibus cumque eos optio suscipit blanditiis inventore iusto aspernatur voluptates, soluta dolores rerum dolore iste in, odio nulla tenetur sequi eius.",
+            image: "/src/assets/imgs/services/service1.jpg",
+        },
+        {
+            id: 2,
+            title: "Car Air Conditioning",
+            description: "Lorem ipsum dolor sit amet consectetur adipisicing elit. Quo ducimus nostrum fugiat sequi nisi veritatis veniam fuga voluptates. Quibusdam delectus perspiciatis, id voluptas totam qui exercitationem eaque rem odio, quia, non accusamus ipsum repellendus commodi quo! Sint enim ipsam, tempora debitis molestias iste perspiciatis itaque quisquam, omnis rem, illum ducimus.",
+            image: "/src/assets/imgs/services/service2.jpg",
+        },
+        {
+            id: 3,
+            title: "Change Oil",
+            description: "Lorem ipsum dolor sit amet consectetur adipisicing elit. Ab sequi odit sint. Et, eum hic dolorem eius voluptatum aliquam magni temporibus sequi repellendus quaerat ducimus, iusto blanditiis, possimus tempora consequatur repudiandae ipsam consequuntur accusantium omnis iure? Magni quaerat eaque dolorum!",
+            image: "/src/assets/imgs/services/service3.jpg",
+        }
+    ]);
+
 </script>
 
 <style scoped>
+
+    /* .container {
+        margin-top: 120px;
+        min-height: 100vh !important;
+    } */
     .services {
         padding: 100px 0;
     }

@@ -1,79 +1,115 @@
 <template>
     <div class="home" id="home">
         <!-- Carousel Slider -->
-        <div id="carouselExampleIndicators" class="carousel slide" data-ride="carousel">
+      <!--   <div id="carouselExampleIndicators" class="carousel slide" data-ride="carousel">
             <div class="carousel-inner">
-                <!-- First Slide -->
-                <div class="carousel-item active">
-                    <img class="d-block w-100" src="@/assets/imgs/slideshow/gohlong-slideshow1.jpg" alt="First slide" />
+                <div class="carousel-item" v-for="item in items" ref="carousel">
+                    <img class="d-block w-100" :src="item.image"/>
                 </div>
-                <!-- Second Slide -->
-                <div class="carousel-item">
-                    <img class="d-block w-100" src="@/assets/imgs/slideshow/gohlong-slideshow2.jpg" alt="Second slide" />
-                </div>
-                <!-- Third Slide -->
-                <!-- <div class="carousel-item">
-                    <img class="d-block w-100" src="https://picsum.photos/4000" alt="Third slide" />
-                </div> -->
             </div>
-            <!-- Carousel Controls -->
             <a class="carousel-control-prev" href="#carouselExampleIndicators" role="button" data-slide="prev">
                 <i class="fa fa-chevron-left fa-lg"></i>
             </a>
             <a class="carousel-control-next" href="#carouselExampleIndicators" role="button" data-slide="next">
                 <i class="fa fa-chevron-right fa-lg"></i>
             </a>
-
-            <!-- Carousel Indicators -->
-        </div>
-        <!-- End of Carousel Slider -->
+        </div> -->
+        <Splide :options="splideOptions">
+            <SplideSlide v-for="item in items" :key="item.id">
+                <div class="carousel__item">
+                    <img :src="item.image" :alt="item.name" />
+                </div>
+            </SplideSlide>
+        </Splide>
     </div>
 </template>
 
 <script setup>
+    import { ref } from "vue";
+    import { Splide, SplideSlide } from '@splidejs/vue-splide';
+    import '@splidejs/vue-splide/css';
+
+    const splideOptions = {
+        type: 'loop',
+        rewind : true,
+        width: '100%',
+        perPage: 1,
+        perMove: 1,
+        gap: '1px',
+        drag   : false,
+        autoplay: true,
+        pauseOnHover: false,
+        resetProgress: false,
+        arrows: true,
+        pagination: true,
+        breakpoints: {
+            640: {
+                perPage: 1,
+                perMove: 1,
+            },
+            768: {
+                perPage: 1,
+                perMove: 1,
+            },
+            1024: {
+                perPage: 1,
+                perMove: 1,
+            },
+        },
+    };
+
+    const items = ref([
+        {
+            id: 1,
+            name: "Calling Card",
+            image: "/src/assets/imgs/slideshow/calling-card.jpg",
+        },
+        {
+            id: 2,
+            name: "Goh Long Slideshow 1",
+            image: "/src/assets/imgs/slideshow/gohlong-slideshow1.jpg",
+        },
+        {
+            id: 3,
+            name: "Goh Long Slideshow 2",
+            image: "/src/assets/imgs/slideshow/gohlong-slideshow2.jpg",
+        },
+        {
+            id: 4,
+            name: "Tires",
+            image: "/src/assets/imgs/slideshow/tires.jpg",
+        },
+    ]);
+
+    
+
+
 </script>
 
 <style scoped>
-    .carousel-item {
+    .carousel__item {
         height: 90vh;
     }
-    .carousel-item img {
-        height: 90vh;
-        object-fit: cover;
-    }
-    .carousel-control-prev,
-    .carousel-control-next {
-        width: 5%;
-    }
-    .carousel-control-prev i,
-    .carousel-control-next i {
-        color: #000;
-    }
-    .carousel-control-prev:hover i,
-    .carousel-control-next:hover i {
-        color: #fff;
-    }
-    .carousel-control-prev {
-        left: 0;
-    }
-    .carousel-control-next {
-        right: 0;
+    .splide__slide img {
+        width: 100%;
+        height: 100%;
+        object-fit: stretch !important;
     }
 
     @media screen and (max-width: 1024px) {
-        .carousel-item {
+        .carousel__item {
             height: 50vh;
         }
-        .carousel-item img {
+        .carousel__item img {
             height: 50vh;
         }
     }
 
     @media screen and (max-width: 768px) {
-        .carousel-item {
+        .carousel__item {
             height: 50vh;
         }
-        .carousel-item img {
+        .carousel__item img {
             height: 50vh;
         }
     }
