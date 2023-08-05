@@ -18,7 +18,7 @@
                             <a href="#services">Services</a>
                         </li>
                         <li>
-                            <a href="#partners">Partners</a>
+                            <a href="#brands">Brands</a>
                         </li>
                         <li>
                             <a href="#updates">Updates</a>
@@ -43,7 +43,7 @@
                             <a href="#services">Services</a>
                         </li>
                         <li>
-                            <a href="#partners">Partners</a>
+                            <a href="#brands">Brands</a>
                         </li>
                         <li>
                             <a href="#updates">Updates</a>

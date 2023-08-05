@@ -34,7 +34,7 @@
 
 <style>
     .top-header {
-        background: #dbdbdb;
+        background: #f7f7f7;
     }
     .top-header .header-contact ul li {
         display: inline-block;
