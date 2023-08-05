@@ -17,6 +17,10 @@ html {
     color: #f5f5f5 !important;
 }
 
+.text-orange {
+    color: #ff6600 !important;
+}
+
 .card-orange {
     background-color: #ff6600;
     color: #ececec;
