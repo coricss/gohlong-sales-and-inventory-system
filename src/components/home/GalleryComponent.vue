@@ -68,7 +68,7 @@
 
 <style scoped>
     .container-fluid{
-        margin-top: 120px;
+        margin-top: 200px;
     }
 
     .image-gallery-wraper {

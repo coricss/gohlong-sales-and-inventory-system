@@ -1,5 +1,5 @@
 import { createApp } from 'vue';
-// import { createPinia } from 'pinia';
+import { createPinia } from 'pinia';
 import '@/assets/css/style.css';
 import App from './App.vue';
 import router from './router';
@@ -13,10 +13,10 @@ import 'admin-lte/plugins/chart.js/Chart.min.js';
 import 'admin-lte/plugins/sweetalert2/sweetalert2.min.js';
 import 'admin-lte/dist/js/adminlte.min.js';
 
-// const pinia = createPinia();
+const pinia = createPinia();
 const Vue = createApp(App);
 
-// Vue.use(pinia);
+Vue.use(pinia);
 Vue.use(router);
 Vue.use(Toast);
 Vue.mount('#app');

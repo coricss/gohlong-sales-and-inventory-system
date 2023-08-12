@@ -1,44 +1,52 @@
 import { createRouter, createWebHistory } from 'vue-router';
 
-const LandingPage = () => import('@/pages/LandingPage.vue');
-const LogIn = () => import('@/pages/LogIn.vue');
-const Dashboard = () => import('@/pages/Dashboard.vue');
-const UserManagement = () => import('@/pages/UserManagement.vue');
+const appName = 'Gohlong Tire and Service Center';
 
 const routes = [
     {
       path: '/',
-      redirect: {path: '/'},
-      component: LandingPage,
-      children: [
-        {
-          path: '/',
-          name: 'home',
-          title: 'Home',
-          component: LandingPage 
-        }
-      ]
+      name: appName,
+      component: import('@/pages/LandingPage.vue')
     },
     {
       path: '/login',
-      name: 'login',
-      component: LogIn
+      name: 'Login | ' + appName,
+      component: import('@/pages/LogIn.vue')
     },
     {
       path: '/dashboard',
-      name: 'dashboard',
-      component: Dashboard
+      name: 'Dashboard | ' + appName,
+      component: import('@/pages/Dashboard.vue')
     },
     {
       path: '/user-management',
-      name: 'user-management',
-      component: UserManagement
+      name: 'User Management | ' + appName,
+      component: import('@/pages/UserManagement.vue')
     },
+    {
+        path: '/:pathMatch(.*)*',
+        name: 'Page Not Found',
+        component: () => import('@/components/server-error/404.vue')
+    }
   ]
 
 const router = createRouter({
     history: createWebHistory(),
-    routes
+    routes,
+    scrollBehavior(to, from, savedPosition) {
+      if (savedPosition) {
+        return savedPosition;
+      }
+      if (to.hash) {
+        return { el: to.hash };
+      }
+      return { left: 0, top: 0 };
+    }
 })
+
+router.beforeEach((to, from, next) => {
+  document.title = to.name;
+  next();
+});
 
 export default router
