@@ -11,11 +11,11 @@ export default defineConfig({
     alias:{
       '@': '/src'
     },
-    server:{
-      //localhost:3000
-      host: 'localhost',
-      port: 3000,
-      strictPort: true,
-    }
   },
+  server:{
+    //localhost:3000
+    host: 'localhost',
+    port: 3000,
+    strictPort: true,
+  }
 })
