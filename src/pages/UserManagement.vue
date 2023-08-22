@@ -138,11 +138,11 @@
     };
 
     const loadData = () => {
-      axios.get('https://5fdb12ee91f19e00173339f5.mockapi.io/employee')
+      /* axios.get('https://5fdb12ee91f19e00173339f5.mockapi.io/employee')
       .then(response => {
         employees.value = response.data;
         loadToast("Data successfully loaded!", "success");
-      })
+      }) */
     };
 
     const loadToast = (message, type) => {

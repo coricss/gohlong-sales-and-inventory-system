@@ -129,7 +129,7 @@
               class="fas fa-th-large"></i></a>
         </li> -->
         <li class="nav-item">
-          <a class="nav-link" href="#" role="button">
+          <a class="nav-link" href="#" @click="logout" role="button">
             <i class="fas fa-sign-out-alt"></i>
           </a>
         </li>
@@ -138,6 +138,15 @@
 </template>
   
 <script setup>
+    import { ref, onMounted } from "vue";
+    import { useAuthStore } from "@/store/auth.js";
+  
+    const authStore = useAuthStore();
+
+    const logout = () => {
+        authStore.handleLogout();
+    };
+
 </script>
   
 <style>

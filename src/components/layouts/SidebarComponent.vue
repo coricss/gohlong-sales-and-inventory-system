@@ -16,8 +16,8 @@
             <div class="image">
               <img src="@/assets/imgs/users/default-150x150.png" class="img-circle elevation-0" alt="User Image">
             </div>
-            <div class="info">
-              <a href="#" class="d-block">Rico Guinanao</a>
+            <div class="info nav-link">
+              <router-link to="/profile" class="d-block">{{ userName }}</router-link>
             </div>
           </div>
   
@@ -84,22 +84,31 @@
     </div>
 </template>
   
-<script>
-    export default {
-        name: 'SidebarComponent',
-        data() {
-            return {
-                active: false
-            }
-        },
-        methods: {
-            closeSidebarOverlay () {
-                document.body.classList.remove('sidebar-open');
-                document.body.classList.add('sidebar-collapse');
-            }
-        },
-        mounted() {
-        }
+<script setup>
+
+    import { 
+      ref,
+      watchEffect, 
+      computed 
+    } from "vue";
+
+    const user = ref(null);
+
+    watchEffect(() => {
+      user.value = JSON.parse(sessionStorage.getItem("user"));
+    });
+
+    const userName = computed(() => {
+      try {
+        return user.value.name;
+      } catch (error) {
+      /*   console.log(error); */
+      }
+    });
+    
+    const closeSidebarOverlay = () => {
+        document.body.classList.remove('sidebar-open');
+        document.body.classList.add('sidebar-collapse');
     }
 </script>
 

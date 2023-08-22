@@ -1,5 +1,6 @@
-import { createApp } from 'vue';
+import { createApp, markRaw } from 'vue';
 import { createPinia } from 'pinia';
+import axios from 'axios';
 import '@/assets/css/style.css';
 import App from './App.vue';
 import router from './router';
@@ -13,9 +14,16 @@ import 'admin-lte/plugins/chart.js/Chart.min.js';
 import 'admin-lte/plugins/sweetalert2/sweetalert2.min.js';
 import 'admin-lte/dist/js/adminlte.min.js';
 
-const pinia = createPinia();
-const Vue = createApp(App);
+axios.defaults.withCredentials = true;
+axios.defaults.baseURL = 'http://localhost/sims/server/public/';
 
+const pinia = createPinia();
+
+pinia.use(({ store }) => {
+    store.router = markRaw(router);
+});
+
+const Vue = createApp(App);
 Vue.use(pinia);
 Vue.use(router);
 Vue.use(Toast);

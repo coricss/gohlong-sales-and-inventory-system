@@ -1,27 +1,29 @@
 import { createRouter, createWebHistory } from 'vue-router';
 
+import { useAuthStore } from '@/store/auth';
+
 const appName = 'Gohlong Tire and Service Center';
 
 const routes = [
     {
       path: '/',
       name: appName,
-      component: import('@/pages/LandingPage.vue')
+      component: () => import('@/pages/LandingPage.vue')
     },
     {
       path: '/login',
       name: 'Login | ' + appName,
-      component: import('@/pages/LogIn.vue')
+      component: () => import('@/pages/LogIn.vue')
     },
     {
       path: '/dashboard',
       name: 'Dashboard | ' + appName,
-      component: import('@/pages/Dashboard.vue')
+      component: () => import('@/pages/Dashboard.vue')
     },
     {
       path: '/user-management',
       name: 'User Management | ' + appName,
-      component: import('@/pages/UserManagement.vue')
+      component: () => import('@/pages/UserManagement.vue')
     },
     {
         path: '/:pathMatch(.*)*',
@@ -48,5 +50,14 @@ router.beforeEach((to, from, next) => {
   document.title = to.name;
   next();
 });
+
+router.afterEach((to, from) => {
+  var checkToken = sessionStorage.getItem("token")
+  if ((to.name !== 'Login | ' + appName) && (to.name !== appName)) {
+      if (!checkToken) {
+          window.location.href = '/login'
+      }
+  }
+})
 
 export default router
