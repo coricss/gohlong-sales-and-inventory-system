@@ -1,5 +1,6 @@
 import { createApp, markRaw } from 'vue';
 import { createPinia } from 'pinia';
+import piniaPluginPersistedstate from 'pinia-plugin-persistedstate'
 import axios from 'axios';
 import '@/assets/css/style.css';
 import App from './App.vue';
@@ -15,9 +16,10 @@ import 'admin-lte/plugins/sweetalert2/sweetalert2.min.js';
 import 'admin-lte/dist/js/adminlte.min.js';
 
 axios.defaults.withCredentials = true;
-axios.defaults.baseURL = 'http://localhost/sims/server/public/';
+axios.defaults.baseURL = import.meta.env.VITE_LARAVEL_API_URL;
 
 const pinia = createPinia();
+pinia.use(piniaPluginPersistedstate)
 
 pinia.use(({ store }) => {
     store.router = markRaw(router);

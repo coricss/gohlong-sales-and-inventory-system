@@ -14,10 +14,11 @@
           <!-- Sidebar user panel (optional) -->
           <div class="user-panel mt-3 pb-3 mb-3 d-flex">
             <div class="image">
-              <img src="@/assets/imgs/users/default-150x150.png" class="img-circle elevation-0" alt="User Image">
+              <img v-if="user" :src="api_url+'/images/'+user.picture" class="img-circle elevation-0" alt="User Image">
+              <img v-else src="@/assets/imgs/users/default-150x150.png" class="img-circle elevation-0" alt="User Image">
             </div>
             <div class="info nav-link">
-              <router-link to="/profile" class="d-block">{{ userName }}</router-link>
+              <router-link to="/profile" v-if="user" class="d-block">{{ user.name }}</router-link>
             </div>
           </div>
   
@@ -88,28 +89,22 @@
 
     import { 
       ref,
-      watchEffect, 
-      computed 
+      onMounted
     } from "vue";
 
     const user = ref(null);
+    const api_url = ref(null);
 
-    watchEffect(() => {
-      user.value = JSON.parse(sessionStorage.getItem("user"));
-    });
-
-    const userName = computed(() => {
-      try {
-        return user.value.name;
-      } catch (error) {
-      /*   console.log(error); */
-      }
-    });
-    
     const closeSidebarOverlay = () => {
         document.body.classList.remove('sidebar-open');
         document.body.classList.add('sidebar-collapse');
     }
+
+    onMounted(() => {
+       user.value = JSON.parse(sessionStorage.getItem("user"));
+       api_url.value = import.meta.env.VITE_LARAVEL_API_URL;
+    });
+
 </script>
 
 <style>
