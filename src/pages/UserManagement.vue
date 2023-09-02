@@ -47,10 +47,7 @@
                               className: 'text-center',
                             }
                           ],
-                          order: [[ 0, 'asc' ]],
-                          initComplete: function () {
-                            /* console.log(dt); */
-                          }
+                          order: [[ 0, 'asc' ]]
                       }"
                     >
                       <thead class="bg-dark text-white">
@@ -144,7 +141,7 @@
     
     import { useToast } from "vue-toastification";
 
-    import { ref, onMounted, watch } from "vue";
+    import { ref, onMounted, inject } from "vue";
 
     import { useUserManagementStore } from "@/store/user-management.js";
 
@@ -154,6 +151,7 @@
     DataTable.use(Buttons);
   
     const toast = useToast();
+    const swal = inject("$swal");
 
     const employees = ref(null);
     
@@ -203,7 +201,7 @@
           var btn_del = document.createElement('button');
           btn_del.setAttribute('class', 'btn btn-sm btn-danger btn-del-user');
           btn_del.setAttribute('data-id', data);
-          btn_del.innerHTML = '<i class="fas fa-trash"></i>';
+          btn_del.innerHTML = `<i class="fas fa-trash" data-id="${data}"></i>`;
 
           return '<center>'+btn_edit.outerHTML+' '+btn_del.outerHTML+'</center>';
         }
@@ -339,7 +337,6 @@
       formData.append('password_confirmation', addUserForm.value.password_confirmation);
  
       users.registerUser(formData).then((response) => {
-        console.log(response);
         if (response.status == 200) {
           loadData();
           clearForm();
@@ -351,20 +348,39 @@
         }
       }).catch((error) => {
         loadToast('Please check email if already exists & password if match', 'error');
-       console.log(error.response.data.message.errors);
+       /* console.log(error.response.data.message.errors); */
       });
     };
-
-    NodeList.prototype[Symbol.iterator] = Array.prototype[Symbol.iterator];
-      HTMLCollection.prototype[Symbol.iterator] = Array.prototype[Symbol.iterator];
 
     const deleteUser = () => {
       const userTable = document.querySelector('#user-management-table');
       
       userTable.addEventListener('click', function(e) {
-        if (e.target.classList.contains('btn-del-user')) {
+        if (e.target.classList.contains('btn-del-user') || e.target.classList.contains('fa-trash')) {
           const id = e.target.getAttribute('data-id');
-
+          swal({
+            icon: "question",
+            title: "Are you sure to delete this user?",
+            text: "Please make sure before to proceed!",
+            showCancelButton: true,
+            confirmButtonColor: "#d33",
+            cancelButtonColor: "gray",
+            confirmButtonText: "Yes, delete it",
+            cancelButtonText: "No",
+          }).then((result) => {
+            if (result.isConfirmed) {
+              users.removeUser(id).then((response) => {
+                if (response.status == 200) {
+                  loadData();
+                  loadToast(response.message, 'success');
+                } else {
+                  loadToast(response.message, 'error');
+                }
+              }).catch((error) => {
+                loadToast(error.response.data.message, 'error');
+              });
+            }
+          });
           
         }
       });

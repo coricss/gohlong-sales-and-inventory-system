@@ -32,9 +32,17 @@ export const useUserManagementStore = defineStore('user-management', {
                     resolve(response.data);
                 }).catch((error) => {
                     reject(error);
-                    console.log(error.response);
                 });
             });
-        }
+        },
+        removeUser(id) {
+            return new Promise ((resolve, reject) => {
+                axios.delete(`api/users/delete/${id}`).then((response) => {
+                    resolve(response.data);
+                }).catch((error) => {
+                    reject(error);
+                });
+            });
+        },
     }
 })
