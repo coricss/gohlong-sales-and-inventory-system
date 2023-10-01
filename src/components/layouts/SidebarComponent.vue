@@ -14,11 +14,11 @@
           <!-- Sidebar user panel (optional) -->
           <div class="user-panel mt-3 pb-3 mb-3 d-flex">
             <div class="image">
-              <img v-if="user" :src="api_url+'/images/'+user.picture" class="img-circle elevation-0" alt="User Image">
-              <img v-else src="@/assets/imgs/users/default-150x150.png" class="img-circle elevation-0" alt="User Image">
+              <img v-if="has_picture" :src="api_url+'/images/'+user.picture" class="img-circle elevation-0" alt="User Image" style="width: 35px; height: 35px">
+              <img v-else src="@/assets/imgs/users/default-150x150.png" class="img-circle elevation-0" alt="User Image" style="width: 35px; height: 35px">
             </div>
             <div class="info nav-link">
-              <router-link to="/profile" v-if="user" class="d-block">{{ user.name }}</router-link>
+              <router-link to="/profile" v-if="user" class="d-block profile_name">{{ user.name }}</router-link>
             </div>
           </div>
   
@@ -94,6 +94,7 @@
 
     const user = ref(null);
     const api_url = ref(null);
+    const has_picture = ref(false);
 
     const closeSidebarOverlay = () => {
         document.body.classList.remove('sidebar-open');
@@ -102,6 +103,7 @@
 
     onMounted(() => {
        user.value = JSON.parse(sessionStorage.getItem("user"));
+       user.value.picture === null ? has_picture.value = false : has_picture.value = true;
        api_url.value = import.meta.env.VITE_LARAVEL_API_URL;
     });
 
@@ -112,4 +114,14 @@
         background-image: var(--gradient-orange);
         color: #ececec !important;
     }
+
+    .router-link-active.router-link-exact-active.profile_name{
+        font-weight: bold;
+        color: #ff7418;
+    }
+
+    .router-link-active.router-link-exact-active.profile_name:hover{
+        color: #ff7418;
+    }
+
 </style>  

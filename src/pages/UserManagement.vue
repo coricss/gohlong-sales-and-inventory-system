@@ -84,7 +84,7 @@
                 <i class="fas fa-user-plus"></i>
                 New User
               </h4>
-              <button type="button" class="btn-close btn-close-modal" @click="clearForm" data-dismiss="modal" aria-label="Close">
+              <button type="button" class="btn-close btn-close-modal" @click="clearAddForm" data-dismiss="modal" aria-label="Close">
                 <i class="fas fa-times"></i>
               </button>
             </div>
@@ -94,9 +94,9 @@
                   <div class="col-md-12">
                     <div class="mb-3">
                       <div class="d-flex justify-content-center">
-                        <img class="img-circle img-fluid elevation-1" id="display-picture" @click="changeProfile" src="@/assets/imgs/users/default-150x150.png" alt="" style="cursor: pointer; width: 150px; height: 150px" />
+                        <img class="img-circle img-fluid elevation-1" id="add-display-picture" @click="addImage" src="@/assets/imgs/users/default-150x150.png" alt="" style="cursor: pointer; width: 150px; height: 150px" />
                       </div>
-                      <input id="picture" name="picture" v-on:change="onFileChange" type="file" autocomplete="picture" class="d-none" />
+                      <input id="add-picture" name="picture" v-on:change="addPhotoChange" type="file" autocomplete="picture" class="d-none" />
                     </div>
                     <div class="mb-3">
                       <label for="name" class="form-label">Name</label>
@@ -114,7 +114,58 @@
                   <i class="fas fa-save"></i>
                   Save
                 </button>
-                <button type="button" class="btn btn-sm btn-outline-danger btn-close-modal" data-dismiss="modal" @click="clearForm">
+                <button type="button" class="btn btn-sm btn-outline-danger btn-close-modal" data-dismiss="modal" @click="clearAddForm">
+                  <i class="fas fa-times"></i>
+                  Cancel
+                </button>
+              </div>
+            </form>
+          </div>
+        </div>
+      </div>
+
+
+      <!-- edit user -->
+      <div class="modal fade" data-backdrop="static" id="edit-user-modal">
+        <div class="modal-dialog modal-sm modal-dialog-centered">
+          <div class="modal-content">
+            <div class="modal-header bg-orange">
+              <h4 class="modal-title text-white">
+                <i class="fas fa-user-edit"></i>
+                Edit User
+              </h4>
+              <button type="button" class="btn-close btn-close-edit-modal" @click="clearEditForm" data-dismiss="modal" aria-label="Close">
+                <i class="fas fa-times"></i>
+              </button>
+            </div>
+            <form id="edit-user-form" @submit.prevent="editUser" enctype="multipart/form-data">
+              <div class="modal-body">
+                <div class="row">
+                  <div class="col-md-12">
+                    <div class="mb-3">
+                      <div class="d-flex justify-content-center">
+                        <img class="img-circle img-fluid elevation-1" id="edit-display-picture" @click="editImage" src="@/assets/imgs/users/default-150x150.png" alt="" style="cursor: pointer; width: 150px; height: 150px" />
+                      </div>
+                      <input id="edit-picture" name="picture" v-on:change="editPhotoChange" type="file" autocomplete="picture" class="d-none" />
+                    </div>
+                    <input type="hidden" name="id" v-model="editUserForm.id">
+                    <div class="mb-3">
+                      <label for="name" class="form-label">Name</label>
+                      <input type="text" class="form-control" id="name" name="name" placeholder="Enter name" required v-model="editUserForm.name">
+                    </div>
+                    <div class="mb-3">
+                      <label for="email" class="form-label">Email</label>
+                      <input type="email" class="form-control" id="email" name="email" placeholder="Enter email" required v-model="editUserForm.email">
+                    </div>
+                  </div>
+                </div>
+              </div>  
+              <div class="modal-footer justify-content-center">
+                <button type="submit" class="btn btn-sm btn-success">
+                  <i class="fas fa-save"></i>
+                  Save
+                </button>
+                <button type="button" class="btn btn-sm btn-outline-danger btn-close-edit-modal" data-dismiss="modal" @click="clearEditForm">
                   <i class="fas fa-times"></i>
                   Cancel
                 </button>
@@ -194,16 +245,23 @@
         render: function (data, type, row) {
 
           var btn_edit = document.createElement('button');
-          btn_edit.setAttribute('class', 'btn btn-sm btn-primary');
+          btn_edit.setAttribute('class', 'btn btn-sm btn-primary btn-edit-user');
           btn_edit.setAttribute('data-id', data);
-          btn_edit.innerHTML = '<i class="fas fa-edit"></i>';
+          btn_edit.setAttribute('data-toggle','modal');
+          btn_edit.setAttribute('data-target','#edit-user-modal');
+          btn_edit.innerHTML = `<i class="fas fa-edit" data-id="${data}"></i>`;
+
+          var btn_reset_pass = document.createElement('button');
+          btn_reset_pass.setAttribute('class', 'btn btn-sm btn-warning btn-reset-pass');
+          btn_reset_pass.setAttribute('data-id', data);
+          btn_reset_pass.innerHTML = `<i class="fas fa-sync" data-id="${data}"></i>`;
           
           var btn_del = document.createElement('button');
           btn_del.setAttribute('class', 'btn btn-sm btn-danger btn-del-user');
           btn_del.setAttribute('data-id', data);
           btn_del.innerHTML = `<i class="fas fa-trash" data-id="${data}"></i>`;
 
-          return '<center>'+btn_edit.outerHTML+' '+btn_del.outerHTML+'</center>';
+          return '<center>'+btn_edit.outerHTML+' '+btn_reset_pass.outerHTML+' '+btn_del.outerHTML+'</center>';
         }
       }
     ]);
@@ -285,25 +343,32 @@
       });
     };
 
-    const changeProfile = () => {
-        document.getElementById('picture').click();
+    const addImage = () => {
+        document.getElementById('add-picture').click();
 
         /* display photo in image when #picture was changed */
-        document.getElementById('picture').onchange = (e) => {
+        document.getElementById('add-picture').onchange = (e) => {
             const reader = new FileReader();
             reader.readAsDataURL(e.target.files[0]);
             reader.onload = (e) => {
-                document.getElementById('display-picture').src = e.target.result;
+                document.getElementById('add-display-picture').src = e.target.result;
             };
         };
     };
 
+    const editImage = () => {
+        document.getElementById('edit-picture').click();
 
-    const clearForm = () => {
-      document.querySelector('#display-picture').src = 'http://localhost:3000/src/assets/imgs/users/default-150x150.png';
-      document.querySelector('#new-user-form').reset();
-      file.value = null
+        /* display photo in image when #picture was changed */
+        document.getElementById('edit-picture').onchange = (e) => {
+            const reader = new FileReader();
+            reader.readAsDataURL(e.target.files[0]);
+            reader.onload = (e) => {
+                document.getElementById('edit-display-picture').src = e.target.result;
+            };
+        };
     };
+
 
     const loadData = () => {
       users.getUsersData().then((response) => {
@@ -320,17 +385,17 @@
         password_confirmation: 'GTSC@'+new Date().getFullYear()
     });
 
-    const file = ref(null);
+    const addPhoto = ref(null);
     
-    const onFileChange = (e) => {
-        file.value = e.target.files[0];
+    const addPhotoChange = (e) => {
+      addPhoto.value = e.target.files[0];
     };
 
     const addUser = () => {
 
       const formData = new FormData();
 
-      formData.append('picture',file.value);
+      formData.append('picture',addPhoto.value);
       formData.append('name', addUserForm.value.name);
       formData.append('email', addUserForm.value.email);
       formData.append('password', addUserForm.value.password);
@@ -339,7 +404,7 @@
       users.registerUser(formData).then((response) => {
         if (response.status == 200) {
           loadData();
-          clearForm();
+          clearAddForm();
           const closeModal = document.querySelector('.btn-close-modal');
           closeModal.click();
           loadToast(response.message, 'success');
@@ -352,8 +417,89 @@
       });
     };
 
-    const deleteUser = () => {
+    const editUserForm = ref({
+        id: '',
+        name: '',
+        email: ''
+    });
+
+    const editPhoto = ref(null);
+
+    const editPhotoChange = (e) => {
+      editPhoto.value = e.target.files[0];
+    };
+
+    const editUser = () => {
+
+      const formData = new FormData();
+
+      formData.append('picture', editPhoto.value);
+      formData.append('id', editUserForm.value.id);
+      formData.append('name', editUserForm.value.name);
+      formData.append('email', editUserForm.value.email);
+      
+      users.updateUser(formData).then((response) => {
+        if (response.status == 200) {
+          loadData();
+          clearEditForm();
+          const closeModal = document.querySelector('.btn-close-edit-modal');
+          closeModal.click();
+          loadToast(response.message, 'success');
+        } else {
+          loadToast(response.message, 'error');
+        }
+      }).catch((error) => {
+        loadToast(error.response.data.message, 'error');
+      });
+    };
+
+    const action = () => {
       const userTable = document.querySelector('#user-management-table');
+
+      userTable.addEventListener('click', function(e) {
+        if (e.target.classList.contains('btn-edit-user') || e.target.classList.contains('fa-edit')) {
+          const id = e.target.getAttribute('data-id');
+          users.getUser(id).then((response) => {
+
+            if(response.picture != null) {
+              document.getElementById('edit-display-picture').src = import.meta.env.VITE_LARAVEL_API_URL+'images/'+response.picture;
+            }
+
+            editUserForm.value = response;
+          }).catch((error) => {
+            loadToast(error.response.data.message, 'error');
+          });
+        }
+      });
+
+      userTable.addEventListener('click', function(e) {
+        if (e.target.classList.contains('btn-reset-pass') || e.target.classList.contains('fa-sync')) {
+          const id = e.target.getAttribute('data-id');
+          swal({
+            icon: "question",
+            title: "Are you sure to reset the password of this user?",
+            text: "Please make sure before to proceed!",
+            showCancelButton: true,
+            confirmButtonColor: "#007bff",
+            cancelButtonColor: "gray",
+            confirmButtonText: "Yes, reset it",
+            cancelButtonText: "No",
+          }).then((result) => {
+            if (result.isConfirmed) {
+              users.resetPassword(id).then((response) => {
+                if (response.status == 200) {
+                  loadData();
+                  loadToast(response.message, 'success');
+                } else {
+                  loadToast(response.message, 'error');
+                }
+              }).catch((error) => {
+                loadToast(error.response.data.message, 'error');
+              });
+            }
+          });
+        }
+      });
       
       userTable.addEventListener('click', function(e) {
         if (e.target.classList.contains('btn-del-user') || e.target.classList.contains('fa-trash')) {
@@ -381,9 +527,20 @@
               });
             }
           });
-          
         }
       });
+    };
+
+    const clearAddForm = () => {
+      document.querySelector('#add-display-picture').src = 'http://localhost:3000/src/assets/imgs/users/default-150x150.png';
+      document.querySelector('#new-user-form').reset();
+      addPhoto.value = null
+    };
+
+    const clearEditForm = () => {
+      document.querySelector('#edit-display-picture').src = 'http://localhost:3000/src/assets/imgs/users/default-150x150.png';
+      document.querySelector('#edit-user-form').reset();
+      editPhoto.value = null
     };
 
     const loadToast = (message, type) => {
@@ -409,7 +566,7 @@
     };
 
     onMounted(() => {
-      deleteUser();
+      action();
       windowResize();
       loadData();
     });
