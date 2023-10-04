@@ -4,30 +4,33 @@
             <div class="container">
                 <div class="brand">
                     <h1 class="m-0 p-0">
-                        <a href="/">
-                            <img src="@/assets/imgs/logos/gohlong-logo.png" alt="logo" width="200px" />
-                        </a>
+                        <router-link to="/">
+                            <img src="@/assets/imgs/logos/gohlong-logo.png" alt="logo" style="width: 200px" />
+                        </router-link>
                     </h1>
                 </div>
                 <div class="nav-links d-lg-block d-none">
                     <ul class="m-0 p-0">
-                        <li>
+                        <!-- <li>
                             <a href="#home">Home</a>
+                        </li> -->
+                        <li>
+                            <router-link to="#home">Home</router-link>
                         </li>
                         <li>
-                            <a href="#services">Services</a>
+                            <router-link to="#services">Services</router-link>
                         </li>
                         <li>
-                            <a href="#brands">Brands</a>
+                            <router-link to="#brands">Brands</router-link>
                         </li>
                         <!-- <li>
                             <a href="#updates">Updates</a>
                         </li> -->
                         <li>
-                            <a href="#gallery">Gallery</a>
+                            <router-link to="#gallery">Gallery</router-link>
                         </li>
                         <li>
-                            <a href="#contact">Contact Us</a>
+                            <router-link to="#contact">Contact Us</router-link>
                         </li>
                     </ul>
                 </div>
@@ -66,21 +69,9 @@
 </template>
 
 <script setup>
-    import { useRouter } from "vue-router";
+
     import { ref, watchEffect } from "vue";
 
-    const router = useRouter();
-
-    /* const homeRouter = createRouter({
-        scrollBehavior(to, from, savedPosition) {
-            if (to.hash) {
-                return {
-                    el: to.hash,
-                    behavior: "smooth",
-                };
-            }
-        },
-    }); */
 
     const hamburger = ref({
         isOpen: false,
@@ -150,11 +141,7 @@
             }
         });
     });
-   
-    
-    const login = () => {
-        router.push("/login");
-    };
+
 </script>
 
 <style scoped>

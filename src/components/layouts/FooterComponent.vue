@@ -4,7 +4,7 @@
       <div class="float-right d-none d-sm-block">
         <b>{{ timeAndDate }}</b>
       </div>
-      <strong>Copyright &copy; {{ year }} <a href="">Company name</a>.</strong> All rights reserved.
+      <strong>Copyright &copy; {{ year }} <router-link to="">Gohlong Tire and Service Center</router-link>.</strong> All rights reserved.
     </footer>
   </div>
 </template>

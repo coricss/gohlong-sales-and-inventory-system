@@ -1,8 +1,12 @@
-import { createApp } from 'vue';
-// import { createPinia } from 'pinia';
+import { createApp, markRaw } from 'vue';
+import { createPinia } from 'pinia';
+import piniaPluginPersistedstate from 'pinia-plugin-persistedstate'
+import axios from 'axios';
 import '@/assets/css/style.css';
 import App from './App.vue';
 import router from './router';
+import VueSweetalert2 from 'vue-sweetalert2';
+import 'sweetalert2/dist/sweetalert2.min.css';
 import Toast from "vue-toastification";
 import "vue-toastification/dist/index.css";
 import 'admin-lte/plugins/fontawesome-free/css/all.min.css';
@@ -13,10 +17,19 @@ import 'admin-lte/plugins/chart.js/Chart.min.js';
 import 'admin-lte/plugins/sweetalert2/sweetalert2.min.js';
 import 'admin-lte/dist/js/adminlte.min.js';
 
-// const pinia = createPinia();
-const Vue = createApp(App);
+axios.defaults.withCredentials = true;
+axios.defaults.baseURL = import.meta.env.VITE_LARAVEL_API_URL;
 
-// Vue.use(pinia);
+const pinia = createPinia();
+pinia.use(piniaPluginPersistedstate)
+
+pinia.use(({ store }) => {
+    store.router = markRaw(router);
+});
+
+const Vue = createApp(App);
+Vue.use(pinia);
 Vue.use(router);
 Vue.use(Toast);
+Vue.use(VueSweetalert2);
 Vue.mount('#app');

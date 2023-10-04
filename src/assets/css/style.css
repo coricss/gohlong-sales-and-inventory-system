@@ -42,3 +42,47 @@ html {
 .brand__pagination__page.is-active {
     background-color: #ff6600;
 }
+ 
+.dataTables_filter {
+    color: #000 !important;
+}
+
+.dataTables_info {
+    float: left;
+    color: #000;
+}
+
+.dt-buttons {
+    float: left;
+}
+
+.button-page-length {
+    color: #000 !important;
+}
+
+.btn-close {
+    color: #fff;
+    opacity: 1;
+    font-size: 1.5rem;
+    font-weight: 700;
+    line-height: 1;
+    text-shadow: 0 1px 0 #fff;
+    opacity: .5;
+    position: absolute;
+    right: 0;
+    padding: .5rem .75rem;
+    background-color: transparent;
+    border: 0;
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    appearance: none;
+}
+
+.btn-close:hover {
+    opacity: 1;
+}
+
+
+div.show-password {
+    cursor: pointer !important;
+}
