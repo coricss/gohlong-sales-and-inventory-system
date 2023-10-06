@@ -31,6 +31,11 @@ const routes = [
       component: () => import('@/pages/UserManagement.vue')
     },
     {
+      path: '/inventory',
+      name: 'Inventory Management | ' + appName,
+      component: () => import('@/pages/Inventory.vue')
+    },
+    {
         path: '/:pathMatch(.*)*',
         name: 'Page Not Found',
         component: () => import('@/components/server-error/404.vue')

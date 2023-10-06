@@ -43,6 +43,14 @@
                   </p>
                 </router-link>
               </li>
+              <li class="nav-item">
+                <router-link class="nav-link" to="/inventory">
+                  <i class="nav-icon fas fa-boxes"></i>
+                  <p>
+                    Inventory Management
+                  </p>
+                </router-link>
+              </li>
               <!-- <li class="nav-item menu-open">
                 <a href="#" class="nav-link active">
                   <i class="nav-icon fas fa-tachometer-alt"></i>
