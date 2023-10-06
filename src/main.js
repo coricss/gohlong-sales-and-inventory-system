@@ -17,6 +17,20 @@ import 'admin-lte/plugins/chart.js/Chart.min.js';
 import 'admin-lte/plugins/sweetalert2/sweetalert2.min.js';
 import 'admin-lte/dist/js/adminlte.min.js';
 
+import PrimeVue from 'primevue/config';
+import 'primeicons/primeicons.css';
+import "primevue/resources/primevue.min.css";
+import "primevue/resources/themes/bootstrap4-light-blue/theme.css";
+import InputText from 'primevue/inputtext';
+import Button from 'primevue/button';
+import Dialog from 'primevue/dialog';
+import SpeedDial from 'primevue/speeddial';
+import TabView from 'primevue/tabview';
+import TabPanel from 'primevue/tabpanel';
+
+import ToastService from 'primevue/toastservice';
+import ConfirmationService from 'primevue/confirmationservice';
+
 axios.defaults.withCredentials = true;
 axios.defaults.baseURL = import.meta.env.VITE_LARAVEL_API_URL;
 
@@ -32,4 +46,15 @@ Vue.use(pinia);
 Vue.use(router);
 Vue.use(Toast);
 Vue.use(VueSweetalert2);
+
+Vue.use(PrimeVue);
+Vue.use(ToastService);
+Vue.use(ConfirmationService);
+Vue.component('InputText', InputText);
+Vue.component('Button', Button);
+Vue.component('Dialog', Dialog);
+Vue.component('SpeedDial', SpeedDial);
+Vue.component('TabView', TabView);
+Vue.component('TabPanel', TabPanel);
+
 Vue.mount('#app');
