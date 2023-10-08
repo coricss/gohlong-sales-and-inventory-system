@@ -21,40 +21,7 @@
             </section>
             <section class="content">
                 <div class="container-fluid">
-                    <TabView class="tabview-custom">
-                        <TabPanel>
-                            <template #header>
-                                <!-- <i class="pi pi-box mx-2"></i> -->
-                                <i class="fas fa-box-open mx-2"></i>
-                                <span>Products</span>
-                            </template>
-                            <ProductsTable />
-                        </TabPanel>
-                        <TabPanel>
-                            <template #header>
-                                <!-- <i class="pi pi-th-large mx-2"></i> -->
-                                <i class="fas fa-shapes mx-2"></i>
-                                <span>Categories</span>
-                            </template>
-                            <div class="card card-orange card-outline">
-                                <div class="card-body" style="display: block;">
-                                    <small class="text-dark">Categories</small>
-                                </div>
-                            </div>
-                        </TabPanel>
-                        <TabPanel>
-                            <template #header>
-                                <!-- <i class="pi pi-tags mx-2"></i> -->
-                                <i class="fas fa-tags mx-2"></i>
-                                <span>Brands</span>
-                            </template>
-                            <div class="card card-orange card-outline">
-                                <div class="card-body" style="display: block;">
-                                    <small class="text-dark">Brands</small>
-                                </div>
-                            </div>
-                        </TabPanel>
-                    </TabView>
+                    <ProductsTable/>
                 </div>
             </section>
         <FooterComponent/>
@@ -65,7 +32,7 @@
     import HeaderComponent from "@/components/layouts/HeaderComponent.vue";
     import SidebarComponent from "@/components/layouts/SidebarComponent.vue";
     import FooterComponent from "@/components/layouts/FooterComponent.vue";
-    import ProductsTable from "@/components/inventory-tables/Producttable.vue";
+    import ProductsTable from "@/components/inventory-tables/ProductsTable.vue";
     import { 
         ref,
         onMounted

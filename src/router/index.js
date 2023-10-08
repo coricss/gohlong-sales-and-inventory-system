@@ -33,8 +33,16 @@ const routes = [
     {
       path: '/inventory',
       name: 'Inventory Management | ' + appName,
-      component: () => import('@/pages/Inventory.vue')
+      component: () => import('@/pages/Inventory.vue'),
+      children: [
+        {
+          path: '/inventory/products',
+          name: 'Manage Products | ' + appName,
+          component: () => import('@/components/inventory-tables/ProductsTable.vue'),
+        },
+      ]
     },
+    
     {
         path: '/:pathMatch(.*)*',
         name: 'Page Not Found',
