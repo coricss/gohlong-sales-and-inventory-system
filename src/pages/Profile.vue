@@ -1,5 +1,5 @@
 <template>
-    <div class="content-wrapper" style="min-height: 1599.06px;">
+    <div class="content-wrapper">
         <HeaderComponent/>
         <SidebarComponent/>
             <section class="content-header">
@@ -132,31 +132,54 @@
                                     </div>
                                 </div>                            
                                 <hr>
-                                <div class="change-password mt-2">
-                                    <h5 class="text-center text-dark">Change Password</h5>
-                                    <div class="row mt-4">
-                                        <div class="col-md-4 mt-2">
-                                            <input type="password" class="form-control" placeholder="Old Password">
+                                <form id="change-password-form" @submit.prevent="submitChangePassword">
+                                    <div class="change-password mt-2">
+                                        <h5 class="text-center text-dark">Change Password</h5>
+                                        <div class="row mt-4">
+                                            <div class="col-md-4 mt-2">
+                                                <input 
+                                                    :type="showPassword ? 'text' : 'password'"
+                                                    class="form-control" 
+                                                    v-model="changePasswordForm.old_password"
+                                                    placeholder="Old Password"
+                                                    required
+                                                >
+                                            </div>
+                                            <div class="col-md-4 mt-2">
+                                                <input 
+                                                    :type="showPassword ? 'text' : 'password'" class="form-control" 
+                                                    v-model="changePasswordForm.new_password"
+                                                    placeholder="New Password"
+                                                    required
+                                                >
+                                                <passwordMeter 
+                                                    :password="changePasswordForm.new_password" :show="true" 
+                                                    @score="onScore"
+                                                />
+                                            </div>
+                                            <div class="col-md-4 mt-2">
+                                                <input 
+                                                    :type="showPassword ? 'text' : 'password'"
+                                                    class="form-control"
+                                                    v-model="changePasswordForm.confirm_password" 
+                                                    placeholder="Confirm Password"
+                                                    required
+                                                >
+                                            <div class="custom-control custom-checkbox float-right">
+                                                    <input class="custom-control-input" type="checkbox" id="customCheckbox1" value="option1" @click="showPassword=!showPassword" style="cursor: pointer">
+                                                    <label for="customCheckbox1" class="custom-control-label text-muted">Show Password</label>
+                                            </div>
+                                            </div>
                                         </div>
-                                        <div class="col-md-4 mt-2">
-                                            <input type="password" class="form-control" placeholder="New Password">
-                                        </div>
-                                        <div class="col-md-4 mt-2">
-                                            <input type="password" class="form-control" placeholder="Confirm Password">
-                                           <div class="custom-control custom-checkbox float-right">
-                                                <input class="custom-control-input" type="checkbox" id="customCheckbox1" value="option1">
-                                                <label for="customCheckbox1" class="custom-control-label text-muted">Show Password</label>
-                                           </div>
-                                        </div>
-                                    </div>
-                                    <div class="row">                                      
-                                        <div class="col-md-12 mt-3">
-                                            <div class="text-center">
-                                                <button class="btn btn-primary">Change Password</button>
+                                        <div class="row">                                      
+                                            <div class="col-md-12 mt-3">
+                                                <div class="text-center">
+                                                    <button class="btn btn-primary">Change Password</button>
+                                                </div>
                                             </div>
                                         </div>
                                     </div>
-                                </div>
+                                </form>
                             </div>
                         </div>
                     </div>
@@ -174,6 +197,8 @@
     import { ref, onMounted } from "vue";
     import { useToast } from "vue-toastification";
     import { useProfileManagementStore } from "@/store/profile-management.js";
+
+    import passwordMeter from "vue-simple-password-meter";
 
     const toast = useToast();
     const profileStore = useProfileManagementStore();
@@ -305,6 +330,47 @@
             img.src = BASE_URL+'images/'+userDetail.value.picture;
         }
 
+    }
+
+    /* change password */
+    const changePasswordForm = ref({
+        old_password: "",
+        new_password: "",
+        confirm_password: ""
+    });
+
+    const showPassword = ref(false);
+    const strength = ref(null);
+
+    const onScore = (score) => {
+        strength.value = score.strength;
+    }
+
+    const submitChangePassword = (e) => {
+        if(changePasswordForm.value.new_password !== changePasswordForm.value.confirm_password) {
+            loadToast("New password and confirm password does not match!", "error");
+        } else {
+            if((strength.value !== 'risky') && (strength.value !== 'guessable') && (strength.value !== 'weak')) {
+                profileStore.changePassword(changePasswordForm.value).then((response) => {
+                    if(response.status == 200){
+                        loadToast(response.message, "success");
+                        changePasswordForm.value = {
+                            old_password: "",
+                            new_password: "",
+                            confirm_password: ""
+                        };
+                    } else {
+                        loadToast(response.message, "error");
+                    }
+                
+                }).catch((error) => {
+                    loadToast(error.message, "error");
+                })
+            } else {
+                loadToast("Password is not strong enough!", "error");
+            }
+           
+        }
     }
 
 

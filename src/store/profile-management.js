@@ -56,5 +56,15 @@ export const useProfileManagementStore = defineStore('profile-management', {
                 });
             });
         },
+        changePassword(data) {
+            return new Promise ((resolve, reject) => {
+                axios.post('api/profile/change-password', data)
+                .then((response) => {
+                    resolve(response.data);
+                }).catch((error) => {
+                    reject(error);
+                });
+            });
+        }
     }
 });
