@@ -1,7 +1,10 @@
 <template>
     <div class="content-wrapper">
         <HeaderComponent/>
-        <SidebarComponent/>
+        <SidebarComponent 
+            :username="name"
+            :picture="picture"
+        />
             <section class="content-header">
                 <div class="container-fluid">
                     <div class="row mb-2">
@@ -109,11 +112,12 @@
                                 <div class="row justify-content-center" v-else>
                                     <div class="edit-email d-flex align-items-center justify-content-center">
                                         <input 
-                                            type="text" 
+                                            type="email" 
                                             class="form-control text-center edit-email-input" 
                                             v-if="isEmailEditing" 
                                             v-model="userDetail.email"
                                             @keyup.enter="updateEmail"
+                                            required
                                         >
                                         <div class=" mt-1 w-25">
                                             <i 
@@ -235,12 +239,14 @@
     /* edit name */
     const isNameHovered = ref(false);
     const isNameEditing = ref(false);
+    const name = ref(JSON.parse(sessionStorage.getItem("user")).name);
 
     const updateName = () => {
         if(userDetail.value.name !== '') {
             isNameEditing.value = false;
             sessionStorage.setItem("user", JSON.stringify(userDetail.value));
             profileStore.updateUserName(userDetail.value.name).then((response) => {
+                name.value = userDetail.value.name;
                 loadToast(response.message, "success");
             }).catch((error) => {
                 loadToast(error.message, "error");
@@ -284,6 +290,7 @@
     const has_picture = ref(false);
     const BASE_URL = import.meta.env.VITE_LARAVEL_API_URL;
     const isPictureEditing = ref(false);
+    const picture = ref(JSON.parse(sessionStorage.getItem("user")).picture);
 
     const pictureEditing = () => {
         
@@ -311,6 +318,7 @@
             loadToast(response.message, "success");
             isPictureEditing.value = false;
             userDetail.value.picture = response.picture;
+            picture.value = response.picture;
             sessionStorage.setItem("user", JSON.stringify(userDetail.value));
         }).catch((error) => {
             loadToast(error.message, "error");

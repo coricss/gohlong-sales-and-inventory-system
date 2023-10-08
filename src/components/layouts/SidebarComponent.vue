@@ -14,11 +14,15 @@
           <!-- Sidebar user panel (optional) -->
           <div class="user-panel mt-3 pb-3 mb-3 d-flex">
             <div class="image">
-              <img v-if="has_picture" :src="api_url+'/images/'+user.picture" class="img-circle elevation-0" alt="User Image" style="width: 35px; height: 35px">
-              <img v-else src="@/assets/imgs/users/default-150x150.png" class="img-circle elevation-0" alt="User Image" style="width: 35px; height: 35px">
+              <img 
+                :src="picture != null ? api_url+'images/'+picture : (user.picture != null ? api_url+'images/'+user.picture : 'src/assets/imgs/users/default-150x150.png')"
+                class="img-circle elevation-0" 
+                :alt="picture" 
+                style="width: 35px; height: 35px"
+              >
             </div>
             <div class="info nav-link">
-              <router-link to="/profile" v-if="user" class="d-block profile_name">{{ user.name }}</router-link>
+              <router-link to="/profile" v-if="user" class="d-block profile_name">{{ username == 'User name' ? user.name : username }}</router-link>
             </div>
           </div>
   
@@ -83,6 +87,7 @@
                   </p>
                 </a>
               </li>
+              <!-- 'src/assets/imgs/users/default-150x150.png' -->
             </ul>
           </nav>
           <!-- /.sidebar-menu -->
@@ -97,12 +102,24 @@
 
     import { 
       ref,
-      onMounted
+      onMounted,
+      watch
     } from "vue";
 
-    const user = ref(null);
-    const api_url = ref(null);
+    const user = ref(JSON.parse(sessionStorage.getItem("user")));
+    const api_url = import.meta.env.VITE_LARAVEL_API_URL;
     const has_picture = ref(false);
+
+    defineProps({
+        username: {
+            type: String,
+            default: 'User name'
+        },
+        picture: {
+            type: String,
+            default: null
+        }
+    });
 
     const closeSidebarOverlay = () => {
         document.body.classList.remove('sidebar-open');
@@ -112,7 +129,6 @@
     onMounted(() => {
        user.value = JSON.parse(sessionStorage.getItem("user"));
        user.value.picture === null ? has_picture.value = false : has_picture.value = true;
-       api_url.value = import.meta.env.VITE_LARAVEL_API_URL;
     });
 
 </script>
