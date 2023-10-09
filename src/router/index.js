@@ -31,18 +31,20 @@ const routes = [
       component: () => import('@/pages/UserManagement.vue')
     },
     {
-      path: '/inventory',
-      name: 'Inventory Management | ' + appName,
-      component: () => import('@/pages/Inventory.vue'),
-      children: [
-        {
-          path: '/inventory/products',
-          name: 'Manage Products | ' + appName,
-          component: () => import('@/components/inventory-tables/ProductsTable.vue'),
-        },
-      ]
+      path: '/inventory/products',
+      name: 'Manage Products | ' + appName,
+      component: () => import('@/components/inventory-tables/ProductsTable.vue'),
     },
-    
+    {
+      path: '/inventory/categories',
+      name: 'Manage Categories | ' + appName,
+      component: () => import('@/components/inventory-tables/CategoriesTable.vue'),
+    },
+    {
+      path: '/inventory/brands',
+      name: 'Manage Brands | ' + appName,
+      component: () => import('@/components/inventory-tables/BrandsTable.vue'),
+    },
     {
         path: '/:pathMatch(.*)*',
         name: 'Page Not Found',

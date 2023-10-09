@@ -6,7 +6,7 @@
                     <div class="container-fluid">
                         <div class="row mb-2">
                             <div class="col-sm-6">
-                                <h1 class="text-dark"><i class="fas fa-box-open"></i> Manage Products</h1>
+                                <h1 class="text-dark"><i class="fas fa-tags"></i> Manage Brands</h1>
                             </div>
                             <!-- <div class="col-sm-6">
                             <ol class="breadcrumb float-sm-right">
@@ -53,11 +53,11 @@
                                                     className: 'text-center',
                                                 },
                                                 {
-                                                    targets: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10],
+                                                    targets: [1, 2, 3, 4],
                                                     className: 'text-center align-middle',
                                                 },
                                                 {
-                                                    targets: 11,
+                                                    targets: 5,
                                                     className: 'text-center',
                                                     orderable: false,
                                                 }
@@ -68,14 +68,8 @@
                                             <thead class="bg-dark text-white">
                                                 <tr>
                                                     <th>#</th>
-                                                    <th>Model/Size</th>
                                                     <th>Brand</th>
                                                     <th>Category</th>
-                                                    <th>Stocks</th>
-                                                    <th>Price</th>
-                                                    <th>Discounted Price</th>
-                                                    <th>Total Price Stocks</th>
-                                                    <th>Total Discounted Price Stocks</th>
                                                     <th>Created At</th>
                                                     <th>Updated At</th>
                                                     <th>Action</th>
@@ -169,28 +163,10 @@ const columns = ref([
         }
     },
     {
-        data: "model_size",
-    },
-    {
         data: "brand",
     },
     {
         data: "category",
-    },
-    {
-        data: "quantity",
-    },
-    {
-        data: "price",
-    },
-    {
-        data: "discounted_price",
-    },
-    {
-        data: "total_stock_price",
-    },
-    {
-        data: "total_stock_discounted_price",
     },
     {
         data: "created_at",
@@ -242,7 +218,7 @@ const buttons = ref([
     {
         extend: 'csv',
         text: '<i class="fas fa-download fa-sm"></i> Export',
-        title: "Gohlong Tire and Service Inventory Products",
+        title: "Gohlong Tire and Service Products",
         titleAttr: 'Export',
         className: 'btn btn-sm btn-dark',
         attr:  {
@@ -252,7 +228,7 @@ const buttons = ref([
             node.removeClass('dt-button');
         },
         exportOptions: {
-            columns: [ 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10]
+            columns: [ 0, 1, 2, 3, 4, 5]
         },
     },
     {

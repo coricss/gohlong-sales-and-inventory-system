@@ -55,25 +55,31 @@
                   </p>
                 </router-link>
               </li> -->
-              <li class="nav-item menu-open">
-                <a href="#" class="nav-link">
+              <li class="nav-item" :class="{'menu-open': $route.path.includes('/inventory')}">
+                <a href="#" class="inventory nav-link" :class="{'active': $route.path.includes('/inventory')}">
                   <i class="nav-icon fas fa-boxes"></i>
                   <p>
-                    Inventory Management
+                    Inventory
                     <i class="right fas fa-angle-left"></i>
                   </p>
                 </a>
-                <ul class="nav nav-treeview">
+                <ul class="nav nav-treeview" style="padding-left: 1rem">
                   <li class="nav-item">
-                    <router-link class="nav-link" to="/inventory/products">
+                    <router-link class="nav-link sub-link" to="/inventory/products" :class="{'active': $route.path.includes('/inventory/products')}">
                       <i class="fas fa-box-open mx-2"></i>
                       <p>Products</p>
                     </router-link>
                   </li>
                   <li class="nav-item">
-                    <router-link class="nav-link" to="/inventory/categories">
-                      <i class="fas fa-box-open mx-2"></i>
-                      <p>Products</p>
+                    <router-link class="nav-link sub-link" to="/inventory/categories">
+                      <i class="fas fa-shapes mx-2"></i>
+                      <p>Categories</p>
+                    </router-link>
+                  </li>
+                  <li class="nav-item">
+                    <router-link class="nav-link sub-link" to="/inventory/brands">
+                      <i class="fas fa-tags mx-2"></i>
+                      <p>Brands</p>
                     </router-link>
                   </li>
                 </ul>
@@ -106,7 +112,8 @@
       watch
     } from "vue";
 
-    const user = ref(JSON.parse(sessionStorage.getItem("user")));
+   /*  const user = ref(JSON.parse(sessionStorage.getItem("user"))); */
+    const user = ref(null);
     const api_url = import.meta.env.VITE_LARAVEL_API_URL;
     const has_picture = ref(false);
 
@@ -133,10 +140,15 @@
 
 </script>
 
-<style>
-    .router-link-active.nav-link{
+<style scoped>
+    .router-link-active.nav-link, .inventory.active{
         background-image: var(--gradient-orange);
         color: #ececec !important;
+    }
+
+    a.router-link-active.nav-link.sub-link{
+        background-image: linear-gradient(to bottom right, #ff822f62, #ff660057 80%, #ff741867) !important;
+        color: #212529 !important;
     }
 
     .router-link-active.router-link-exact-active.profile_name{
