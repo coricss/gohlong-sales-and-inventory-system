@@ -14,12 +14,12 @@
           <!-- Sidebar user panel (optional) -->
           <div class="user-panel mt-3 pb-3 mb-3 d-flex">
             <div class="image">
-              <img 
+              <!-- <img 
                 :src="picture != null ? api_url+'images/'+picture : (user.picture != null ? api_url+'images/'+user.picture : 'src/assets/imgs/users/default-150x150.png')"
                 class="img-circle elevation-0" 
                 :alt="picture" 
                 style="width: 35px; height: 35px"
-              >
+              > -->
             </div>
             <div class="info nav-link">
               <router-link to="/profile" v-if="user" class="d-block profile_name">{{ username == 'User name' ? user.name : username }}</router-link>
@@ -47,14 +47,6 @@
                   </p>
                 </router-link>
               </li>
-              <!-- <li class="nav-item">
-                <router-link class="nav-link" to="/inventory">
-                  <i class="nav-icon fas fa-boxes"></i>
-                  <p>
-                    Inventory Management
-                  </p>
-                </router-link>
-              </li> -->
               <li class="nav-item" :class="{'menu-open': $route.path.includes('/inventory')}">
                 <a href="#" class="inventory nav-link" :class="{'active': $route.path.includes('/inventory')}">
                   <i class="nav-icon fas fa-boxes"></i>
@@ -85,6 +77,14 @@
                 </ul>
               </li>
               <li class="nav-item">
+                <router-link class="nav-link" to="/point-of-sales">
+                  <i class="nav-icon fas fa-shopping-cart"></i>
+                  <p>
+                    Point of Sales
+                  </p>
+                </router-link>
+              </li>
+              <!-- <li class="nav-item">
                 <a href="#" class="nav-link">
                   <i class="nav-icon fas fa-th"></i>
                   <p>
@@ -92,7 +92,7 @@
                     <span class="right badge badge-danger">New</span>
                   </p>
                 </a>
-              </li>
+              </li> -->
               <!-- 'src/assets/imgs/users/default-150x150.png' -->
             </ul>
           </nav>
@@ -134,8 +134,8 @@
     }
 
     onMounted(() => {
-       user.value = JSON.parse(sessionStorage.getItem("user"));
-       user.value.picture === null ? has_picture.value = false : has_picture.value = true;
+       /* user.value = JSON.parse(sessionStorage.getItem("user"));
+       user.value.picture === null ? has_picture.value = false : has_picture.value = true; */
     });
 
 </script>

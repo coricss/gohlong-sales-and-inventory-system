@@ -46,6 +46,11 @@ const routes = [
       component: () => import('@/components/inventory-tables/BrandsTable.vue'),
     },
     {
+      path: '/point-of-sales',
+      name: 'Point of Sales | ' + appName,
+      component: () => import('@/pages/PointOfSales.vue'),
+    },
+    {
         path: '/:pathMatch(.*)*',
         name: 'Page Not Found',
         component: () => import('@/components/server-error/404.vue')
@@ -75,7 +80,7 @@ router.afterEach((to, from) => {
   var checkToken = sessionStorage.getItem("token")
   if ((to.name !== 'Login | ' + appName) && (to.name !== appName)) {
       if (!checkToken) {
-          window.location.href = '/login'
+          /* window.location.href = '/login' */
       }
   }
 })

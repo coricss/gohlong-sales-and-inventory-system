@@ -86,3 +86,39 @@ html {
 div.show-password {
     cursor: pointer !important;
 }
+
+
+@media screen and (max-width: 1720px) {
+    .quantity_wrapper {
+        flex: 0 0 100% !important;
+        max-width: 100% !important;
+    }
+}
+
+input.form-control:focus {
+    border-color: #f58634 !important;
+}
+
+.p-highlight {
+    background-color: #f58634;
+    color: #fff;
+}
+
+/* no outline button */
+.p-button {
+    outline: none;
+    border: none;
+    box-shadow: none 
+}
+
+.p-inputtext:focus{
+    border-color: #f58634;
+    box-shadow: none;
+    outline: none;
+}
+
+/* InputNumber style outline none */
+
+input.p-inputnumber-input:enabled:focus {
+    box-shadow: none !important;
+}
