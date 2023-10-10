@@ -26,7 +26,7 @@ import InputNumber from 'primevue/inputnumber';
 import ToggleButton  from 'primevue/togglebutton';
 import Button from 'primevue/button';
 import Dialog from 'primevue/dialog';
-import SpeedDial from 'primevue/speeddial';
+import ConfirmPopup from 'primevue/confirmpopup';
 import TabView from 'primevue/tabview';
 import TabPanel from 'primevue/tabpanel';
 
@@ -57,7 +57,7 @@ Vue.component('InputNumber', InputNumber);
 Vue.component('ToggleButton', ToggleButton);
 Vue.component('Button', Button);
 Vue.component('Dialog', Dialog);
-Vue.component('SpeedDial', SpeedDial);
+Vue.component('ConfirmPopup', ConfirmPopup);
 Vue.component('TabView', TabView);
 Vue.component('TabPanel', TabPanel);
 

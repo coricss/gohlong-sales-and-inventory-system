@@ -33,11 +33,14 @@
                                             <div class="p-inputgroup flex-1">
                                                 <InputText 
                                                     placeholder="Scan Barcode or Enter Product ID" 
+                                                    v-model="search"
+                                                    @keyup.enter="search_item"
                                                 />
                                                 <Button 
                                                     icon="fas fa-barcode" 
                                                     severity="secondary"
                                                     style="width: 50px; border-radius: 0 5px 5px 0"
+                                                    @click="search_item"
                                                 />
                                             </div>
                                         </div>
@@ -51,7 +54,13 @@
                                             </div>
                                             <div class="col-6">
                                                 <div class="model_size text-dark">
-                                                    <h6 class="">qweq</h6>
+                                                    <h6 
+                                                        class=""
+                                                        style="word-break: break-all; white-space: normal;"
+                                                        v-html="product.product_id"
+                                                    >
+                                                        
+                                                    </h6>
                                                 </div>
                                             </div>
                                         </div>
@@ -63,7 +72,14 @@
                                             </div>
                                             <div class="col-6">
                                                 <div class="model_size text-dark">
-                                                    <h6 class="">qweq</h6>
+                                                    <h6 
+                                                        class=""
+                                                        style="word-break: break-all; white-space: normal;"
+                                                        v-html="product.model_size"
+                                                    >
+                                                    
+                                                    </h6>
+                                                    <!-- 175/65 R14 -->
                                                 </div>
                                             </div>
                                         </div>
@@ -75,7 +91,13 @@
                                             </div>
                                             <div class="col-6">
                                                 <div class="model_size text-dark">
-                                                    <h6 class="">qweq</h6>
+                                                    <h6 
+                                                        class=""
+                                                        style="word-break: break-all; white-space: normal;"
+                                                        v-html="product.brand"
+                                                    >
+                                                    
+                                                    </h6>
                                                 </div>
                                             </div>
                                         </div>
@@ -87,7 +109,13 @@
                                             </div>
                                             <div class="col-6">
                                                 <div class="model_size text-dark">
-                                                    <h6 class="">qweq</h6>
+                                                    <h6 
+                                                        class=""
+                                                        style="word-break: break-all; white-space: normal;"
+                                                        v-html="product.category"
+                                                    >
+                                                    
+                                                    </h6>
                                                 </div>
                                             </div>
                                         </div>
@@ -98,8 +126,60 @@
                                                 </div>
                                             </div>
                                             <div class="col-6">
+                                                <div class="model_size text-dark d-flex align-items-center">
+                                                    <span class="mr-1">&#8369;</span>
+                                                    <h6 
+                                                        class="m-0"
+                                                        style="word-break: break-all; white-space: normal;"
+                                                        v-html="product.price"
+                                                    >
+                                                    
+                                                    </h6>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="row mb-3 mt-3">
+                                            <div class="col-6">
                                                 <div class="model_size text-dark">
-                                                    <h6 class="">qweq</h6>
+                                                    <h6 class="font-weight-bold">Discounted Price:</h6>
+                                                </div>
+                                            </div>
+                                            <div class="col-6">
+                                                <div class="model_size text-dark d-flex align-items-center">
+                                                    <span class="mr-1">&#8369;</span>
+                                                    <h6 
+                                                        class="m-0"
+                                                        style="word-break: break-all; white-space: normal;"
+                                                        v-html="product.discounted_price"
+                                                    >
+                                                    
+                                                    </h6>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="row mb-3 mt-3">
+                                            <div class="col-6">
+                                                <div class="model_size text-dark">
+                                                    <h6 class="font-weight-bold">Stocks:</h6>
+                                                </div>
+                                            </div>
+                                            <div class="col-6">
+                                                <div class="model_size text-dark d-flex align-items-center">
+                                                    <h6 
+                                                        class="m-0"
+                                                        style="word-break: break-all; white-space: normal;"
+                                                        v-html="product.stocks"
+                                                        v-if="product.stocks > 0"
+                                                    >
+                                                    
+                                                    </h6>
+                                                    <h6 
+                                                        class="m-0 text-danger"
+                                                        style="word-break: break-all; white-space: normal;"
+                                                        v-else
+                                                    >
+                                                        Out of Stock
+                                                    </h6>
                                                 </div>
                                             </div>
                                         </div>
@@ -111,7 +191,7 @@
                                                         v-model="item_quantity" 
                                                         buttonLayout="horizontal"
                                                         showButtons 
-                                                        :min="0"
+                                                        :min="1"
                                                         decrementButtonClass="p-button-danger" 
                                                         incrementButtonClass="p-button-success" 
                                                         incrementButtonIcon="pi pi-plus" 
@@ -145,8 +225,8 @@
                                             <div class="col-md-12">
                                                 <div class="d-flex justify-content-center align-items-center flex-column">
                                                     <img src="@/assets/imgs/empty_item.png" alt="Empty" class="img-fluid" style="width: 230px; height: 230px">
-                                                    <h4 class="text-dark m-0">No Item</h4>
-                                                    <p class="text-dark m-0">Please scan barcode or enter product ID</p>
+                                                    <h4 class="text-dark m-0">No Item Found</h4>
+                                                    <p class="text-dark m-0">Please scan barcode or enter a valid product ID</p>
                                                 </div>
                                             </div>
                                         </div>
@@ -158,6 +238,7 @@
                                                 class="w-100 mt-3 rounded" 
                                                 size="large"
                                                 :disabled="!item_found"
+                                                @click="add_item"
                                             >
                                                 <i class="pi pi-plus mr-2"></i>
                                                 Add Item
@@ -176,8 +257,8 @@
                                 <div class="card-body">
                                     <DataTable
                                             class="table table-hover table-bordered table-sm text-dark display nowrap w-100"
-                                            id="inventory-management-table"
-                                            ref="inventory_table"
+                                            id="list-of-items"
+                                            ref="list_of_items"
                                             :data="items"
                                             :columns="columns"
                                             :options="{
@@ -204,18 +285,21 @@
                                                     className: 'text-center',
                                                 },
                                                 {
-                                                    targets: [1, 2, 3, 4, 5, 6, 7, 8],
+                                                    targets: [1, 2, 3, 4, 5, 6],
                                                     className: 'text-center align-middle',
                                                 },
                                                 {
-                                                    targets: 9,
+                                                    targets: 7,
+                                                    className: 'text-center align-middle data_total_price',
+                                                },
+                                                {
+                                                    targets: 8,
                                                     className: 'text-center',
                                                     orderable: false,
                                                 }
                                                 ],
                                                 order: [[ 0, 'asc' ]]
                                             }"
-                                            :initComplete="initComplete"
                                         >
                                             <thead class="bg-dark text-white">
                                                 <tr>
@@ -224,7 +308,6 @@
                                                     <th>Model/Size</th>
                                                     <th>Brand</th>
                                                     <th>Category</th>
-                                                    <th>Sold to</th>
                                                     <th>Price</th>
                                                     <th>Quantity</th>
                                                     <th>Total</th>
@@ -240,7 +323,7 @@
                                     <div class="row">
                                         <div class="col-6">
                                             <div class="d-flex justify-content-start align-items-center">
-                                                <h5 class="text-dark m-0">Total Products:</h5>
+                                                <h5 class="text-dark m-0">Total Items:</h5>
                                                 <h5 class="text-dark m-0 mx-2">
                                                     {{items.length}}
                                                 </h5>>
@@ -251,7 +334,7 @@
                                                 <h5 class="text-dark m-0">Total Price:</h5>
                                                 <h5 class="text-dark m-0 mx-2">
                                                     <span>&#8369;</span>
-                                                    {{ total_price }}
+                                                    {{ total_price.toFixed(2) }}
                                                 </h5>
                                             </div>
                                         </div>
@@ -264,6 +347,7 @@
                                                     class="w-50 mt-3 rounded" 
                                                     size="large"
                                                     :disabled="items.length == 0"
+                                                    @click="check_out_dialog = true"
                                                 >
                                                     <i class="pi pi-cart-plus mr-2" style="font-size: 18px"></i>
                                                     Checkout
@@ -277,6 +361,85 @@
                     </div>
                 </div>
             </section>
+            <Dialog v-model:visible="check_out_dialog" :style="{ width: '20vw' }" :modal="true" :closable="true" :dismissable-mask="true" :draggable="true" :resizable="true" :breakpoints="{ '960px': '75vw', '641px': '100vw' }" @hide="clear_payment">
+                <template #header>
+                    <div class="text-center">
+                        <h4 class="text-dark m-0 font-weight-bold">Checkout Items</h4>
+                    </div>
+                </template>
+                <div class="row">
+                    <div class="col-sm-12 mt-2">
+                        <div class="d-flex justify-content-center align-items-center flex-column">
+                            <!-- payment icon -->
+                            <i class="fas fa-money-check fa-5x text-orange"></i>
+                            <h1 class="text-orange m-0 mt-2 font-weight-bold" @click="payment=total_price" style="cursor: pointer">
+                                <span>&#8369;</span>
+                                {{ total_price.toFixed(2) }}
+                            </h1>
+
+                            <h6 class="text-dark m-0 mt-3">
+                                <span>Total Items:</span>
+                                {{ items.length }}
+                            </h6>
+                            <div class="flex-auto mt-3 w-100">
+                                <label for="integeronly" class="font-bold block"> Payment: </label>
+                                <InputNumber
+                                    @click="mark_value"
+                                    mode="currency"
+                                    currency="PHP"
+                                    label="Payment"
+                                    inputId="payment"
+                                    v-model="payment" 
+                                    style="width: 100%; height: 40px; font-size: 15px; word-break: break-all; white-space: normal;"
+                                />
+                            </div>
+                            <h5 class="text-dark m-0 mt-3" v-if="payment >= total_price">
+                                <span>Change: </span>
+                                <span>&#8369;</span>
+                                {{ (payment - total_price).toFixed(2) }}
+                            </h5>
+                            <h5 class="text-dark m-0 mt-3" v-else>
+                                <span>Balance Due: </span>
+                                <span>&#8369;</span>
+                                {{ (total_price - payment).toFixed(2) }}
+                            </h5>
+                            
+                            
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-sm-12 mt-4">
+                        <div class="d-flex justify-content-center align-items-center">
+                            <ConfirmPopup></ConfirmPopup>
+                            <Button 
+                                icon="pi pi-check"
+                                class="w-100 mt-2 mx-1 rounded" 
+                                size="large"
+                                :disabled="items.length == 0"
+                                @click="confirm_checkout($event)"
+                            >
+                                <i class="pi pi-check mr-2" style="font-size: 18px"></i>
+                                Checkout
+                            </Button>
+                            <Button
+                                icon="pi pi-check"
+                                class="w-100 mt-2 mx-1 rounded p-button-danger"
+                                size="large"
+                                :disabled="items.length == 0"
+                                @click="check_out_dialog = false"
+                            >
+                                <i class="pi pi-times mr-2" style="font-size: 18px"></i>
+                                Cancel
+                            </Button>
+                        </div>
+                    </div>
+                </div>
+                <!-- <template #footer>
+                    <Button label="No" icon="pi pi-times" @click="visible = false" text />
+                    <Button label="Yes" icon="pi pi-check" @click="visible = false" autofocus />
+                </template> -->
+            </Dialog>
         <FooterComponent />
     </div>
 </template>
@@ -292,136 +455,161 @@ import 'datatables.net-buttons/js/buttons.html5';
 import 'datatables.net-responsive';
 import 'datatables.net-select';
 
+DataTable.use(DataTablesCore);
+DataTable.use(Buttons);
+
 import { 
     ref,
     onMounted,
     watch
 } from "vue";
 
-DataTable.use(DataTablesCore);
-DataTable.use(Buttons);
+import { useConfirm } from "primevue/useconfirm";
+import { useToast } from "vue-toastification";
 
-const item_found = ref(false);
-const item_quantity = ref(0);
-const is_discounted = ref(false);
+const confirm = useConfirm();
+const toast = useToast();
 
-item_found.value = true;
-
-const items = ref([
-    {
-        count: 1,
-        product_id: '123',
-        model_size: '123',
-        brand: '123',
-        category: '123',
-        sold_to: '123',
-        price: 123,
-        quantity: '123',
-        total: 123.39,
-        action: '123',
-    },
-    {
-        count: 1,
-        product_id: '123',
-        model_size: '123',
-        brand: '123',
-        category: '123',
-        sold_to: '123',
-        price: 123,
-        quantity: '123',
-        total: 123.39,
-        action: '123',
-    },
-    {
-        count: 1,
-        product_id: '123',
-        model_size: '123',
-        brand: '123',
-        category: '123',
-        sold_to: '123',
-        price: 123,
-        quantity: '123',
-        total: 123.39,
-        action: '123',
-    },
-    {
-        count: 1,
-        product_id: '123',
-        model_size: '123',
-        brand: '123',
-        category: '123',
-        sold_to: '123',
-        price: 123,
-        quantity: '123',
-        total: 123.39,
-        action: '123',
-    },
-    {
-        count: 1,
-        product_id: '123',
-        model_size: '123',
-        brand: '123',
-        category: '123',
-        sold_to: '123',
-        price: 123,
-        quantity: '123',
-        total: 123.39,
-        action: '123',
-    },
-    {
-        count: 1,
-        product_id: '123',
-        model_size: '123',
-        brand: '123',
-        category: '123',
-        sold_to: '123',
-        price: 123,
-        quantity: '123',
-        total: 123.39,
-        action: '123',
-    },
-    {
-        count: 1,
-        product_id: '123',
-        model_size: '123',
-        brand: '123',
-        category: '123',
-        sold_to: '123',
-        price: 123,
-        quantity: '123',
-        total: 123.39,
-        action: '123',
-    },
-    {
-        count: 1,
-        product_id: '123',
-        model_size: '123',
-        brand: '123',
-        category: '123',
-        sold_to: '123',
-        price: 123,
-        quantity: '123',
-        total: 123.39,
-        action: '123',
-    },
+const search = ref(null);
+const product = ref([
+    product_id => null,
+    model_size => null,
+    brand => null,
+    category => null,
+    price => 0,
+    discounted_price => 0,
+    quantity => null,
+    is_discounted => false,
+    stocks => null,
 ]);
 
-
+const items = ref([]);
+const item_found = ref(false);
+const item_quantity = ref(1);
+const is_discounted = ref(false);
 const total_price = ref(0);
+const check_out_dialog = ref(false);
+const payment = ref(0);
+const change = ref(0);
 
-items.value.forEach(item => {
-    total_price.value += item.total;
-});
+const confirm_checkout = (event) => {
+    confirm.require({
+        target: event.currentTarget,
+        message: 'Are you sure you want to checkout?',
+        icon: 'pi pi-question-circle',
+        position: 'topleft',
+        acceptLabel: 'Yes, checkout!',
+        rejectLabel: 'No',
+        acceptClass: 'p-button-success p-button-sm rounded mx-1',
+        rejectClass: 'p-button-danger p-button-sm rounded mx-1',
+        accept: () => {
+            loadToast('test', 'success');
+        },
+        reject: () => {
+            loadToast('test', 'error');
+        },
+       
+    });
+}
 
+const search_item = () => {
+    if(search.value == null || search.value == '') {
+        item_found.value = false;
+    } else {
+        /* search function */
+        product.value.product_id = search.value;
+        product.value.model_size = '175/65 R14';
+        product.value.brand = 'ACHILLES';
+        product.value.category = 'Tires';
+        product.value.price = 1950.00;
+        product.value.discounted_price = 1859.52;
+       /*  product.value.quantity = item_quantity.value; */
+        product.value.is_discounted = is_discounted.value;
+        product.value.stocks = 10;
 
+        item_found.value = true;
+    }
+}
 
+const add_item = () => {
+
+    /*
+    * If stocks = 0 then return out of stock
+    * else if stocks < item_quantity then item_quantity = stocks
+    * then stocks -= item_quantity
+    */
+
+    if(product.value.stocks == 0) {
+        loadToast('Item is out of stock', 'error');
+    } else {
+        
+        if(product.value.stocks < item_quantity.value) {
+            item_quantity.value = product.value.stocks;
+        }
+
+        product.value.stocks -= item_quantity.value;
+
+        /* find product.value.product_id in items */
+        const item_index = items.value.findIndex(item => item.product_id == product.value.product_id);
+        
+        if(item_index != -1) {
+            items.value[item_index].quantity += item_quantity.value;
+            items.value[item_index].total = is_discounted.value ? product.value.discounted_price * items.value[item_index].quantity : product.value.price * items.value[item_index].quantity;
+        } else {
+            items.value.push({
+                id: items.value.length + 1,
+                product_id: product.value.product_id,
+                model_size: product.value.model_size,
+                brand: product.value.brand,
+                category: product.value.category,
+                price: product.value.price,
+                quantity: item_quantity.value,
+                total: is_discounted.value ? product.value.discounted_price * item_quantity.value : product.value.price * item_quantity.value,
+                action: '<button class="btn btn-sm btn-danger btn-remove-item"><i class="fas fa-trash"></i></button>',
+            });
+        }
+        
+        const total_price_of_column = items.value.reduce((accumulator, item) => {
+            return accumulator + item.total;
+        }, 0);
+
+        total_price.value = total_price_of_column;
+
+    }
+}
+
+const remove_item = () => {
+    const items_table = document.getElementById('list-of-items');
+
+    items_table.addEventListener('click', function(e) {
+        if(e.target.classList.contains('btn-remove-item') || e.target.classList.contains('fa-trash')) {
+            const item_id = e.target.parentElement.parentElement.children[0].innerText;
+            const item_index = items.value.findIndex(item => item.id == item_id);
+            items.value.splice(item_index, 1);
+        }
+    });
+
+}
+
+const mark_value = () => {
+    const payment_input = document.getElementById('payment');
+    payment_input.select();
+}
+
+const clear_payment = () => {
+    payment.value = 0;
+}
+
+const check_out = () => {
+
+}
 
 const columns = ref([
     {
         /* count */
         data: null,
         render: function (data, type, row, meta) {
-            return meta.row + meta.settings._iDisplayStart + 1;
+            return meta.row + 1;
         }
     },  
     {
@@ -437,16 +625,19 @@ const columns = ref([
         data: "category",
     },
     {
-        data: "sold_to",
-    },
-    {
         data: "price",
+        render: function (data, type, row, meta) {
+            return '<span>&#8369;</span> ' + data.toFixed(2);
+        }
     },
     {
         data: "quantity",
     },
     {
         data: "total",
+        render: function (data, type, row, meta) {
+            return '<span>&#8369; </span>' + data.toFixed(2);
+        }
     },
     {
         data: "action",
@@ -484,14 +675,36 @@ const buttons = ref([
 ]);
 
 const lengthMenu = ref([
-    [  -1, 10, 25, 50 ],
+    [ 10, 25, 50, -1, ],
     [ 
-    'Show all',
-    '10 rows', 
-    '25 rows', 
-    '50 rows'
+        '10 rows', 
+        '25 rows', 
+        '50 rows',
+        'Show all',
     ]
 ]);
+
+const loadToast = (message, type) => {
+      toast(message, {
+          timeout: 2000,
+          type: type,
+          position: 'top-right',
+          closeOnClick: true,
+          pauseOnFocusLoss: true,
+          pauseOnHover: true,
+          newestOnTop: true,
+          draggable: true,
+          draggablePercent: 0.6,
+          dangerouslyHTMLString: true,
+          showCloseButtonOnHover: false,
+          hideProgressBar: true,
+          closeButton: false,
+          icon: true,
+          rtl: false,
+          theme: 'colored',
+          transition: 'bounce'
+      });
+    };
 
 const windowResize = () => {
     window.addEventListener('resize', function() {
@@ -500,9 +713,14 @@ const windowResize = () => {
     });
 };
 
-const initComplete = (settings, json) => {
+/* const initComplete = (settings, json) => {
+    
+}; */
+
+onMounted(() => {
     windowResize();
-};
+    remove_item();
+});
 
 </script>
 

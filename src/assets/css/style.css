@@ -111,6 +111,12 @@ input.form-control:focus {
     box-shadow: none 
 }
 
+.p-dialog-header-icon.p-dialog-header-close.p-link {
+    outline: none;
+    border: none;
+    box-shadow: none 
+}
+
 .p-inputtext:focus{
     border-color: #f58634;
     box-shadow: none;
