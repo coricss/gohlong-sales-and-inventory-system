@@ -26,8 +26,8 @@
                                     <div class="card-body" style="display: block;">
                                         <DataTable
                                             class="table table-hover table-bordered table-sm text-dark display nowrap w-100"
-                                            id="inventory-management-table"
-                                            ref="inventory_table"
+                                            id="brands-management-table"
+                                            ref="brands_table"
                                             :data="items"
                                             :columns="columns"
                                             :options="{
@@ -122,8 +122,7 @@ const counter = ref(0);
 }; */
 const items = ref([
     {
-        count:1,
-        id:"4",
+        id:1,
         model_size:"32",
         brand:"hkhj",
         category:"eqweq",
@@ -133,12 +132,10 @@ const items = ref([
         total_stock_price:"Php 4",
         total_stock_discounted_price:"Php 46",
         created_at:"12\/09\/2023 02:14 PM",
-        updated_at:"07\/09\/2023 10:12 PM",
-        action:"<button class=\"btn btn-sm btn-primary\" id=\"btn-edit\" data-toggle=\"modal\" data-target=\"#edit-user-modal\"><i class=\"fas fa-edit\"></i></button> <button class=\"btn btn-sm btn-danger\" id=\"btn-delete\"><i class=\"fas fa-trash\"></i></button>",
+        updated_at:"07\/09\/2023 10:12 PM"
     },
     {
-        count:1,
-        id:"4",
+        id:2,
         model_size:"32",
         brand:"hkhj",
         category:"eqweq",
@@ -148,8 +145,7 @@ const items = ref([
         total_stock_price:"Php 4",
         total_stock_discounted_price:"Php 46",
         created_at:"12\/09\/2023 02:14 PM",
-        updated_at:"07\/09\/2023 10:12 PM",
-        action:"<button class=\"btn btn-sm btn-primary\" id=\"btn-edit\" data-toggle=\"modal\" data-target=\"#edit-user-modal\"><i class=\"fas fa-edit\"></i></button> <button class=\"btn btn-sm btn-danger\" id=\"btn-delete\"><i class=\"fas fa-trash\"></i></button>",
+        updated_at:"07\/09\/2023 10:12 PM"
     }
 ]);
 
@@ -175,7 +171,23 @@ const columns = ref([
         data: "updated_at",
     },
     {
-        data: "action",
+        data: "id",
+        render: function (data, type, row) {
+
+            var btn_edit_category = document.createElement("button");
+            btn_edit_category.setAttribute("class", "btn btn-sm btn-primary btn-edit-category");
+            btn_edit_category.setAttribute("data-id", data);
+            btn_edit_category.innerHTML = `<i class=\"fas fa-edit\" data-id="${data}"></i>`;
+
+
+            var btn_delete_category = document.createElement("button");
+            btn_delete_category.setAttribute("class", "btn btn-sm btn-danger btn-delete-category");
+            btn_delete_category.setAttribute("data-id", data);
+            btn_delete_category.innerHTML = `<i class=\"fas fa-trash\" data-id="${data}"></i>`;
+
+            return '<center>'+btn_edit_category.outerHTML+' '+btn_delete_category.outerHTML+'</center>';
+
+        }
     },
 
 ])

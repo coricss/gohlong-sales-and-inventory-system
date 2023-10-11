@@ -26,8 +26,8 @@
                                     <div class="card-body" style="display: block;">
                                         <DataTable
                                             class="table table-hover table-bordered table-sm text-dark display nowrap w-100"
-                                            id="inventory-management-table"
-                                            ref="inventory_table"
+                                            id="product-management-table"
+                                            ref="product_table"
                                             :data="items"
                                             :columns="columns"
                                             :options="{
@@ -53,11 +53,11 @@
                                                     className: 'text-center',
                                                 },
                                                 {
-                                                    targets: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10],
+                                                    targets: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11],
                                                     className: 'text-center align-middle',
                                                 },
                                                 {
-                                                    targets: 11,
+                                                    targets: 12,
                                                     className: 'text-center',
                                                     orderable: false,
                                                 }
@@ -68,6 +68,7 @@
                                             <thead class="bg-dark text-white">
                                                 <tr>
                                                     <th>#</th>
+                                                    <th>Product ID</th>
                                                     <th>Model/Size</th>
                                                     <th>Brand</th>
                                                     <th>Category</th>
@@ -128,8 +129,8 @@ const counter = ref(0);
 }; */
 const items = ref([
     {
-        count:1,
-        id:"4",
+        id:1,
+        product_id: '123456',
         model_size:"32",
         brand:"hkhj",
         category:"eqweq",
@@ -139,12 +140,12 @@ const items = ref([
         total_stock_price:"Php 4",
         total_stock_discounted_price:"Php 46",
         created_at:"12\/09\/2023 02:14 PM",
-        updated_at:"07\/09\/2023 10:12 PM",
-        action:"<button class=\"btn btn-sm btn-primary\" id=\"btn-edit\" data-toggle=\"modal\" data-target=\"#edit-user-modal\"><i class=\"fas fa-edit\"></i></button> <button class=\"btn btn-sm btn-danger\" id=\"btn-delete\"><i class=\"fas fa-trash\"></i></button>",
+        updated_at:"07\/09\/2023 10:12 PM"
+        
     },
     {
-        count:1,
-        id:"4",
+        id:2,
+        product_id: '654321',
         model_size:"32",
         brand:"hkhj",
         category:"eqweq",
@@ -154,8 +155,8 @@ const items = ref([
         total_stock_price:"Php 4",
         total_stock_discounted_price:"Php 46",
         created_at:"12\/09\/2023 02:14 PM",
-        updated_at:"07\/09\/2023 10:12 PM",
-        action:"<button class=\"btn btn-sm btn-primary\" id=\"btn-edit\" data-toggle=\"modal\" data-target=\"#edit-user-modal\"><i class=\"fas fa-edit\"></i></button> <button class=\"btn btn-sm btn-danger\" id=\"btn-delete\"><i class=\"fas fa-trash\"></i></button>",
+        updated_at:"07\/09\/2023 10:12 PM"
+        
     }
 ]);
 
@@ -167,6 +168,9 @@ const columns = ref([
         render: function (data, type, row, meta) {
             return meta.row + meta.settings._iDisplayStart + 1;
         }
+    },
+    {
+        data: "product_id",
     },
     {
         data: "model_size",
@@ -199,7 +203,23 @@ const columns = ref([
         data: "updated_at",
     },
     {
-        data: "action",
+        data: "id",
+        render: function (data, type, row) {
+
+            var btn_edit_product = document.createElement("button");
+            btn_edit_product.setAttribute("class", "btn btn-sm btn-primary btn-edit-product");
+            btn_edit_product.setAttribute("data-id", data);
+            btn_edit_product.innerHTML = `<i class=\"fas fa-edit\" data-id="${data}"></i>`;
+
+
+            var btn_delete_product = document.createElement("button");
+            btn_delete_product.setAttribute("class", "btn btn-sm btn-danger btn-delete-product");
+            btn_delete_product.setAttribute("data-id", data);
+            btn_delete_product.innerHTML = `<i class=\"fas fa-trash\" data-id="${data}"></i>`;
+
+            return '<center>'+btn_edit_product.outerHTML+' '+btn_delete_product.outerHTML+'</center>';
+
+        }
     },
 
 ])
