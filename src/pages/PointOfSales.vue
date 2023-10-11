@@ -328,7 +328,7 @@
                                                 <h5 class="text-dark m-0">Total Items:</h5>
                                                 <h5 class="text-dark m-0 mx-2">
                                                     {{items.length}}
-                                                </h5>>
+                                                </h5>
                                             </div>
                                         </div>
                                         <div class="col-6">
