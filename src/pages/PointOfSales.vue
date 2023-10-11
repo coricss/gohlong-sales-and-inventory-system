@@ -35,6 +35,7 @@
                                                     placeholder="Scan Barcode or Enter Product ID" 
                                                     v-model="search"
                                                     @keyup.enter="search_item"
+                                                    @keydown.space.prevent
                                                 />
                                                 <Button 
                                                     icon="fas fa-barcode" 
@@ -231,13 +232,13 @@
                                             </div>
                                         </div>
                                     </div>
-                                    <div class="row mt-3">
+                                    <div class="row">
                                         <div class="col-md-12">
                                             <Button 
                                                 icon="fas fa-plus"
                                                 class="w-100 mt-3 rounded" 
                                                 size="large"
-                                                :disabled="!item_found"
+                                                :disabled="!item_found || product.stocks == 0"
                                                 @click="add_item"
                                             >
                                                 <i class="pi pi-plus mr-2"></i>
@@ -255,6 +256,7 @@
                                     <h4 class="text-dark" style="font-weight: 600">List of Items</h4>
                                 </div>
                                 <div class="card-body">
+                                    <ConfirmPopup id="confirm_remove_all"></ConfirmPopup>
                                     <DataTable
                                             class="table table-hover table-bordered table-sm text-dark display nowrap w-100"
                                             id="list-of-items"
@@ -361,7 +363,7 @@
                     </div>
                 </div>
             </section>
-            <Dialog v-model:visible="check_out_dialog" :style="{ width: '20vw' }" :modal="true" :closable="true" :dismissable-mask="true" :draggable="true" :resizable="true" :breakpoints="{ '960px': '75vw', '641px': '100vw' }" @hide="clear_payment">
+            <Dialog v-model:visible="check_out_dialog" :modal="true" :closable="true" :dismissable-mask="true" :draggable="true" :resizable="true"  @hide="clear_payment">
                 <template #header>
                     <div class="text-center">
                         <h4 class="text-dark m-0 font-weight-bold">Checkout Items</h4>
@@ -371,7 +373,7 @@
                     <div class="col-sm-12 mt-2">
                         <div class="d-flex justify-content-center align-items-center flex-column">
                             <!-- payment icon -->
-                            <i class="fas fa-money-check fa-5x text-orange"></i>
+                            <img src="@/assets/imgs/credit_card.png" alt="Empty" class="img-fluid mr-3" style="width: 200px; height: 200px">
                             <h1 class="text-orange m-0 mt-2 font-weight-bold" @click="payment=total_price" style="cursor: pointer">
                                 <span>&#8369;</span>
                                 {{ total_price.toFixed(2) }}
@@ -382,7 +384,19 @@
                                 {{ items.length }}
                             </h6>
                             <div class="flex-auto mt-3 w-100">
-                                <label for="integeronly" class="font-bold block"> Payment: </label>
+                                <label for="customer_name" class="font-bold block"> Customer Name: </label>
+                                <InputText
+                                    placeholder="Enter customer name"
+                                    ref="input_customer_name"
+                                    id="customer_name"
+                                    v-model="customer_name" 
+                                    style="width: 100%; height: 40px; font-size: 15px; word-break: break-all; white-space: normal;"
+                                    @keydown.space.prevent
+                                    autofocus
+                                />
+                            </div>
+                            <div class="flex-auto mt-3 w-100">
+                                <label for="payment" class="font-bold block"> Payment: </label>
                                 <InputNumber
                                     @click="mark_value"
                                     mode="currency"
@@ -411,26 +425,27 @@
                 <div class="row">
                     <div class="col-sm-12 mt-4">
                         <div class="d-flex justify-content-center align-items-center">
-                            <ConfirmPopup></ConfirmPopup>
+                            <ConfirmPopup id="confirm_checkout"></ConfirmPopup>
                             <Button 
+                               
                                 icon="pi pi-check"
                                 class="w-100 mt-2 mx-1 rounded" 
                                 size="large"
                                 :disabled="items.length == 0"
                                 @click="confirm_checkout($event)"
                             >
-                                <i class="pi pi-check mr-2" style="font-size: 18px"></i>
-                                Checkout
+                                <span><i class="pi pi-check mr-2" style="font-size: 15px"></i></span>
+                                <span>Checkout</span>
                             </Button>
                             <Button
                                 icon="pi pi-check"
-                                class="w-100 mt-2 mx-1 rounded p-button-danger"
+                                class="w-100 mt-2 mx-1 rounded p-button-danger d-flex justify-content-center align-items-center"
                                 size="large"
                                 :disabled="items.length == 0"
                                 @click="check_out_dialog = false"
                             >
-                                <i class="pi pi-times mr-2" style="font-size: 18px"></i>
-                                Cancel
+                                <span><i class="pi pi-times mr-2" style="font-size: 15px"></i></span>
+                                <span>Cancel</span>
                             </Button>
                         </div>
                     </div>
@@ -489,27 +504,44 @@ const item_quantity = ref(1);
 const is_discounted = ref(false);
 const total_price = ref(0);
 const check_out_dialog = ref(false);
+const input_customer_name = ref();
+const customer_name = ref(null);
 const payment = ref(0);
 const change = ref(0);
 
 const confirm_checkout = (event) => {
-    confirm.require({
-        target: event.currentTarget,
-        message: 'Are you sure you want to checkout?',
-        icon: 'pi pi-question-circle',
-        position: 'topleft',
-        acceptLabel: 'Yes, checkout!',
-        rejectLabel: 'No',
-        acceptClass: 'p-button-success p-button-sm rounded mx-1',
-        rejectClass: 'p-button-danger p-button-sm rounded mx-1',
-        accept: () => {
-            loadToast('test', 'success');
-        },
-        reject: () => {
-            loadToast('test', 'error');
-        },
-       
-    });
+    if(customer_name.value == '' || customer_name.value == null) {
+        loadToast('Please enter customer name', 'error');
+        document.getElementById('customer_name').focus();
+    }
+    else if(payment.value < total_price.value) {
+        loadToast('Insufficient payment', 'error');
+        document.getElementById('payment').click();
+    } else {
+        confirm.require({
+            target: event.currentTarget,
+            message: 'Are you sure you want to checkout?',
+            icon: 'pi pi-question-circle',
+            position: 'topleft',
+            acceptLabel: 'Yes, checkout!',
+            rejectLabel: 'No',
+            acceptClass: 'p-button-success p-button-sm rounded mx-1',
+            rejectClass: 'p-button-danger p-button-sm rounded mx-1',
+            accept: () => {
+                loadToast('Checkout successful', 'success');
+                check_out_dialog.value = false;
+                clear_payment();
+                items.value = [];
+                total_price.value = 0;
+                item_found.value = false;
+                search.value = null;
+            },
+            reject: () => {
+                /* loadToast('test', 'error'); */
+            },
+        });
+    }
+    
 }
 
 const search_item = () => {
@@ -526,6 +558,13 @@ const search_item = () => {
        /*  product.value.quantity = item_quantity.value; */
         product.value.is_discounted = is_discounted.value;
         product.value.stocks = 10;
+
+        items.value.forEach(item => {
+            if(item.product_id == product.value.product_id) {
+                item_found.value = true;
+                product.value.stocks = product.value.stocks - item.quantity;
+            }
+        });
 
         item_found.value = true;
     }
@@ -565,7 +604,6 @@ const add_item = () => {
                 price: product.value.price,
                 quantity: item_quantity.value,
                 total: is_discounted.value ? product.value.discounted_price * item_quantity.value : product.value.price * item_quantity.value,
-                action: '<button class="btn btn-sm btn-danger btn-remove-item"><i class="fas fa-trash"></i></button>',
             });
         }
         
@@ -575,6 +613,8 @@ const add_item = () => {
 
         total_price.value = total_price_of_column;
 
+        item_found.value = false;
+
     }
 }
 
@@ -583,9 +623,12 @@ const remove_item = () => {
 
     items_table.addEventListener('click', function(e) {
         if(e.target.classList.contains('btn-remove-item') || e.target.classList.contains('fa-trash')) {
-            const item_id = e.target.parentElement.parentElement.children[0].innerText;
+            const item_id = e.target.getAttribute('data-id');
             const item_index = items.value.findIndex(item => item.id == item_id);
             items.value.splice(item_index, 1);
+            total_price.value = items.value.reduce((accumulator, item) => {
+                return accumulator + item.total;
+            }, 0);
         }
     });
 
@@ -597,6 +640,7 @@ const mark_value = () => {
 }
 
 const clear_payment = () => {
+    customer_name.value = null;
     payment.value = 0;
 }
 
@@ -640,12 +684,64 @@ const columns = ref([
         }
     },
     {
-        data: "action",
+        data: "id",
+        render: function (data, type, row) {
+            var btn_remove_item = document.createElement("button");
+            btn_remove_item.setAttribute("class", "btn btn-sm btn-danger btn-remove-item");
+            btn_remove_item.setAttribute("data-id", data);
+            btn_remove_item.innerHTML = `<i class=\"fas fa-trash\" data-id="${data}"></i>`;
+
+            return '<center>'+btn_remove_item.outerHTML+'</center>';
+
+        }
     },
 
 ]);
 
+const confirm_remove_all = (event) => {
+    confirm.require({
+        target: event.currentTarget,
+        message: 'Are you sure you want to remove all items?',
+        icon: 'pi pi-question-circle',
+        position: 'topleft',
+        acceptLabel: 'Yes, remove all items!',
+        rejectLabel: 'No',
+        acceptClass: 'p-button-success p-button-sm rounded mx-1',
+        rejectClass: 'p-button-danger p-button-sm rounded mx-1',
+        accept: () => {
+           loadToast('Removed all items', 'success');
+            items.value = [];
+            total_price.value = 0;
+            item_found.value = false;
+            search.value = null;
+        },
+        reject: () => {
+           /*  loadToast('Cancelled', 'error'); */
+        }
+    });
+}
+
 const buttons = ref([
+    {
+        text: '<i class="fas fa-trash fa-sm"></i> Remove All',
+        titleAttr: 'Remove all items',
+        className: 'btn btn-sm btn-danger',
+        attr:  {
+            id: 'btn-remove'
+        },
+        init: function (api, node, config) {
+            node.removeClass('dt-button');
+        },
+        action: function ( e, dt, node, config ) {
+            var count = dt.rows().count();
+            if(count == 0) {
+                loadToast('No items to remove', 'error');
+            } else {
+                confirm_remove_all(e);
+               
+            }
+        }
+    },
     {
         text: '<i class="fas fa-sync fa-sm"></i> Refresh',
         titleAttr: 'Show entries',
