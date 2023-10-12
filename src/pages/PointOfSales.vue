@@ -42,6 +42,7 @@
                                                     severity="secondary"
                                                     style="width: 50px; border-radius: 0 5px 5px 0"
                                                     @click="search_item"
+                                                    :loading="search_loading"
                                                 />
                                             </div>
                                         </div>
@@ -280,25 +281,25 @@
                                                 lengthChange:   false,
                                                 info:           false,
                                                 columnDefs: [
-                                                { responsivePriority: 1, targets: 0 },
-                                                { responsivePriority: 2, targets: -1 },
-                                                {
-                                                    targets: 0,
-                                                    className: 'text-center',
-                                                },
-                                                {
-                                                    targets: [1, 2, 3, 4, 5, 6],
-                                                    className: 'text-center align-middle',
-                                                },
-                                                {
-                                                    targets: 7,
-                                                    className: 'text-center align-middle data_total_price',
-                                                },
-                                                {
-                                                    targets: 8,
-                                                    className: 'text-center',
-                                                    orderable: false,
-                                                }
+                                                    { responsivePriority: 1, targets: 0 },
+                                                    { responsivePriority: 2, targets: -1 },
+                                                    {
+                                                        targets: 0,
+                                                        className: 'text-center',
+                                                    },
+                                                    {
+                                                        targets: [1, 2, 3, 4, 5, 6],
+                                                        className: 'text-center align-middle',
+                                                    },
+                                                    {
+                                                        targets: 7,
+                                                        className: 'text-center align-middle data_total_price',
+                                                    },
+                                                    {
+                                                        targets: 8,
+                                                        className: 'text-center',
+                                                        orderable: false,
+                                                    }
                                                 ],
                                                 order: [[ 0, 'asc' ]]
                                             }"
@@ -312,7 +313,7 @@
                                                     <th>Category</th>
                                                     <th>Price</th>
                                                     <th>Quantity</th>
-                                                    <th>Total</th>
+                                                    <th>Subtotal</th>
                                                     <th>Action</th>
                                                 </tr>
                                             </thead>
@@ -507,7 +508,6 @@ const check_out_dialog = ref(false);
 const input_customer_name = ref();
 const customer_name = ref(null);
 const payment = ref(0);
-const change = ref(0);
 
 const confirm_checkout = (event) => {
     if(customer_name.value == '' || customer_name.value == null) {
@@ -543,31 +543,37 @@ const confirm_checkout = (event) => {
     }
     
 }
-
+const search_loading = ref(false);
 const search_item = () => {
-    if(search.value == null || search.value == '') {
-        item_found.value = false;
-    } else {
-        /* search function */
-        product.value.product_id = search.value;
-        product.value.model_size = '175/65 R14';
-        product.value.brand = 'ACHILLES';
-        product.value.category = 'Tires';
-        product.value.price = 1950.00;
-        product.value.discounted_price = 1859.52;
-       /*  product.value.quantity = item_quantity.value; */
-        product.value.is_discounted = is_discounted.value;
-        product.value.stocks = 10;
+    search_loading.value = true;
+    setTimeout(() => {
+        if(search.value == null || search.value == '') {
+            item_found.value = false;
+        } else {
+        
+            /* search function */
+            product.value.product_id = search.value;
+            product.value.model_size = '175/65 R14';
+            product.value.brand = 'ACHILLES';
+            product.value.category = 'Tires';
+            product.value.price = 1950.00;
+            product.value.discounted_price = 1859.52;
+        /*  product.value.quantity = item_quantity.value; */
+            product.value.is_discounted = is_discounted.value;
+            product.value.stocks = 10;
 
-        items.value.forEach(item => {
-            if(item.product_id == product.value.product_id) {
-                item_found.value = true;
-                product.value.stocks = product.value.stocks - item.quantity;
-            }
-        });
+            items.value.forEach(item => {
+                if(item.product_id == product.value.product_id) {
+                    item_found.value = true;
+                    product.value.stocks = product.value.stocks - item.quantity;
+                }
+            });
 
-        item_found.value = true;
-    }
+            item_found.value = true; 
+        }
+
+        search_loading.value = false;
+    }, 1000);
 }
 
 const add_item = () => {
@@ -593,9 +599,9 @@ const add_item = () => {
         
         if(item_index != -1) {
             items.value[item_index].quantity += item_quantity.value;
-            items.value[item_index].total = is_discounted.value ? product.value.discounted_price * items.value[item_index].quantity : product.value.price * items.value[item_index].quantity;
+            items.value[item_index].subtotal = is_discounted.value ? product.value.discounted_price * items.value[item_index].quantity : product.value.price * items.value[item_index].quantity;
         } else {
-            items.value.push({
+            /* items.value.push({
                 id: items.value.length + 1,
                 product_id: product.value.product_id,
                 model_size: product.value.model_size,
@@ -603,16 +609,28 @@ const add_item = () => {
                 category: product.value.category,
                 price: product.value.price,
                 quantity: item_quantity.value,
-                total: is_discounted.value ? product.value.discounted_price * item_quantity.value : product.value.price * item_quantity.value,
+                subtotal: is_discounted.value ? product.value.discounted_price * item_quantity.value : product.value.price * item_quantity.value,
+            }); */
+
+            /* push to items.value and reverse it */
+            items.value.unshift({
+                id: items.value.length + 1,
+                product_id: product.value.product_id,
+                model_size: product.value.model_size,
+                brand: product.value.brand,
+                category: product.value.category,
+                price: product.value.price,
+                quantity: item_quantity.value,
+                subtotal: is_discounted.value ? product.value.discounted_price * item_quantity.value : product.value.price * item_quantity.value,
             });
         }
         
         const total_price_of_column = items.value.reduce((accumulator, item) => {
-            return accumulator + item.total;
+            return accumulator + item.subtotal;
         }, 0);
 
         total_price.value = total_price_of_column;
-
+        search.value = null;
         item_found.value = false;
 
     }
@@ -627,7 +645,7 @@ const remove_item = () => {
             const item_index = items.value.findIndex(item => item.id == item_id);
             items.value.splice(item_index, 1);
             total_price.value = items.value.reduce((accumulator, item) => {
-                return accumulator + item.total;
+                return accumulator + item.subtotal;
             }, 0);
         }
     });
@@ -678,7 +696,7 @@ const columns = ref([
         data: "quantity",
     },
     {
-        data: "total",
+        data: "subtotal",
         render: function (data, type, row, meta) {
             return '<span>&#8369; </span>' + data.toFixed(2);
         }
