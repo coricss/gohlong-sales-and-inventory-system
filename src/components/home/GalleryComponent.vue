@@ -9,7 +9,7 @@
                 </div>
                 <div class="row mt-3">
                     <div class="image-gallery-wraper">
-                    <ul class="image-gallery">
+                    <ul class="image-gallery p-0">
                         <li>
                         <img src="https://source.unsplash.com/VWcPlbHglYc" alt="" />
                         <div class="overlay"><span>Image title</span></div>

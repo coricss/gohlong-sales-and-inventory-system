@@ -367,7 +367,7 @@
             <Dialog v-model:visible="check_out_dialog" :modal="true" :closable="true" :dismissable-mask="true" :draggable="true" :resizable="true"  @hide="clear_payment">
                 <template #header>
                     <div class="text-center">
-                        <h4 class="text-dark m-0 font-weight-bold">Checkout Items</h4>
+                        <h4 class="m-0 font-weight-bold">Checkout Items</h4>
                     </div>
                 </template>
                 <div class="row">
@@ -418,8 +418,6 @@
                                 <span>&#8369;</span>
                                 {{ (total_price - payment).toFixed(2) }}
                             </h5>
-                            
-                            
                         </div>
                     </div>
                 </div>
@@ -451,10 +449,142 @@
                         </div>
                     </div>
                 </div>
-                <!-- <template #footer>
-                    <Button label="No" icon="pi pi-times" @click="visible = false" text />
-                    <Button label="Yes" icon="pi pi-check" @click="visible = false" autofocus />
-                </template> -->
+            </Dialog>
+            <Dialog class="invoice-dialog" v-model:visible="invoice_visible" :modal="true" :closable="true" :style="{ width: '1000px' }" :dismissable-mask="true" :draggable="true" :resizable="true" wi  @hide="">
+                <template #header>
+                    <div class="text-center invoice_header">
+                        <h4 class="m-0 font-weight-bold">Invoice</h4>
+                    </div>
+                </template>
+                <div class="body p-4" id="invoice-body">
+                    <div class="row">
+                        <div class="col-sm-12">
+                            <div class="company-logo text-center">
+                                <img src="@/assets/imgs/logos/gohlong-logo.png" alt="Company Logo" class="img-fluid" style="width: 280px; height: 100px; pointer-events: none;">
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row mt-3">
+                        <div class="col-sm-4 mt-2">
+                            <div class="d-flex justify-content-between align-items-center">
+                                <div class="flex-auto">
+                                    <h6 class="text-dark m-0">
+                                        <span>Billing to: </span>
+                                        <strong class="text-uppercase">{{ customer_name }}</strong>
+                                    </h6>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-sm-4 mt-2">
+                            <div class="d-flex justify-content-between align-items-center">
+                                <div class="flex-auto">
+                                    <h6 class="text-dark m-0">
+                                        <span>Date of Issue: </span>
+                                        <strong>{{ new Date().toLocaleDateString() }}</strong>
+                                    </h6>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-sm-4 mt-2">
+                            <div class="invoice-total text-md-right">
+                                <h6>Invoice Total: </h6>
+                                <h1>
+                                    <strong>
+                                        <span>&#8369;</span>
+                                        {{ total_price.toFixed(2) }}
+                                    </strong>
+                                </h1>
+                            </div>
+                        </div>
+                    </div>
+                    <hr class="mt-4 mb-1" style="border-top: 3px solid #ff7300">
+                    <div class="row">
+                        <div class="col-sm-12">
+                            <div class="table-responsive">
+                                <table class="table table-bordered table-sm text-dark display nowrap w-100" id="table-invoice">
+                                    <thead class="text-orange">
+                                        <tr>
+                                            <th>#</th>
+                                            <th>Product ID</th>
+                                            <th>Model/Size</th>
+                                            <th>Brand</th>
+                                            <th>Category</th>
+                                            <th>Price</th>
+                                            <th>Quantity</th>
+                                            <th>Subtotal</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr v-for="(item, index) in items" :key="index">
+                                            <td class="text-center">{{ index + 1 }}</td>
+                                            <td class="text-center">{{ item.product_id }}</td>
+                                            <td class="text-center">{{ item.model_size }}</td>
+                                            <td class="text-center">{{ item.brand }}</td>
+                                            <td class="text-center">{{ item.category }}</td>
+                                            <td class="text-center">
+                                                <span>&#8369;</span>
+                                                {{ item.price.toFixed(2) }}
+                                            </td>
+                                            <td class="text-center">{{ item.quantity }}</td>
+                                            <td class="text-center">
+                                                <span>&#8369;</span>
+                                                {{ item.subtotal.toFixed(2) }}
+                                            </td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                     <div class="row">
+                        <div class="col-sm-12">
+                            <div class="payment-summary text-md-right">
+                                <h5>
+                                    Payment: 
+                                    <strong>
+                                        <span>&#8369;</span>
+                                        {{ payment.toFixed(2) }}
+                                    </strong>
+                                </h5>
+                            </div>
+                        </div>
+                     </div>
+                    <div class="row">
+                        <div class="col-sm-12">
+                            <div class="change-summary text-md-right">
+                                <h5>
+                                    Change: 
+                                    <strong>
+                                        <span>&#8369;</span>
+                                        {{ (payment - total_price).toFixed(2) }}
+                                    </strong>
+                                </h5>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <template #footer>
+                    <div class="text-center invoice_footer d-flex align-items-center justify-content-center">
+                        <Button 
+                            icon="pi pi-print"
+                            class="w-25 mt-2 mx-1 rounded" 
+                            size="sm"
+                            @click="print_invoice"
+                        >
+                            <span><i class="pi pi-print mr-2" style="font-size: 15px"></i></span>
+                            <span>Print</span>
+                        </Button>
+                        <Button
+                            icon="pi pi-check"
+                            class="w-25 mt-2 mx-1 rounded p-button-danger d-flex justify-content-center align-items-center"
+                            size="sm"
+                            @click="invoice_visible = false"
+                        >
+                            <span><i class="pi pi-times mr-2" style="font-size: 15px"></i></span>
+                            <span>Close</span>
+                        </Button>  
+                    </div>
+                </template>
             </Dialog>
         <FooterComponent />
     </div>
@@ -470,6 +600,23 @@ import Buttons from 'datatables.net-buttons';
 import 'datatables.net-buttons/js/buttons.html5';
 import 'datatables.net-responsive';
 import 'datatables.net-select';
+
+const print_invoice = () => {
+   var invoice_body = document.getElementById('invoice-body').innerHTML;
+
+    var mywindow = window.open('', 'PRINT', 'height=400,width=600');
+
+    mywindow.document.write('<html><head><title>' + document.title  + '</title>');
+
+    mywindow.document.write('</head><body >');
+    mywindow.document.write(invoice_body);
+    mywindow.document.write('</body></html>');
+
+    mywindow.document.close(); // necessary for IE >= 10
+    mywindow.focus(); // necessary for IE >= 10*/
+
+    mywindow.print();
+}
 
 DataTable.use(DataTablesCore);
 DataTable.use(Buttons);
@@ -508,6 +655,7 @@ const check_out_dialog = ref(false);
 const input_customer_name = ref();
 const customer_name = ref(null);
 const payment = ref(0);
+const invoice_visible = ref(false);
 
 const confirm_checkout = (event) => {
     if(customer_name.value == '' || customer_name.value == null) {
@@ -529,12 +677,13 @@ const confirm_checkout = (event) => {
             rejectClass: 'p-button-danger p-button-sm rounded mx-1',
             accept: () => {
                 loadToast('Checkout successful', 'success');
-                check_out_dialog.value = false;
+                /* check_out_dialog.value = false;
                 clear_payment();
                 items.value = [];
                 total_price.value = 0;
                 item_found.value = false;
-                search.value = null;
+                search.value = null; */
+                invoice_visible.value = true;
             },
             reject: () => {
                 /* loadToast('test', 'error'); */
@@ -863,6 +1012,19 @@ onMounted(() => {
 
 input#item_quantity {
     border-radius: 0px !important;
+}
+
+.p-dialog-header {
+    background-image: var(--gradient-orange);
+    color: #fff !important;
+}
+
+.p-dialog-header-close {
+    color: #fff !important;
+}
+
+.table-invoice th {
+    border: 1px solid #dee2e6 !important;
 }
 
 </style>
