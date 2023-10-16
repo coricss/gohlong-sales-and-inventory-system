@@ -502,7 +502,7 @@
                         <div class="col-sm-12">
                             <div class="table-responsive">
                                 <table class="table table-bordered table-sm text-dark display nowrap w-100" id="table-invoice">
-                                    <thead class="text-orange">
+                                    <thead class="text-orange" id="table-invoice-thead">
                                         <tr>
                                             <th>#</th>
                                             <th>Product ID</th>
@@ -514,19 +514,19 @@
                                             <th>Subtotal</th>
                                         </tr>
                                     </thead>
-                                    <tbody>
+                                    <tbody id="table-invoice-tbody">
                                         <tr v-for="(item, index) in items" :key="index">
-                                            <td class="text-center">{{ index + 1 }}</td>
-                                            <td class="text-center">{{ item.product_id }}</td>
-                                            <td class="text-center">{{ item.model_size }}</td>
-                                            <td class="text-center">{{ item.brand }}</td>
-                                            <td class="text-center">{{ item.category }}</td>
-                                            <td class="text-center">
+                                            <td>{{ index + 1 }}</td>
+                                            <td>{{ item.product_id }}</td>
+                                            <td>{{ item.model_size }}</td>
+                                            <td>{{ item.brand }}</td>
+                                            <td>{{ item.category }}</td>
+                                            <td>
                                                 <span>&#8369;</span>
                                                 {{ item.price.toFixed(2) }}
                                             </td>
-                                            <td class="text-center">{{ item.quantity }}</td>
-                                            <td class="text-center">
+                                            <td>{{ item.quantity }}</td>
+                                            <td>
                                                 <span>&#8369;</span>
                                                 {{ item.subtotal.toFixed(2) }}
                                             </td>
@@ -601,21 +601,21 @@ import 'datatables.net-buttons/js/buttons.html5';
 import 'datatables.net-responsive';
 import 'datatables.net-select';
 
+/* const invoice_body = ref(null); */
 const print_invoice = () => {
-   var invoice_body = document.getElementById('invoice-body').innerHTML;
+    var invoice_body = document.getElementById('invoice-body').innerHTML;
 
-    var mywindow = window.open('', 'PRINT', 'height=400,width=600');
+    var invoice_window = window.open('', '', 'height=1080,width=1920');
 
-    mywindow.document.write('<html><head><title>' + document.title  + '</title>');
-
-    mywindow.document.write('</head><body >');
-    mywindow.document.write(invoice_body);
-    mywindow.document.write('</body></html>');
-
-    mywindow.document.close(); // necessary for IE >= 10
-    mywindow.focus(); // necessary for IE >= 10*/
-
-    mywindow.print();
+    invoice_window.document.write('<html><head><title></title>');
+    invoice_window.document.write('<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.5.2/css/bootstrap.css">');
+    invoice_window.document.write('</head><body >');
+    invoice_window.document.write(invoice_body);
+    invoice_window.document.write('</body></html>');
+    invoice_window.document.close();
+    invoice_window.focus();
+    invoice_window.print();
+    invoice_window.close();
 }
 
 DataTable.use(DataTablesCore);
@@ -1025,6 +1025,24 @@ input#item_quantity {
 
 .table-invoice th {
     border: 1px solid #dee2e6 !important;
+}
+
+
+tbody#table-invoice-tbody {
+    display:block;
+    height:200px;
+    overflow:auto;
+}
+thead#table-invoice-thead, tbody#table-invoice-tbody tr {
+    display:table;
+    width:100%;
+    table-layout:fixed;
+}
+thead#table-invoice-thead {
+    width: calc( 100% - 1em )
+}
+table#table-invoice {
+    width:900px;
 }
 
 </style>
