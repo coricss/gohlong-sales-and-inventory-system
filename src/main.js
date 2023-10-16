@@ -29,6 +29,7 @@ import Dialog from 'primevue/dialog';
 import ConfirmPopup from 'primevue/confirmpopup';
 import TabView from 'primevue/tabview';
 import TabPanel from 'primevue/tabpanel';
+import Checkbox from 'primevue/checkbox';
 
 import ToastService from 'primevue/toastservice';
 import ConfirmationService from 'primevue/confirmationservice';
@@ -60,5 +61,5 @@ Vue.component('Dialog', Dialog);
 Vue.component('ConfirmPopup', ConfirmPopup);
 Vue.component('TabView', TabView);
 Vue.component('TabPanel', TabPanel);
-
+Vue.component('Checkbox', Checkbox);
 Vue.mount('#app');

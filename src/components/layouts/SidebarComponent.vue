@@ -1,5 +1,66 @@
 <template>
     <div>
+        <Dialog 
+          v-model:visible="is_new_user"
+          :modal="is_new_user" 
+          :draggable="false"
+          :closable="false"
+          :style="{ width: '20vw' }"
+        >
+          <template #header>
+              <div class="text-center">
+                  <h4 class="m-0 font-weight-bold">Change Password</h4>
+              </div>
+          </template>
+          <div class="row">
+            <div class="col-12 my-2">
+              <InputText 
+                v-model="password_form.old_password" 
+                :type="show_password ? 'text' : 'password'"
+                placeholder="Enter current password" 
+                class="form-control" 
+                style="width: 100%"
+              />
+            </div>
+            <div class="col-12 my-2">
+              <InputText 
+                v-model="password_form.new_password" 
+                :type="show_password ? 'text' : 'password'"
+                placeholder="Enter new password" 
+                class="form-control" 
+                style="width: 100%"
+              />
+              <passwordMeter 
+                  :password="password_form.new_password" :show="true" 
+                  @score="onScore"
+              />
+            </div>
+            <div class="col-12 my-2">
+              <InputText 
+                v-model="password_form.confirm_password" 
+                :type="show_password ? 'text' : 'password'"
+                placeholder="Confirm new password" 
+                class="form-control" 
+                style="width: 100%"
+              />
+              <div class="custom-control custom-checkbox float-right mt-2">
+                  <input class="custom-control-input" type="checkbox" id="show_password" value="option1" @click="show_password=!show_password" style="cursor: pointer">
+                  <label for="show_password" class="custom-control-label text-muted">Show Password</label>
+              </div>
+            </div>
+            <div class="col-12 mt-1">
+              <Button 
+                size="large"
+                icon ="pi pi-key"
+                class="w-100 rounded"
+                @click="submitCreatePassword"
+              >
+                <i class="pi pi-key mr-2"></i>
+                Create new password
+              </Button>
+            </div>
+          </div>
+      </Dialog>
       <!-- Main Sidebar Container -->
       <aside class="main-sidebar sidebar-light-success elevation-1">
         <!-- Brand Logo -->
@@ -111,11 +172,84 @@
       onMounted,
       watch
     } from "vue";
+    import { useToast } from "vue-toastification";
+    import { useProfileManagementStore } from "@/store/profile-management.js";
+    import passwordMeter from "vue-simple-password-meter";
 
     const user = ref(JSON.parse(sessionStorage.getItem("user")));
-    /* const user = ref(null); */
+    const password_form = ref({
+        old_password: "",
+        new_password: "",
+        confirm_password: "",
+    });
     const api_url = import.meta.env.VITE_LARAVEL_API_URL;
     const has_picture = ref(false);
+    const is_new_user = ref(null);
+    const show_password = ref(false);
+    const strength = ref(null);
+
+    const toast = useToast();
+    const profileStore = useProfileManagementStore();
+
+    const onScore = (score) => {
+        strength.value = score.strength;
+    }
+
+    const loadProfileData = () => {
+        profileStore.getProfileData();
+        user.value = JSON.parse(sessionStorage.getItem("user"));
+    }
+
+    const submitCreatePassword = (e) => {
+      if(password_form.value.new_password !== password_form.value.confirm_password) {
+          loadToast("New password and confirm password does not match!", "error");
+      } else {
+        if((strength.value !== 'risky') && (strength.value !== 'guessable') && (strength.value !== 'weak')) {
+            profileStore.changePassword(password_form.value).then((response) => {
+                if(response.status == 200){
+                    loadToast(response.message, "success");
+                    password_form.value = {
+                        old_password: "",
+                        new_password: "",
+                        confirm_password: ""
+                    };
+                    loadProfileData();
+                } else {
+                    loadToast(response.message, "error");
+                }
+            
+            }).catch((error) => {
+                loadToast(error.message, "error");
+            }).finally(() => {
+                is_new_user.value = false;
+            });
+        } else {
+            loadToast("Password is not strong enough!", "error");
+        }
+      }
+    }
+
+    const loadToast = (message, type) => {
+      toast(message, {
+          timeout: 2000,
+          type: type,
+          position: 'top-right',
+          closeOnClick: true,
+          pauseOnFocusLoss: true,
+          pauseOnHover: true,
+          newestOnTop: true,
+          draggable: true,
+          draggablePercent: 0.6,
+          dangerouslyHTMLString: true,
+          showCloseButtonOnHover: false,
+          hideProgressBar: true,
+          closeButton: false,
+          icon: true,
+          rtl: false,
+          theme: 'colored',
+          transition: 'bounce'
+      });
+    };
 
     defineProps({
         username: {
@@ -134,8 +268,10 @@
     }
 
     onMounted(() => {
+      loadProfileData();
        user.value = JSON.parse(sessionStorage.getItem("user"));
        user.value.picture === null ? has_picture.value = false : has_picture.value = true;
+       user.value.is_new_user === 1 ? is_new_user.value = true : is_new_user.value = false;
     });
 
 </script>
