@@ -864,8 +864,7 @@ const add_item = () => {
         total_price.value = total_price_of_column;
         search.value = null;
         item_found.value = false;
-        startScan();
-
+        search_value === 'Scan' && startScan();
     }
 }
 
