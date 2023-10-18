@@ -25,10 +25,17 @@
                             <!-- BARCODE -->
                             <div class="card card-orange card-outline">
                                 <div class="card-header">
-                                    <h4 class="text-dark" style="font-weight: 600">Search a Product Item</h4>
+                                    <!-- <h4 class="text-dark" style="font-weight: 600">Search a Product Item</h4> -->
+                                    <SelectButton 
+                                        v-model="search_value" 
+                                        :options="search_option" 
+                                        aria-labelledby="basic" 
+                                        :unselectable="true"
+                                        @change="onSwtichToScan(search_value)"
+                                    />
                                 </div>
                                 <div class="card-body">
-                                    <div class="row mb-4">
+                                    <div class="row mb-4" v-if="search_value == 'Search'">
                                         <div class="col-md-12">
                                             <div class="p-inputgroup flex-1">
                                                 <InputText 
@@ -47,188 +54,223 @@
                                             </div>
                                         </div>
                                     </div>
-                                    <div class="item_detail" v-if="item_found">
-                                        <div class="row mb-3">
-                                            <div class="col-6">
-                                                <div class="model_size text-dark">
-                                                    <h6 class="font-weight-bold">Product ID:</h6>
-                                                </div>
-                                            </div>
-                                            <div class="col-6">
-                                                <div class="model_size text-dark">
-                                                    <h6 
-                                                        class=""
-                                                        style="word-break: break-all; white-space: normal;"
-                                                        v-html="product.product_id"
-                                                    >
-                                                        
-                                                    </h6>
-                                                </div>
-                                            </div>
-                                        </div>
-                                        <div class="row mb-3">
-                                            <div class="col-6">
-                                                <div class="model_size text-dark">
-                                                    <h6 class="font-weight-bold">Model/Size:</h6>
-                                                </div>
-                                            </div>
-                                            <div class="col-6">
-                                                <div class="model_size text-dark">
-                                                    <h6 
-                                                        class=""
-                                                        style="word-break: break-all; white-space: normal;"
-                                                        v-html="product.model_size"
-                                                    >
-                                                    
-                                                    </h6>
-                                                    <!-- 175/65 R14 -->
-                                                </div>
-                                            </div>
-                                        </div>
-                                        <div class="row mb-3 mt-3">
-                                            <div class="col-6">
-                                                <div class="model_size text-dark">
-                                                    <h6 class="font-weight-bold">Brand:</h6>
-                                                </div>
-                                            </div>
-                                            <div class="col-6">
-                                                <div class="model_size text-dark">
-                                                    <h6 
-                                                        class=""
-                                                        style="word-break: break-all; white-space: normal;"
-                                                        v-html="product.brand"
-                                                    >
-                                                    
-                                                    </h6>
-                                                </div>
-                                            </div>
-                                        </div>
-                                        <div class="row mb-3 mt-3">
-                                            <div class="col-6">
-                                                <div class="model_size text-dark">
-                                                    <h6 class="font-weight-bold">Category:</h6>
-                                                </div>
-                                            </div>
-                                            <div class="col-6">
-                                                <div class="model_size text-dark">
-                                                    <h6 
-                                                        class=""
-                                                        style="word-break: break-all; white-space: normal;"
-                                                        v-html="product.category"
-                                                    >
-                                                    
-                                                    </h6>
-                                                </div>
-                                            </div>
-                                        </div>
-                                        <div class="row mb-3 mt-3">
-                                            <div class="col-6">
-                                                <div class="model_size text-dark">
-                                                    <h6 class="font-weight-bold">Price:</h6>
-                                                </div>
-                                            </div>
-                                            <div class="col-6">
-                                                <div class="model_size text-dark d-flex align-items-center">
-                                                    <span class="mr-1">&#8369;</span>
-                                                    <h6 
-                                                        class="m-0"
-                                                        style="word-break: break-all; white-space: normal;"
-                                                        v-html="product.price"
-                                                    >
-                                                    
-                                                    </h6>
-                                                </div>
-                                            </div>
-                                        </div>
-                                        <div class="row mb-3 mt-3">
-                                            <div class="col-6">
-                                                <div class="model_size text-dark">
-                                                    <h6 class="font-weight-bold">Discounted Price:</h6>
-                                                </div>
-                                            </div>
-                                            <div class="col-6">
-                                                <div class="model_size text-dark d-flex align-items-center">
-                                                    <span class="mr-1">&#8369;</span>
-                                                    <h6 
-                                                        class="m-0"
-                                                        style="word-break: break-all; white-space: normal;"
-                                                        v-html="product.discounted_price"
-                                                    >
-                                                    
-                                                    </h6>
-                                                </div>
-                                            </div>
-                                        </div>
-                                        <div class="row mb-3 mt-3">
-                                            <div class="col-6">
-                                                <div class="model_size text-dark">
-                                                    <h6 class="font-weight-bold">Stocks:</h6>
-                                                </div>
-                                            </div>
-                                            <div class="col-6">
-                                                <div class="model_size text-dark d-flex align-items-center">
-                                                    <h6 
-                                                        class="m-0"
-                                                        style="word-break: break-all; white-space: normal;"
-                                                        v-html="product.stocks"
-                                                        v-if="product.stocks > 0"
-                                                    >
-                                                    
-                                                    </h6>
-                                                    <h6 
-                                                        class="m-0 text-danger"
-                                                        style="word-break: break-all; white-space: normal;"
-                                                        v-else
-                                                    >
-                                                        Out of Stock
-                                                    </h6>
-                                                </div>
-                                            </div>
-                                        </div>
-                                        <div class="row">
-                                            <div class="col-lg-8 mt-3 quantity_wrapper">
-                                                <div class="p-inputgroup flex-1">
-                                                    <InputNumber 
-                                                        inputId="item_quantity"
-                                                        v-model="item_quantity" 
-                                                        buttonLayout="horizontal"
-                                                        showButtons 
-                                                        :min="1"
-                                                        decrementButtonClass="p-button-danger" 
-                                                        incrementButtonClass="p-button-success" 
-                                                        incrementButtonIcon="pi pi-plus" 
-                                                        decrementButtonIcon="pi pi-minus"
-                                                        suffix=" piece(s)"
-                                                        style="width: 100%; height: 40px; font-size: 15px; word-break: break-all; white-space: normal;"
-                                                    />
-                                                </div>
-                                            </div>
-                                            <div class="col-lg-4 mt-3 quantity_wrapper">
-                                                <div class="p-inputgroup flex-1 d-flex align-items-center">
-                                                    <ToggleButton 
-                                                        v-model="is_discounted" 
-                                                        class="rounded"
-                                                        onIcon="pi pi-check"
-                                                        offIcon="pi pi-times"
-                                                        onLabel="Discounted"
-                                                        offLabel="No Discount"
-                                                        onIconPos="left"
-                                                        offIconPos="right"
-                                                        onClass="p-button-success"
-                                                        offClass="p-button-danger"
-                                                        style="width: 100%; height: 40px; font-size: 15px; word-break: break-all; white-space: normal;"
-                                                    />
-                                                </div>
+                                    <div class="row mb-4" v-else>
+                                        <div class="col-md-12">
+                                            <div class="p-inputgroup flex-1">
+                                                <div 
+                                                    id="qr-reader"
+                                                    style="width: 100%"
+                                                    ref="qrReader"
+                                                ></div>
                                             </div>
                                         </div>
                                     </div>
-                                    <div class="empty_item" v-else>
-                                        <div class="row">
-                                            <div class="col-md-12">
-                                                <div class="d-flex justify-content-center align-items-center flex-column">
-                                                    <img src="@/assets/imgs/empty_item.png" alt="Empty" class="img-fluid" style="width: 230px; height: 230px">
-                                                    <h4 class="text-dark m-0">No Item Found</h4>
-                                                    <p class="text-dark m-0">Please scan barcode or enter a valid product ID</p>
+                                    <div class="loading-item" v-if="search_loading">
+                                        <div class="row mb-3" v-for="index in 7" :key="index">
+                                            <div class="col-6">
+                                                <div class="model_size text-dark">
+                                                    <Skeleton width="100%" class="mb-2"></Skeleton>
+                                                </div>
+                                            </div>
+                                            <div class="col-6">
+                                                <div class="model_size text-dark">
+                                                    <Skeleton width="100%" class="mb-2"></Skeleton>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="row mt-3">
+                                            <div class="col-lg-8">
+                                                <Skeleton width="100%" height="3rem"></Skeleton>
+                                            </div>
+                                            <div class="col-lg-4">
+                                                <Skeleton width="100%" height="3rem"></Skeleton>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="loaded-item" v-else>
+                                        <div class="item_detail" v-if="item_found">
+                                            <div class="row mb-3">
+                                                <div class="col-6">
+                                                    <div class="model_size text-dark">
+                                                        <h6 class="font-weight-bold">Product ID:</h6>
+                                                    </div>
+                                                </div>
+                                                <div class="col-6">
+                                                    <div class="model_size text-dark">
+                                                        <h6 
+                                                            class=""
+                                                            style="word-break: break-all; white-space: normal;"
+                                                            v-html="product.product_id"
+                                                        >
+                                                            
+                                                        </h6>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="row mb-3">
+                                                <div class="col-6">
+                                                    <div class="model_size text-dark">
+                                                        <h6 class="font-weight-bold">Model/Size:</h6>
+                                                    </div>
+                                                </div>
+                                                <div class="col-6">
+                                                    <div class="model_size text-dark">
+                                                        <h6 
+                                                            class=""
+                                                            style="word-break: break-all; white-space: normal;"
+                                                            v-html="product.model_size"
+                                                        >
+                                                        
+                                                        </h6>
+                                                        <!-- 175/65 R14 -->
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="row mb-3 mt-3">
+                                                <div class="col-6">
+                                                    <div class="model_size text-dark">
+                                                        <h6 class="font-weight-bold">Brand:</h6>
+                                                    </div>
+                                                </div>
+                                                <div class="col-6">
+                                                    <div class="model_size text-dark">
+                                                        <h6 
+                                                            class=""
+                                                            style="word-break: break-all; white-space: normal;"
+                                                            v-html="product.brand"
+                                                        >
+                                                        
+                                                        </h6>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="row mb-3 mt-3">
+                                                <div class="col-6">
+                                                    <div class="model_size text-dark">
+                                                        <h6 class="font-weight-bold">Category:</h6>
+                                                    </div>
+                                                </div>
+                                                <div class="col-6">
+                                                    <div class="model_size text-dark">
+                                                        <h6 
+                                                            class=""
+                                                            style="word-break: break-all; white-space: normal;"
+                                                            v-html="product.category"
+                                                        >
+                                                        
+                                                        </h6>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="row mb-3 mt-3">
+                                                <div class="col-6">
+                                                    <div class="model_size text-dark">
+                                                        <h6 class="font-weight-bold">Price:</h6>
+                                                    </div>
+                                                </div>
+                                                <div class="col-6">
+                                                    <div class="model_size text-dark d-flex align-items-center">
+                                                        <span class="mr-1">&#8369;</span>
+                                                        <h6 
+                                                            class="m-0"
+                                                            style="word-break: break-all; white-space: normal;"
+                                                            v-html="product.price"
+                                                        >
+                                                        
+                                                        </h6>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="row mb-3 mt-3">
+                                                <div class="col-6">
+                                                    <div class="model_size text-dark">
+                                                        <h6 class="font-weight-bold">Discounted Price:</h6>
+                                                    </div>
+                                                </div>
+                                                <div class="col-6">
+                                                    <div class="model_size text-dark d-flex align-items-center">
+                                                        <span class="mr-1">&#8369;</span>
+                                                        <h6 
+                                                            class="m-0"
+                                                            style="word-break: break-all; white-space: normal;"
+                                                            v-html="product.discounted_price"
+                                                        >
+                                                        
+                                                        </h6>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="row mb-3 mt-3">
+                                                <div class="col-6">
+                                                    <div class="model_size text-dark">
+                                                        <h6 class="font-weight-bold">Stocks:</h6>
+                                                    </div>
+                                                </div>
+                                                <div class="col-6">
+                                                    <div class="model_size text-dark d-flex align-items-center">
+                                                        <h6 
+                                                            class="m-0"
+                                                            style="word-break: break-all; white-space: normal;"
+                                                            v-html="product.stocks"
+                                                            v-if="product.stocks > 0"
+                                                        >
+                                                        
+                                                        </h6>
+                                                        <h6 
+                                                            class="m-0 text-danger"
+                                                            style="word-break: break-all; white-space: normal;"
+                                                            v-else
+                                                        >
+                                                            Out of Stock
+                                                        </h6>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="row">
+                                                <div class="col-lg-8 mt-3 quantity_wrapper">
+                                                    <div class="p-inputgroup flex-1">
+                                                        <InputNumber 
+                                                            inputId="item_quantity"
+                                                            v-model="item_quantity" 
+                                                            buttonLayout="horizontal"
+                                                            showButtons 
+                                                            :min="1"
+                                                            decrementButtonClass="p-button-danger" 
+                                                            incrementButtonClass="p-button-success" 
+                                                            incrementButtonIcon="pi pi-plus" 
+                                                            decrementButtonIcon="pi pi-minus"
+                                                            suffix=" piece(s)"
+                                                            style="width: 100%; height: 40px; font-size: 15px; word-break: break-all; white-space: normal;"
+                                                        />
+                                                    </div>
+                                                </div>
+                                                <div class="col-lg-4 mt-3 quantity_wrapper">
+                                                    <div class="p-inputgroup flex-1 d-flex align-items-center">
+                                                        <ToggleButton 
+                                                            v-model="is_discounted" 
+                                                            class="rounded"
+                                                            onIcon="pi pi-check"
+                                                            offIcon="pi pi-times"
+                                                            onLabel="Discounted"
+                                                            offLabel="No Discount"
+                                                            onIconPos="left"
+                                                            offIconPos="right"
+                                                            onClass="p-button-success"
+                                                            offClass="p-button-danger"
+                                                            style="width: 100%; height: 40px; font-size: 15px; word-break: break-all; white-space: normal;"
+                                                        />
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="empty_item" v-else>
+                                            <div class="row">
+                                                <div class="col-md-12">
+                                                    <div class="d-flex justify-content-center align-items-center flex-column">
+                                                        <img src="@/assets/imgs/empty_item.png" alt="Empty" class="img-fluid" style="width: 230px; height: 230px">
+                                                        <h4 class="text-dark m-0">No Item Found</h4>
+                                                        <p class="text-dark m-0">Please scan barcode or enter a valid product ID</p>
+                                                    </div>
                                                 </div>
                                             </div>
                                         </div>
@@ -627,11 +669,15 @@ import {
     watch
 } from "vue";
 
+import { Html5QrcodeScanner, Html5Qrcode, Html5QrcodeScanType  } from 'html5-qrcode';
 import { useConfirm } from "primevue/useconfirm";
 import { useToast } from "vue-toastification";
 
 const confirm = useConfirm();
 const toast = useToast();
+
+const search_value = ref('Search');
+const search_option = ref(['Search', 'Scan']);
 
 const search = ref(null);
 const product = ref([
@@ -692,6 +738,45 @@ const confirm_checkout = (event) => {
     }
     
 }
+
+const startScan = () => {
+    Html5Qrcode.getCameras().then(devices => {
+        if (devices && devices.length) {
+            const cameraId = devices[devices.length - 1].id;
+            const config = { 
+            fps: 1, 
+            qrbox: {width: 300, height: 100},
+            aspectRatio: {min: 1, max: 100},
+            rememberLastUsedCamera: true,
+            /* formatsToSupport: [Html5QrcodeSupportedFormats.CODE_128], */
+            supportedScanTypes: [Html5QrcodeScanType.SCAN_TYPE_CAMERA],
+            useBarCodeDetectorIfSupported: true,
+            };
+            const html5QrCode = new Html5Qrcode("qr-reader");
+            html5QrCode.start(
+                cameraId, 
+                config, 
+                (decodedText) => {
+                    search.value = decodedText;
+                    search_item();
+                    html5QrCode.stop();
+                }
+            )
+        }
+    }).catch(err => {
+        loadToast(`Error scanning Barcode: ${err}`, 'error');
+    });
+}
+
+const onSwtichToScan = (value) => {
+   if(value === 'Scan') {
+    startScan();
+   } else {
+    search.value = null;
+    item_found.value = false; 
+   }
+}
+
 const search_loading = ref(false);
 const search_item = () => {
     search_loading.value = true;
@@ -781,6 +866,7 @@ const add_item = () => {
         total_price.value = total_price_of_column;
         search.value = null;
         item_found.value = false;
+        startScan();
 
     }
 }
@@ -1043,6 +1129,19 @@ thead#table-invoice-thead {
 }
 table#table-invoice {
     width:900px;
+}
+
+#qr-reader {
+    /* responsive */
+    width: 100% !important;
+}
+
+#qr-reader video {
+    width: 100% !important;
+}
+
+#qr-shaded-region {
+    width: 100% !important;
 }
 
 </style>

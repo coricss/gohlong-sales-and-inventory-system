@@ -30,6 +30,8 @@ import ConfirmPopup from 'primevue/confirmpopup';
 import TabView from 'primevue/tabview';
 import TabPanel from 'primevue/tabpanel';
 import Checkbox from 'primevue/checkbox';
+import SelectButton from 'primevue/selectbutton';
+import Skeleton from 'primevue/skeleton';
 
 import ToastService from 'primevue/toastservice';
 import ConfirmationService from 'primevue/confirmationservice';
@@ -62,4 +64,6 @@ Vue.component('ConfirmPopup', ConfirmPopup);
 Vue.component('TabView', TabView);
 Vue.component('TabPanel', TabPanel);
 Vue.component('Checkbox', Checkbox);
+Vue.component('SelectButton', SelectButton);
+Vue.component('Skeleton', Skeleton);
 Vue.mount('#app');
