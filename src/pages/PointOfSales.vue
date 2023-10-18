@@ -40,9 +40,8 @@
                                             <div class="p-inputgroup flex-1">
                                                 <InputText 
                                                     placeholder="Scan Barcode or Enter Product ID" 
-                                                    v-model="search"
+                                                    v-model.trim="search"
                                                     @keyup.enter="search_item"
-                                                    @keydown.space.prevent
                                                 />
                                                 <Button 
                                                     icon="fas fa-barcode" 
@@ -432,9 +431,8 @@
                                     placeholder="Enter customer name"
                                     ref="input_customer_name"
                                     id="customer_name"
-                                    v-model="customer_name" 
+                                    v-model.trim="customer_name" 
                                     style="width: 100%; height: 40px; font-size: 15px; word-break: break-all; white-space: normal;"
-                                    @keydown.space.prevent
                                     autofocus
                                 />
                             </div>
