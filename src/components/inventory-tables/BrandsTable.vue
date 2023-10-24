@@ -230,7 +230,7 @@ const buttons = ref([
     {
         extend: 'csv',
         text: '<i class="fas fa-download fa-sm"></i> Export',
-        title: "Gohlong Tire and Service Products",
+        title: "Gohlong Tire and Service Inventory Brands",
         titleAttr: 'Export',
         className: 'btn btn-sm btn-dark',
         attr:  {

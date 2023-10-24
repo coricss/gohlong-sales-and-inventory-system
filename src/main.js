@@ -37,6 +37,9 @@ import Skeleton from 'primevue/skeleton';
 import ToastService from 'primevue/toastservice';
 import ConfirmationService from 'primevue/confirmationservice';
 
+import Vue3Autocounter from 'vue3-autocounter';
+import Chart from 'primevue/chart';
+
 axios.defaults.withCredentials = true;
 axios.defaults.baseURL = import.meta.env.VITE_LARAVEL_API_URL;
 
@@ -68,4 +71,6 @@ Vue.component('TabPanel', TabPanel);
 Vue.component('Checkbox', Checkbox);
 Vue.component('SelectButton', SelectButton);
 Vue.component('Skeleton', Skeleton);
+Vue.component('vue3-autocounter', Vue3Autocounter)
+Vue.component('Chart', Chart)
 Vue.mount('#app');
