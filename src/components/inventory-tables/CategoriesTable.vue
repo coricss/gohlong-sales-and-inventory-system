@@ -28,7 +28,7 @@
                                             class="table table-hover table-bordered table-sm text-dark display nowrap w-100"
                                             id="category-management-table"
                                             ref="category_table"
-                                            :data="items"
+                                            :data="categories"
                                             :columns="columns"
                                             :options="{
                                                 dom:            'Bftip',
@@ -78,12 +78,130 @@
                                                 
                                             </tbody>
                                         </DataTable>
+                                        <ConfirmDialog
+                                            :dismissable-mask="true"
+                                            :closable="true"
+                                            :draggable="false"
+                                            :resizable="false"
+                                        ></ConfirmDialog>
                                     </div>
                                 </div>
                             </div>
                         </div>
                     </div>
                 </section>
+                <Dialog 
+                    v-model:visible="new_category_modal" 
+                    :modal="true" 
+                    :closable="true" 
+                    :dismissable-mask="false" 
+                    :draggable="false" 
+                    :resizable="true"  
+                    @hide="clear_category_modal"
+                    :style="{ width: '30rem' }"
+                >
+                    <template #header>
+                        <div class="text-center">
+                            <h4 class="m-0 font-weight-bold">Add new category</h4>
+                        </div>
+                    </template>
+                    <form @submit.prevent="add_new_category" id="new-category-form">
+                        <div class="row">
+                            <div class="col-sm-12 mt-2">
+                                <InputText 
+                                    v-model.trim="new_category"
+                                    class="w-100"
+                                    placeholder="Enter category name"
+                                    :maxlength="50"
+                                    required
+                                    autofocus
+                                />
+                            </div>
+                        </div>
+                    </form>
+                    <template #footer>
+                        <div class="text-center">
+                            <Button 
+                                icon="pi pi-check"
+                                class=" mt-2 mx-1 rounded p-button-success"
+                                size="small"
+                                type="submit"
+                                form="new-category-form"
+                            >
+                                <i class="fas fa-save mr-1"></i> Save
+                            </Button>
+                            <Button 
+                                icon="pi pi-check"
+                                class=" mt-2 mx-1 rounded p-button-danger"
+                                size="small"
+                                outlined 
+                                @click="new_category_modal = false"
+                            >
+                                <i class="fas fa-times mr-1"></i>
+                                Cancel
+                            </Button>
+                        </div>
+                    </template>
+                </Dialog>
+
+                <Dialog 
+                    v-model:visible="edit_category_modal" 
+                    :modal="true" 
+                    :closable="true" 
+                    :dismissable-mask="false" 
+                    :draggable="false" 
+                    :resizable="true"  
+                    @hide="clear_category_modal"
+                    :style="{ width: '30rem' }"
+                >
+                    <template #header>
+                        <div class="text-center">
+                            <h4 class="m-0 font-weight-bold">Update category</h4>
+                        </div>
+                    </template>
+                    <form @submit.prevent="update_category" id="new-category-form">
+                        <div class="row">
+                            <div class="col-sm-12 mt-2">
+                                <Skeleton v-if="!edit_category" width="100%" height="50px" style="cursor: wait;" />
+                                <InputText 
+                                    v-else
+                                    v-model.trim="edit_category"
+                                    class="w-100"
+                                    placeholder="Enter category name"
+                                    :maxlength="50"
+                                    required
+                                />
+                            </div>
+                        </div>
+                    </form>
+                    <template #footer>
+                        <div v-if="!edit_category" class="text-center d-flex align-items-center justify-content-center">
+                            <Skeleton width="80px" height="40px" class="mt-2 mx-1" style="cursor: wait;" />
+                            <Skeleton width="80px" height="40px" class="mt-2 mx-1" style="cursor: wait;" />
+                        </div>
+                        <div class="text-center" v-else>
+                            <Button 
+                                icon="pi pi-check"
+                                class=" mt-2 mx-1 rounded p-button-success"
+                                size="small"
+                                type="submit"
+                                form="new-category-form"
+                            >
+                                <i class="fas fa-save mr-1"></i> Save
+                            </Button>
+                            <Button 
+                                icon="pi pi-check"
+                                class=" mt-2 mx-1 rounded p-button-danger"
+                                size="small"
+                                outlined 
+                                @click="edit_category_modal = false"
+                            >
+                                <i class="fas fa-times mr-1"></i>
+                                Cancel
+                            </Button>
+                        </div>
+                    </template>
+                </Dialog>
         <FooterComponent/>
     </div>
 </template>
@@ -101,56 +219,29 @@ import 'datatables.net-responsive';
 import 'datatables.net-select';
 
 import { ref, onMounted, inject } from "vue";
-
+import { useConfirm } from "primevue/useconfirm";
 import { useToast } from "vue-toastification";
+
+import { useCategoryStore } from "@/store/category.js";
+
+const categoryStore = useCategoryStore();
 
 DataTable.use(DataTablesCore);
 DataTable.use(Buttons);
 
+const confirm = useConfirm();
 const toast = useToast();
 const swal = inject("$swal");
 const counter = ref(0);
-
+const categories = ref(null);
 /* loadData */
-/* const loadData = () => {
-      users.getUsersData().then((response) => {
-        employees.value = response;
+const loadData = () => {
+    categoryStore.getCategoryData().then((response) => {
+        categories.value = response;
       }).catch((error) => {
         loadToast(error.response.data.message, 'error');
       });
-}; */
-const items = ref([
-    {
-        id:1,
-        product_id: '123456',
-        model_size:"32",
-        brand:"hkhj",
-        category:"eqweq",
-        quantity:"2",
-        price:"Php 2",
-        discounted_price:"Php 23",
-        total_stock_price:"Php 4",
-        total_stock_discounted_price:"Php 46",
-        created_at:"12\/09\/2023 02:14 PM",
-        updated_at:"07\/09\/2023 10:12 PM"
-        
-    },
-    {
-        id:2,
-        product_id: '654321',
-        model_size:"32",
-        brand:"hkhj",
-        category:"eqweq",
-        quantity:"2",
-        price:"Php 2",
-        discounted_price:"Php 23",
-        total_stock_price:"Php 4",
-        total_stock_discounted_price:"Php 46",
-        created_at:"12\/09\/2023 02:14 PM",
-        updated_at:"07\/09\/2023 10:12 PM"
-        
-    }
-]);
+};
 
 /* Columns */
 const columns = ref([
@@ -162,13 +253,19 @@ const columns = ref([
         }
     },
     {
-        data: "category",
+        data: "category_name",
     },
     {
         data: "created_at",
+        render: function (data, type, row) {
+          return '<small>'+new Date(data).toLocaleString()+'</small>';
+        }
     },
     {
         data: "updated_at",
+        render: function (data, type, row) {
+          return '<small>'+new Date(data).toLocaleString()+'</small>';
+        }
     },
     {
         data: "id",
@@ -207,7 +304,7 @@ const buttons = ref([
             node.removeClass('dt-button');
         },
         action: function ( e, dt, node, config ) {
-        
+            new_category_modal.value = true;
         }
     },
     {
@@ -221,7 +318,7 @@ const buttons = ref([
             node.removeClass('dt-button');
         },
         action: function ( e, dt, node, config ) {
-           /*  loadData(); */
+            loadData();
             dt.order([0, 'asc']).draw();
             dt.columns.adjust().responsive.recalc();
             /* getDT(dt); */
@@ -266,13 +363,124 @@ const lengthMenu = ref([
 
 const windowResize = () => {
     window.addEventListener('resize', function() {
-        /* loadData(); */
+        loadData();
     });
 };
 
+/* Adding New Category */
+
+const new_category_modal = ref(false);
+const new_category = ref('');
+
+const add_new_category = () => {
+    /* categoryStore.addCategory(new_category.value); */
+    categoryStore.addCategory(new_category.value).then((response) => {
+        if (response.status == 200) {
+            new_category_modal.value = false;
+            new_category.value = '';
+            loadToast(response.message, 'success');
+            loadData();
+        }
+    }).catch((error) => {
+        loadToast(error.message, 'error');
+    });
+};
+
+const edit_category_modal = ref(false);
+const edit_category = ref('');
+const category_id = ref('');
+
+const update_category = () => {
+    categoryStore.updateCategory(edit_category.value, category_id.value).then((response) => {
+        if (response.status == 200) {
+            edit_category_modal.value = false;
+            edit_category.value = '';
+            category_id.value = '';
+            loadToast(response.message, 'success');
+            loadData();
+        }
+    }).catch((error) => {
+        loadToast(error.message, 'error');
+    });
+};
+
+/* Edit and Delete Category */
+const action = () => {
+    const categoryTable = document.querySelector('#category-management-table');
+
+    categoryTable.addEventListener('click', function(e) {
+        if (e.target.classList.contains('btn-edit-category') || e.target.classList.contains('fa-edit')) {
+            const id = e.target.getAttribute('data-id');
+            edit_category_modal.value = true;
+
+            categoryStore.getCategory(id).then((response) => {
+                edit_category.value = response.category_name;
+                category_id.value = response.id;
+            }).catch((error) => {
+                loadToast(error.message, 'error');
+            });
+        } else if (e.target.classList.contains('btn-delete-category') || e.target.classList.contains('fa-trash')) {
+            const id = e.target.getAttribute('data-id');
+            confirm.require({
+                message: 'Are you sure you want to proceed?',
+                header: 'Delete this category?',
+                icon: 'pi pi-question-circle',
+                acceptLabel: 'Yes, delete it!',
+                rejectLabel: 'No',
+                acceptClass: 'p-button-success p-button-sm rounded mx-1',
+                rejectClass: 'p-button-danger p-button-sm rounded mx-1',
+                accept: () => {
+                    categoryStore.deleteCategory(id).then((response) => {
+                        if (response.status == 200) {
+                            loadToast(response.message, 'success');
+                            loadData();
+                        }
+                    }).catch((error) => {
+                        loadToast(error.message, 'error');
+                    });
+                },
+                reject: () => {
+                   
+                }
+            });
+        }
+    });
+}
+
+const clear_category_modal = () => {
+    new_category_modal.value = false;
+    new_category.value = '';
+    edit_category_modal.value = false;
+    edit_category.value = '';
+    category_id.value = '';
+};
+
+const loadToast = (message, type) => {
+    toast(message, {
+        timeout: 2000,
+        type: type,
+        position: 'top-right',
+        closeOnClick: true,
+        pauseOnFocusLoss: true,
+        pauseOnHover: true,
+        newestOnTop: true,
+        draggable: true,
+        draggablePercent: 0.6,
+        dangerouslyHTMLString: true,
+        showCloseButtonOnHover: false,
+        hideProgressBar: true,
+        closeButton: false,
+        icon: true,
+        rtl: false,
+        theme: 'colored',
+        transition: 'bounce'
+    });
+};
 
 onMounted(() => {
+    action();
     windowResize();
+    loadData();
 });
 
 </script>

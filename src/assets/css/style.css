@@ -107,7 +107,6 @@ input.form-control:focus {
 /* no outline button */
 .p-button {
     outline: none;
-    border: none;
     box-shadow: none 
 }
 
@@ -115,6 +114,15 @@ input.form-control:focus {
     outline: none;
     border: none;
     box-shadow: none 
+}
+
+.p-dialog-header {
+    background-image: var(--gradient-orange);
+    color: #fff !important;
+}
+
+.p-dialog-header-close {
+    color: #fff !important;
 }
 
 .p-inputtext:focus{
