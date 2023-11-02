@@ -68,21 +68,21 @@
                                         <div class="row mb-3" v-for="index in 7" :key="index">
                                             <div class="col-6">
                                                 <div class="model_size text-dark">
-                                                    <Skeleton width="100%" class="mb-2"></Skeleton>
+                                                    <Skeleton width="100%" class="mb-2" style="cursor: wait;"></Skeleton>
                                                 </div>
                                             </div>
                                             <div class="col-6">
                                                 <div class="model_size text-dark">
-                                                    <Skeleton width="100%" class="mb-2"></Skeleton>
+                                                    <Skeleton width="100%" class="mb-2" style="cursor: wait;"></Skeleton>
                                                 </div>
                                             </div>
                                         </div>
                                         <div class="row mt-3">
                                             <div class="col-lg-8">
-                                                <Skeleton width="100%" height="3rem"></Skeleton>
+                                                <Skeleton width="100%" height="3rem" style="cursor: wait;"></Skeleton>
                                             </div>
                                             <div class="col-lg-4">
-                                                <Skeleton width="100%" height="3rem"></Skeleton>
+                                                <Skeleton width="100%" height="3rem" style="cursor: wait;"></Skeleton>
                                             </div>
                                         </div>
                                     </div>
@@ -1095,15 +1095,6 @@ onMounted(() => {
 
 input#item_quantity {
     border-radius: 0px !important;
-}
-
-.p-dialog-header {
-    background-image: var(--gradient-orange);
-    color: #fff !important;
-}
-
-.p-dialog-header-close {
-    color: #fff !important;
 }
 
 .table-invoice th {
