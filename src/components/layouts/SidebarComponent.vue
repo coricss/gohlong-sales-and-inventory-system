@@ -76,7 +76,7 @@
           <div class="user-panel mt-3 pb-3 mb-3 d-flex">
             <div class="image">
               <img 
-                :src="picture != null ? api_url+'images/'+picture : (user.picture != null ? api_url+'images/'+user.picture : 'src/assets/imgs/users/default-150x150.png')"
+                :src="picture != null ? api_url+'images/'+picture : (user.picture != null ? api_url+'images/'+user.picture : 'http://localhost:3000/src/assets/imgs/users/default-150x150.png')"
                 class="img-circle elevation-0" 
                 :alt="picture" 
                 style="width: 35px; height: 35px"
@@ -108,7 +108,10 @@
                   </p>
                 </router-link>
               </li>
-              <li class="nav-item" :class="{'menu-open': $route.path.includes('/inventory')}">
+              <li class="nav-item" 
+                @click="is_inventory_open = true" 
+                :class="{'menu-open': $route.path.includes('/inventory')}"
+              >
                 <a href="#" class="inventory nav-link" :class="{'active': $route.path.includes('/inventory')}">
                   <i class="nav-icon fas fa-boxes"></i>
                   <p>
@@ -124,13 +127,13 @@
                     </router-link>
                   </li>
                   <li class="nav-item">
-                    <router-link class="nav-link sub-link" to="/inventory/categories">
+                    <router-link class="nav-link sub-link" to="/inventory/categories" :class="{'active': $route.path.includes('/inventory/categories')}">
                       <i class="fas fa-shapes mx-2"></i>
                       <p>Categories</p>
                     </router-link>
                   </li>
                   <li class="nav-item">
-                    <router-link class="nav-link sub-link" to="/inventory/brands">
+                    <router-link class="nav-link sub-link" to="/inventory/brands" :class="{'active': $route.path.includes('/inventory/brands')}">
                       <i class="fas fa-tags mx-2"></i>
                       <p>Brands</p>
                     </router-link>
@@ -175,7 +178,7 @@
     import { useToast } from "vue-toastification";
     import { useProfileManagementStore } from "@/store/profile-management.js";
     import passwordMeter from "vue-simple-password-meter";
-
+    const is_inventory_open = ref(false);
     const user = ref(JSON.parse(sessionStorage.getItem("user")));
     const password_form = ref({
         old_password: "",
