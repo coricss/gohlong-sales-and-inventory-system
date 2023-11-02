@@ -43,9 +43,19 @@
                             { responsivePriority: 1, targets: 0 },
                             { responsivePriority: 2, targets: -1 },
                             {
-                              targets: 1,
-                              className: 'text-center',
-                            }
+                                targets: 0,
+                                className: 'text-center',
+                            },
+                            {
+                                targets: [2, 3, 4, 5],
+                                className: 'text-center align-middle',
+                            },
+                            {
+                                targets: [1, 6],
+                                className: 'text-center align-middle',
+                                orderable: false,
+                                searchable: false,
+                            },
                           ],
                           order: [[ 0, 'asc' ]]
                       }"
