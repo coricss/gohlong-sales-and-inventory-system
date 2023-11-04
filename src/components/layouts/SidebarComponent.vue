@@ -109,10 +109,10 @@
                 </router-link>
               </li>
               <li class="nav-item" 
-                @click="is_inventory_open = true" 
-                :class="{'menu-open': $route.path.includes('/inventory')}"
+                id="inventory_menu"
+                :class="{'menu-open': is_inventory_open}"
               >
-                <a href="" class="inventory nav-link" :class="{'active': $route.path.includes('/inventory')}">
+                <a style="cursor: pointer;" class="inventory nav-link" :class="{'active': $route.path.includes('/inventory')}">
                   <i class="nav-icon fas fa-boxes"></i>
                   <p>
                     Inventory
@@ -271,10 +271,15 @@
     }
 
     onMounted(() => {
+      document.getElementById("inventory_menu").addEventListener("click", function(){
+        is_inventory_open.value = !is_inventory_open.value;
+      });
+
       loadProfileData();
-       user.value = JSON.parse(sessionStorage.getItem("user"));
-       user.value.picture === null ? has_picture.value = false : has_picture.value = true;
-       user.value.is_new_user === 1 ? is_new_user.value = true : is_new_user.value = false;
+
+      user.value = JSON.parse(sessionStorage.getItem("user"));
+      user.value.picture === null ? has_picture.value = false : has_picture.value = true;
+      user.value.is_new_user === 1 ? is_new_user.value = true : is_new_user.value = false;
     });
 
 </script>
