@@ -162,7 +162,7 @@
                     <form @submit.prevent="update_category" id="new-category-form">
                         <div class="row">
                             <div class="col-sm-12 mt-2">
-                                <Skeleton v-if="!edit_category" width="100%" height="50px" style="cursor: wait;" />
+                                <Skeleton v-if="edit_category_loading" width="100%" height="50px" style="cursor: wait;" />
                                 <InputText 
                                     v-else
                                     v-model.trim="edit_category"
@@ -175,7 +175,7 @@
                         </div>
                     </form>
                     <template #footer>
-                        <div v-if="!edit_category" class="text-center d-flex align-items-center justify-content-center">
+                        <div v-if="edit_category_loading" class="text-center d-flex align-items-center justify-content-center">
                             <Skeleton width="80px" height="40px" class="mt-2 mx-1" style="cursor: wait;" />
                             <Skeleton width="80px" height="40px" class="mt-2 mx-1" style="cursor: wait;" />
                         </div>
@@ -238,9 +238,9 @@ const categories = ref(null);
 const loadData = () => {
     categoryStore.getCategoryData().then((response) => {
         categories.value = response;
-      }).catch((error) => {
+    }).catch((error) => {
         loadToast(error.response.data.message, 'error');
-      });
+    });
 };
 
 /* Columns */
@@ -373,7 +373,6 @@ const new_category_modal = ref(false);
 const new_category = ref('');
 
 const add_new_category = () => {
-    /* categoryStore.addCategory(new_category.value); */
     categoryStore.addCategory(new_category.value).then((response) => {
         if (response.status == 200) {
             new_category_modal.value = false;
@@ -389,6 +388,7 @@ const add_new_category = () => {
 const edit_category_modal = ref(false);
 const edit_category = ref('');
 const category_id = ref('');
+const edit_category_loading = ref(true);
 
 const update_category = () => {
     categoryStore.updateCategory(edit_category.value, category_id.value).then((response) => {
@@ -414,6 +414,7 @@ const action = () => {
             edit_category_modal.value = true;
 
             categoryStore.getCategory(id).then((response) => {
+                edit_category_loading.value = false;
                 edit_category.value = response.category_name;
                 category_id.value = response.id;
             }).catch((error) => {
@@ -453,6 +454,7 @@ const clear_category_modal = () => {
     edit_category_modal.value = false;
     edit_category.value = '';
     category_id.value = '';
+    edit_category_loading.value = true;
 };
 
 const loadToast = (message, type) => {

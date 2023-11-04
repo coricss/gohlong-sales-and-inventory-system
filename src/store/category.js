@@ -11,9 +11,6 @@ export const useCategoryStore = defineStore('categories', {
         categoriesInfo: (state) => state.categoriesData,
     },
     actions: {
-        async getToken() {
-            await axios.get('sanctum/csrf-cookie');
-        },
         getCategoryData () {
             return new Promise ((resolve, reject) => {
                 axios.get('api/categories')
