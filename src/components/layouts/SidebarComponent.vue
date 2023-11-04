@@ -110,7 +110,7 @@
               </li>
               <li class="nav-item" 
                 id="inventory_menu"
-                :class="{'menu-open': is_inventory_open}"
+                :class="{'menu-open': $route.path.includes('/inventory') || is_inventory_open}"
               >
                 <a style="cursor: pointer;" class="inventory nav-link" :class="{'active': $route.path.includes('/inventory')}">
                   <i class="nav-icon fas fa-boxes"></i>
@@ -178,6 +178,7 @@
     import { useToast } from "vue-toastification";
     import { useProfileManagementStore } from "@/store/profile-management.js";
     import passwordMeter from "vue-simple-password-meter";
+
     const is_inventory_open = ref(false);
     const user = ref(JSON.parse(sessionStorage.getItem("user")));
     const password_form = ref({
