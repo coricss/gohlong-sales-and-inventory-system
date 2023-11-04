@@ -112,7 +112,7 @@
                 @click="is_inventory_open = true" 
                 :class="{'menu-open': $route.path.includes('/inventory')}"
               >
-                <a href="#" class="inventory nav-link" :class="{'active': $route.path.includes('/inventory')}">
+                <a href="" class="inventory nav-link" :class="{'active': $route.path.includes('/inventory')}">
                   <i class="nav-icon fas fa-boxes"></i>
                   <p>
                     Inventory
