@@ -28,7 +28,7 @@
                                             class="table table-hover table-bordered table-sm text-dark display nowrap w-100"
                                             id="product-management-table"
                                             ref="product_table"
-                                            :data="items"
+                                            :data="product_items"
                                             :columns="columns"
                                             :options="{
                                                 dom:            'Bftip',
@@ -86,12 +86,301 @@
                                                 
                                             </tbody>
                                         </DataTable>
+                                         <ConfirmDialog
+                                            :dismissable-mask="true"
+                                            :closable="true"
+                                            :draggable="false"
+                                            :resizable="false"
+                                        ></ConfirmDialog>
                                     </div>
                                 </div>
                             </div>
                         </div>
                     </div>
                 </section>
+                <!-- ADD NEW PRODUCT -->
+                <Dialog 
+                    v-model:visible="new_product_modal"
+                    :modal="true" 
+                    :closable="true" 
+                    :dismissable-mask="false" 
+                    :draggable="false" 
+                    :resizable="true"  
+                    @hide="clear_product_modal"
+                    :style="{ width: '30rem' }"
+                >
+                    <template #header>
+                        <div class="text-center">
+                            <h4 class="m-0 font-weight-bold">Add new product</h4>
+                        </div>
+                    </template>
+                    <form @submit.prevent="add_new_product" id="new-product-form">
+                        <div class="row">
+                            <div class="col-sm-8 mt-2">
+                                <InputText 
+                                    v-model.trim="new_product"
+                                    class="w-100"
+                                    placeholder="Enter model/size"
+                                    :maxlength="50"
+                                    required
+                                    autofocus
+                                />
+                            </div>
+                             <div class="col-sm-4 mt-2">
+                                <InputNumber
+                                    inputId="new-stocks"
+                                    v-model="new_stocks"
+                                    placeholder="Enter stocks"
+                                    :min="0"
+                                    suffix=" pc(s)"
+                                    showButtons
+                                    required
+                                    decrementButtonClass="p-button-secondary" 
+                                    incrementButtonClass="p-button-secondary" 
+                                />
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-sm-6 mt-2">
+                                <Dropdown 
+                                    v-model="new_brand"
+                                    id="brand_dropdown"
+                                    class="w-100"
+                                    :options="brand_items"
+                                    optionLabel="brand_name"
+                                    optionValue="id"
+                                    placeholder="Select brand"
+                                    filter
+                                    showClear
+                                    required
+                                    @click="getBrandData"
+                                    @change="getCategorById(new_brand)"
+                                />
+                            </div>
+                            <div class="col-sm-6 mt-2">
+                                <Dropdown 
+                                    v-model="new_category"
+                                    id="category_dropdown"
+                                    class="w-100"
+                                    :options="category_items"
+                                    optionLabel="category_name"
+                                    optionValue="id"
+                                    placeholder="Select category"
+                                    filter
+                                    showClear
+                                    required
+                                    disabled
+                                />
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-sm-6 mt-2">
+                                <InputNumber
+                                    inputId="new-price"
+                                    v-model="new_price"
+                                    placeholder="Enter price"
+                                    :min="0"
+                                    prefix="Price: "
+                                    showButtons
+                                    required
+                                    mode="currency"
+                                    currency="PHP"
+                                    decrementButtonClass="p-button-secondary" 
+                                    incrementButtonClass="p-button-secondary" 
+                                />
+                            </div>
+                            <div class="col-sm-6 mt-2">
+                                <InputNumber 
+                                    inputId="new-discounted-price"
+                                    v-model="new_discounted_price"
+                                    placeholder="Enter discounted price"
+                                    :min="0"
+                                    prefix="Discount: "
+                                    showButtons
+                                    required
+                                    mode="currency"
+                                    currency="PHP"
+                                    decrementButtonClass="p-button-secondary" 
+                                    incrementButtonClass="p-button-secondary" 
+                                />
+                            </div>
+                        </div>
+                    </form>
+                    <template #footer>
+                        <div class="text-center">
+                            <Button 
+                                icon="pi pi-check"
+                                class=" mt-2 mx-1 rounded p-button-success"
+                                size="small"
+                                type="submit"
+                                form="new-product-form"
+                            >
+                                <i class="fas fa-save mr-1"></i> Save
+                            </Button>
+                            <Button 
+                                icon="pi pi-check"
+                                class=" mt-2 mx-1 rounded p-button-danger"
+                                size="small"
+                                outlined 
+                                @click="new_product_modal = false"
+                            >
+                                <i class="fas fa-times mr-1"></i>
+                                Cancel
+                            </Button>
+                        </div>
+                    </template>
+                </Dialog>
+
+                <!-- EDIT PRODUCT -->
+                <Dialog 
+                    v-model:visible="edit_product_modal"
+                    :modal="true" 
+                    :closable="true" 
+                    :dismissable-mask="false" 
+                    :draggable="false" 
+                    :resizable="true"  
+                    @hide="clear_product_modal"
+                    :style="{ width: '30rem' }"
+                >
+                    <template #header>
+                        <div class="text-center">
+                            <h4 class="m-0 font-weight-bold">Update product</h4>
+                        </div>
+                    </template>
+                    <form @submit.prevent="update_product" id="edit-product-form">
+                        <div class="row">
+                            <div class="col-sm-8 mt-2">
+                                <InputText 
+                                    v-model.trim="edit_product"
+                                    class="w-100"
+                                    placeholder="Enter model/size"
+                                    :maxlength="50"
+                                    required
+                                />
+                            </div>
+                             <div class="col-sm-4 mt-2">
+                                <InputNumber
+                                    inputId="edit-stocks"
+                                    v-model="edit_stocks"
+                                    placeholder="Enter stocks"
+                                    :min="0"
+                                    suffix=" pc(s)"
+                                    showButtons
+                                    required
+                                    decrementButtonClass="p-button-secondary" 
+                                    incrementButtonClass="p-button-secondary" 
+                                />
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-sm-6 mt-2">
+                                <Dropdown 
+                                    v-model="edit_brand"
+                                    id="brand_dropdown"
+                                    class="w-100"
+                                    :options="brand_items"
+                                    optionLabel="brand_name"
+                                    optionValue="id"
+                                    placeholder="Select brand"
+                                    filter
+                                    showClear
+                                    required
+                                    @click="getBrandData"
+                                    @change="getCategorById(edit_brand)"
+                                />
+                            </div>
+                            <div class="col-sm-6 mt-2">
+                                <Dropdown 
+                                    v-model="edit_category"
+                                    id="category_dropdown"
+                                    class="w-100"
+                                    :options="category_items"
+                                    optionLabel="category_name"
+                                    optionValue="id"
+                                    placeholder="Select category"
+                                    filter
+                                    showClear
+                                    required
+                                    disabled
+                                />
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-sm-6 mt-2">
+                                <InputNumber
+                                    inputId="edit-price"
+                                    v-model="edit_price"
+                                    placeholder="Enter price"
+                                    :min="0"
+                                    prefix="Price: "
+                                    showButtons
+                                    required
+                                    mode="currency"
+                                    currency="PHP"
+                                    decrementButtonClass="p-button-secondary" 
+                                    incrementButtonClass="p-button-secondary" 
+                                />
+                            </div>
+                            <div class="col-sm-6 mt-2">
+                                <InputNumber 
+                                    inputId="edit-discounted-price"
+                                    v-model="edit_discounted_price"
+                                    placeholder="Enter discounted price"
+                                    :min="0"
+                                    prefix="Discount: "
+                                    showButtons
+                                    required
+                                    mode="currency"
+                                    currency="PHP"
+                                    decrementButtonClass="p-button-secondary" 
+                                    incrementButtonClass="p-button-secondary" 
+                                />
+                            </div>
+                        </div>
+                    </form>
+                    <template #footer>
+                        <div class="text-center">
+                            <Button 
+                                icon="pi pi-check"
+                                class=" mt-2 mx-1 rounded p-button-success"
+                                size="small"
+                                type="submit"
+                                form="edit-product-form"
+                            >
+                                <i class="fas fa-save mr-1"></i> Save
+                            </Button>
+                            <Button 
+                                icon="pi pi-check"
+                                class=" mt-2 mx-1 rounded p-button-danger"
+                                size="small"
+                                outlined 
+                                @click="edit_product_modal = false"
+                            >
+                                <i class="fas fa-times mr-1"></i>
+                                Cancel
+                            </Button>
+                        </div>
+                    </template>
+                </Dialog>
+
+                <!-- PRINT BARCODE -->
+                <Dialog 
+                    v-model:visible="print_barcode_modal"
+                    :modal="true" 
+                    :closable="true" 
+                    :dismissable-mask="false" 
+                    :draggable="false" 
+                    :resizable="true"  
+                    @hide="clear_product_modal"
+                    :style="{ width: '50rem', }"
+                >
+                    <template #header>
+                        <div class="text-center">
+                            <h4 class="m-0 font-weight-bold">Print this barcode</h4>
+                        </div>
+                    </template>
+                    <iframe ref="print_frame" id="print_frame" name="print_frame" src="" style="display:block; width:100%; height: 500px; border: none;"></iframe>
+                </Dialog>
         <FooterComponent/>
     </div>
 </template>
@@ -109,56 +398,67 @@ import 'datatables.net-responsive';
 import 'datatables.net-select';
 
 import { ref, onMounted, inject } from "vue";
-
+import { useConfirm } from "primevue/useconfirm";
 import { useToast } from "vue-toastification";
+import { useCategoryStore } from "@/store/category.js";
+import { useBrandStore } from "@/store/brands.js";
+import { useProductStore } from "@/store/products.js";
+
+const categoryStore = useCategoryStore();
+const brandStore = useBrandStore();
+const productStore = useProductStore();
 
 DataTable.use(DataTablesCore);
 DataTable.use(Buttons);
 
+const confirm = useConfirm();
 const toast = useToast();
 const swal = inject("$swal");
 const counter = ref(0);
+const product_items = ref(null);
 
 /* loadData */
-/* const loadData = () => {
-      users.getUsersData().then((response) => {
-        employees.value = response;
-      }).catch((error) => {
-        loadToast(error.response.data.message, 'error');
-      });
-}; */
-const items = ref([
-    {
-        id:1,
-        product_id: '123456',
-        model_size:"32",
-        brand:"hkhj",
-        category:"eqweq",
-        quantity:"2",
-        price:"Php 2",
-        discounted_price:"Php 23",
-        total_stock_price:"Php 4",
-        total_stock_discounted_price:"Php 46",
-        created_at:"12\/09\/2023 02:14 PM",
-        updated_at:"07\/09\/2023 10:12 PM"
-        
-    },
-    {
-        id:2,
-        product_id: '654321',
-        model_size:"32",
-        brand:"hkhj",
-        category:"eqweq",
-        quantity:"2",
-        price:"Php 2",
-        discounted_price:"Php 23",
-        total_stock_price:"Php 4",
-        total_stock_discounted_price:"Php 46",
-        created_at:"12\/09\/2023 02:14 PM",
-        updated_at:"07\/09\/2023 10:12 PM"
-        
+const loadData = () => {
+    productStore.getProductData().then((response) => {
+        product_items.value = response;
+    }).catch((error) => {
+        loadToast(error.message, 'error');
+    });
+};
+
+const brand_items = ref(null);
+const new_category = ref(null);
+const category_items = ref(null);
+
+const getBrandData = () => {
+    brandStore.getBrandData().then((response) => {
+        brand_items.value = response;
+    }).catch((error) => {
+        loadToast(error.message, 'error');
+    });
+};
+
+const getCategoryData = () => {
+    categoryStore.getCategoryData().then((response) => {
+        category_items.value = response;
+    }).catch((error) => {
+        loadToast(error.message, 'error');
+    });
+}
+
+const getCategorById = (brand_id) => {
+    getCategoryData();
+    if(brand_id !== null) {
+        brandStore.getBrandById(brand_id).then((response) => {
+            new_category.value = response.category_id;
+            edit_category.value = response.category_id;
+        }).catch((error) => {
+            loadToast(error.message, 'error');
+        });
+    } else {
+        new_category.value = null;
     }
-]);
+};
 
 /* Columns */
 const columns = ref([
@@ -176,31 +476,58 @@ const columns = ref([
         data: "model_size",
     },
     {
-        data: "brand",
+        data: "brand_name",
     },
     {
-        data: "category",
+        data: "category_name",
     },
     {
-        data: "quantity",
+        data: "stocks",
+        render: function (data, type, row) {
+            if (data <= 10) {
+                return '<center><span class="badge badge-danger">'+data+'</span></center>';
+            } else if (data <= 20) {
+                return '<center><span class="badge badge-warning">'+data+'</span></center>';
+            } else {
+                return '<center><span class="badge badge-success">'+data+'</span></center>';
+            }
+        }
     },
     {
         data: "price",
+        render: function (data, type, row) {
+            return '<center><small>'+new Intl.NumberFormat('en-PH', { style: 'currency', currency: 'PHP' }).format(data)+'</small></center>';
+        }
     },
     {
-        data: "discounted_price",
+        data: "discount",
+        render: function (data, type, row) {
+            return '<center><small>'+new Intl.NumberFormat('en-PH', { style: 'currency', currency: 'PHP' }).format(data)+'</small></center>';
+        }
     },
     {
         data: "total_stock_price",
+        render: function (data, type, row) {
+            return '<center><small>'+new Intl.NumberFormat('en-PH', { style: 'currency', currency: 'PHP' }).format(data)+'</small></center>';
+        }
     },
     {
         data: "total_stock_discounted_price",
+        render: function (data, type, row) {
+            return '<center><small>'+new Intl.NumberFormat('en-PH', { style: 'currency', currency: 'PHP' }).format(data)+'</small></center>';
+        }
     },
     {
         data: "created_at",
+        render: function (data, type, row) {
+          return '<small>'+new Date(data).toLocaleString()+'</small>';
+        }
     },
     {
         data: "updated_at",
+        render: function (data, type, row) {
+          return '<small>'+new Date(data).toLocaleString()+'</small>';
+        }
     },
     {
         data: "id",
@@ -211,13 +538,17 @@ const columns = ref([
             btn_edit_product.setAttribute("data-id", data);
             btn_edit_product.innerHTML = `<i class=\"fas fa-edit\" data-id="${data}"></i>`;
 
+            var btn_print_barcode = document.createElement("button");
+            btn_print_barcode.setAttribute("class", "btn btn-sm btn-info btn-print-barcode");
+            btn_print_barcode.setAttribute("data-id", data);
+            btn_print_barcode.innerHTML = `<i class=\"fas fa-barcode\" data-id="${data}"></i>`;
 
             var btn_delete_product = document.createElement("button");
             btn_delete_product.setAttribute("class", "btn btn-sm btn-danger btn-delete-product");
             btn_delete_product.setAttribute("data-id", data);
             btn_delete_product.innerHTML = `<i class=\"fas fa-trash\" data-id="${data}"></i>`;
 
-            return '<center>'+btn_edit_product.outerHTML+' '+btn_delete_product.outerHTML+'</center>';
+            return '<center>'+btn_edit_product.outerHTML+' '+ btn_print_barcode.outerHTML +' '+btn_delete_product.outerHTML+'</center>';
 
         }
     },
@@ -239,7 +570,7 @@ const buttons = ref([
             node.removeClass('dt-button');
         },
         action: function ( e, dt, node, config ) {
-        
+            new_product_modal.value = true;
         }
     },
     {
@@ -253,7 +584,7 @@ const buttons = ref([
             node.removeClass('dt-button');
         },
         action: function ( e, dt, node, config ) {
-           /*  loadData(); */
+            loadData();
             dt.order([0, 'asc']).draw();
             dt.columns.adjust().responsive.recalc();
             /* getDT(dt); */
@@ -298,13 +629,182 @@ const lengthMenu = ref([
 
 const windowResize = () => {
     window.addEventListener('resize', function() {
-        /* loadData(); */
+        loadData();
     });
 };
 
+/* Add new product */
+const new_product_modal = ref(false);
+const new_product = ref(null);
+const new_stocks = ref(null);
+const new_brand = ref(null);
+const new_price = ref(null);
+const new_discounted_price = ref(null);
+
+const add_new_product = () => {
+    if ((new_product.value === null) || (new_stocks.value === null) || (new_brand.value === null) || (new_category.value === null) || (new_price.value === null) || (new_discounted_price.value === null)) {
+        loadToast('Please enter details properly', 'error');
+        return false;
+    } else {
+        const data = {
+            model_size: new_product.value,
+            stocks: new_stocks.value,
+            brand_id: new_brand.value,
+            category_id: new_category.value,
+            price: new_price.value,
+            discounted_price: new_discounted_price.value,
+        };
+        productStore.addProduct(data).then((response) => {
+            loadToast(response.message, 'success');
+            new_product_modal.value = false;
+            clear_product_modal();
+            loadData();
+        }).catch((error) => {
+            loadToast(error.message, 'error');
+        });
+    }
+};
+
+/* Edit product */
+const edit_product_modal = ref(false);
+const edit_product_id = ref(null);
+const edit_product = ref(null);
+const edit_stocks = ref(null);
+const edit_brand = ref(null);
+const edit_category = ref(null);
+const edit_price = ref(null);
+const edit_discounted_price = ref(null);
+const print_barcode_modal = ref(false);
+const print_frame = ref([]);
+
+const update_product = () => {
+    if ((edit_product.value === null) || (edit_stocks.value === null) || (edit_brand.value === null) || (edit_category.value === null) || (edit_price.value === null) || (edit_discounted_price.value === null)) {
+        loadToast('Please enter details properly', 'error');
+        return false;
+    } else {
+        const data = {
+            model_size: edit_product.value,
+            stocks: edit_stocks.value,
+            brand_id: edit_brand.value,
+            category_id: edit_category.value,
+            price: edit_price.value,
+            discounted_price: edit_discounted_price.value,
+        };
+        productStore.updateProduct(data, edit_product_id.value).then((response) => {
+            loadToast(response.message, 'success');
+            edit_product_modal.value = false;
+            clear_product_modal();
+            loadData();
+        }).catch((error) => {
+            loadToast(error.message, 'error');
+        });
+    }
+}
+
+const action = () => {
+    const productTable = document.querySelector('#product-management-table');
+
+    productTable.addEventListener('click', function(e) {
+        if (e.target.classList.contains('btn-edit-product') || e.target.classList.contains('fa-edit')) {
+            const id = e.target.getAttribute('data-id');
+            edit_product_id.value = id;
+            edit_product_modal.value = true;
+            getBrandData();
+            productStore.getProductById(id).then((response) => {
+                edit_product.value = response.model_size;
+                edit_stocks.value = response.stocks;
+                edit_brand.value = response.brand_id;
+                edit_category.value = response.category_id;
+                getCategorById(edit_brand.value);
+                edit_price.value = parseFloat(response.price);
+                edit_discounted_price.value = parseFloat(response.discount);
+            }).catch((error) => {
+                loadToast(error.message, 'error');
+            });
+        } else if (e.target.classList.contains('btn-delete-product') || e.target.classList.contains('fa-trash')) {
+            const id = e.target.getAttribute('data-id');
+            confirm.require({
+                message: 'Are you sure you want to proceed?',
+                header: 'Delete this product?',
+                icon: 'pi pi-question-circle',
+                acceptLabel: 'Yes, delete it!',
+                rejectLabel: 'No',
+                acceptClass: 'p-button-success p-button-sm rounded mx-1',
+                rejectClass: 'p-button-danger p-button-sm rounded mx-1',
+                accept: () => {
+                    productStore.deleteProduct(id).then((response) => {
+                        if (response.status == 200) {
+                            loadToast(response.message, 'success');
+                            loadData();
+                        }
+                    }).catch((error) => {
+                        loadToast(error.message, 'error');
+                    });
+                },
+                reject: () => {
+                   
+                }
+            });
+        } else if (e.target.classList.contains('btn-print-barcode') || e.target.classList.contains('fa-barcode')) {
+            const id = e.target.getAttribute('data-id');
+            print_barcode_modal.value = true;
+
+            productStore.printBarcode(id).then((response) => {
+                if (response.status == 200) {
+                    loadToast(response.message, 'success');
+                    print_frame.value.src = import.meta.env.VITE_LARAVEL_API_URL + 'barcodes/' + response.product.product_id+'.pdf';
+                    loadData();
+                }
+            }).catch((error) => {
+                loadToast(error.message, 'error');
+            });
+        }
+    });
+}
+
+const clear_product_modal = () => {
+    new_product.value = null;
+    new_stocks.value = null;
+    new_brand.value = null;
+    new_category.value = null;
+    new_price.value = null;
+    new_discounted_price.value = null;
+
+    edit_product.value = null;
+    edit_stocks.value = null;
+    edit_brand.value = null;
+    edit_category.value = null;
+    edit_price.value = null;
+    edit_discounted_price.value = null;
+};
+
+
+const loadToast = (message, type) => {
+    toast(message, {
+        timeout: 2000,
+        type: type,
+        position: 'top-right',
+        closeOnClick: true,
+        pauseOnFocusLoss: true,
+        pauseOnHover: true,
+        newestOnTop: true,
+        draggable: true,
+        draggablePercent: 0.6,
+        dangerouslyHTMLString: true,
+        showCloseButtonOnHover: false,
+        hideProgressBar: true,
+        closeButton: false,
+        icon: true,
+        rtl: false,
+        theme: 'colored',
+        transition: 'bounce'
+    });
+};
 
 onMounted(() => {
+    action();
     windowResize();
+    loadData();
 });
 
 </script>
@@ -314,5 +814,9 @@ onMounted(() => {
 @import 'datatables.net-buttons-dt';
 @import 'datatables.net-responsive-dt';
 @import 'datatables.net-select-dt';
+
+#new-stocks, #new-price, #new-discounted-price, #edit-stocks, #edit-price, #edit-discounted-price {
+    width: 100% !important;
+}
 
 </style>
