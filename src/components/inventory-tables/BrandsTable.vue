@@ -107,7 +107,7 @@
                             <h4 class="m-0 font-weight-bold">Add new brand</h4>
                         </div>
                     </template>
-                    <form @submit.prevent="add_new_brand" id="new-category-form">
+                    <form @submit.prevent="add_new_brand" id="new-brand-form">
                         <div class="row">
                             <div class="col-sm-12 mt-2">
                                 <InputText 
@@ -143,7 +143,7 @@
                                 class=" mt-2 mx-1 rounded p-button-success"
                                 size="small"
                                 type="submit"
-                                form="new-category-form"
+                                form="new-brand-form"
                             >
                                 <i class="fas fa-save mr-1"></i> Save
                             </Button>
@@ -177,7 +177,7 @@
                             <h4 class="m-0 font-weight-bold">Update brand</h4>
                         </div>
                     </template>
-                    <form @submit.prevent="update_brand" id="edit-category-form">
+                    <form @submit.prevent="update_brand" id="edit-brand-form">
                         <div class="row">
                             <div class="col-sm-12 mt-2">
                                 <Skeleton v-if="edit_brand_loading" width="100%" height="50px" style="cursor: wait;" />
@@ -219,7 +219,7 @@
                                 class=" mt-2 mx-1 rounded p-button-success"
                                 size="small"
                                 type="submit"
-                                form="edit-category-form"
+                                form="edit-brand-form"
                             >
                                 <i class="fas fa-save mr-1"></i> Save
                             </Button>
