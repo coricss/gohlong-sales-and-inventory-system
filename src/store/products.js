@@ -38,6 +38,15 @@ export const useProductStore = defineStore('products', {
                 });
             });
         },
+        getProductByProductCode(product_code) {
+            return new Promise ((resolve, reject) => {
+                axios.get(`api/product-code/${product_code}`).then((response) => {
+                    resolve(response.data);
+                }).catch((error) => {
+                    reject(error);
+                });
+            });
+        },
         updateProduct(data, id) {
             return new Promise ((resolve, reject) => {
                 axios.put(`api/update-product/${id}`, data).then((response) => {

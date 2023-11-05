@@ -542,7 +542,7 @@
                         <div class="col-sm-12">
                             <div class="table-responsive">
                                 <table class="table table-bordered table-sm text-dark display nowrap w-100" id="table-invoice">
-                                    <thead class="text-orange" id="table-invoice-thead">
+                                    <thead class="text-orange" id="table-invoice-thead" style="width: 100%">
                                         <tr>
                                             <th>#</th>
                                             <th>Product ID</th>
@@ -557,13 +557,15 @@
                                     <tbody id="table-invoice-tbody">
                                         <tr v-for="(item, index) in items" :key="index">
                                             <td>{{ index + 1 }}</td>
-                                            <td>{{ item.product_id }}</td>
+                                            <td style="word-break: break-all; white-space: normal;">
+                                                {{ item.product_id }}
+                                            </td>
                                             <td>{{ item.model_size }}</td>
                                             <td>{{ item.brand }}</td>
                                             <td>{{ item.category }}</td>
                                             <td>
                                                 <span>&#8369;</span>
-                                                {{ item.price.toFixed(2) }}
+                                                {{ item.price }}
                                             </td>
                                             <td>{{ item.quantity }}</td>
                                             <td>
@@ -670,7 +672,9 @@ import {
 import { Html5QrcodeScanner, Html5Qrcode, Html5QrcodeScanType  } from 'html5-qrcode';
 import { useConfirm } from "primevue/useconfirm";
 import { useToast } from "vue-toastification";
+import { useProductStore } from "@/store/products.js";
 
+const productStore = useProductStore();
 const confirm = useConfirm();
 const toast = useToast();
 
@@ -781,30 +785,46 @@ const search_item = () => {
     setTimeout(() => {
         if(search.value == null || search.value == '') {
             item_found.value = false;
+            search_loading.value = false;
         } else {
-        
+           
             /* search function */
-            product.value.product_id = search.value;
-            product.value.model_size = '175/65 R14';
-            product.value.brand = 'ACHILLES';
-            product.value.category = 'Tires';
-            product.value.price = 1950.00;
-            product.value.discounted_price = 1859.52;
-        /*  product.value.quantity = item_quantity.value; */
-            product.value.is_discounted = is_discounted.value;
-            product.value.stocks = 10;
 
-            items.value.forEach(item => {
-                if(item.product_id == product.value.product_id) {
-                    item_found.value = true;
-                    product.value.stocks = product.value.stocks - item.quantity;
+            productStore.getProductByProductCode(search.value).then(response => {
+                if(response.status == 200 ) {
+                    product.value.product_id = response.product.product_id;
+                    product.value.model_size = response.product.model_size;
+                    product.value.brand = response.product.brand_name;
+                    product.value.category = response.product.category_name;
+                    product.value.price = response.product.price;
+                    product.value.discounted_price = response.product.discount;
+                    product.value.stocks = response.product.stocks;
+                    product.value.is_discounted = is_discounted.value;
+
+                    items.value.forEach(item => {
+                        if(item.product_id == product.value.product_id) {
+                            item_found.value = true;
+                            product.value.stocks = product.value.stocks - item.quantity;
+                        }
+                    });
+
+                    item_found.value = true; 
+                    search_loading.value = false;
+                    
+                } else {
+                    loadToast('Item not found', 'error');
+                    item_found.value = false;
+                    search_loading.value = false;
                 }
+                
+            }).catch(error => {
+                loadToast(`Error searching product: ${error}`, 'error');
+                search_loading.value = false;
             });
 
-            item_found.value = true; 
         }
 
-        search_loading.value = false;
+        
     }, 1000);
 }
 
@@ -833,18 +853,6 @@ const add_item = () => {
             items.value[item_index].quantity += item_quantity.value;
             items.value[item_index].subtotal = is_discounted.value ? product.value.discounted_price * items.value[item_index].quantity : product.value.price * items.value[item_index].quantity;
         } else {
-            /* items.value.push({
-                id: items.value.length + 1,
-                product_id: product.value.product_id,
-                model_size: product.value.model_size,
-                brand: product.value.brand,
-                category: product.value.category,
-                price: product.value.price,
-                quantity: item_quantity.value,
-                subtotal: is_discounted.value ? product.value.discounted_price * item_quantity.value : product.value.price * item_quantity.value,
-            }); */
-
-            /* push to items.value and reverse it */
             items.value.unshift({
                 id: items.value.length + 1,
                 product_id: product.value.product_id,
@@ -861,6 +869,7 @@ const add_item = () => {
             return accumulator + item.subtotal;
         }, 0);
 
+        item_quantity.value = 1;
         total_price.value = total_price_of_column;
         search.value = null;
         item_found.value = false;
@@ -921,7 +930,7 @@ const columns = ref([
     {
         data: "price",
         render: function (data, type, row, meta) {
-            return '<span>&#8369;</span> ' + data.toFixed(2);
+            return '<span>&#8369;</span> ' + data;
         }
     },
     {
