@@ -32,19 +32,19 @@
         {
             id: 1,
             title: "Tire Repair",
-            description: "Lorem ipsum dolor sit amet consectetur adipisicing elit. Accusantium voluptatibus cumque eos optio suscipit blanditiis inventore iusto aspernatur voluptates, soluta dolores rerum dolore iste in, odio nulla tenetur sequi eius.",
+            description: "We take pride in providing top-notch tire repair services to keep your vehicle safe and running smoothly. Our team of experienced technicians is dedicated to ensuring that your tires are in the best possible condition, and we offer a range of services to meet your specific needs.",
             image: "/src/assets/imgs/services/service1.jpg",
         },
         {
             id: 2,
             title: "Car Air Conditioning",
-            description: "Lorem ipsum dolor sit amet consectetur adipisicing elit. Quo ducimus nostrum fugiat sequi nisi veritatis veniam fuga voluptates. Quibusdam delectus perspiciatis, id voluptas totam qui exercitationem eaque rem odio, quia, non accusamus ipsum repellendus commodi quo! Sint enim ipsam, tempora debitis molestias iste perspiciatis itaque quisquam, omnis rem, illum ducimus.",
+            description: "We understand the importance of a properly functioning car air conditioning system, especially during hot summer months. Our dedicated team of automotive technicians is here to provide a comprehensive range of car air conditioning services to keep you comfortable while on the road.",
             image: "/src/assets/imgs/services/service2.jpg",
         },
         {
             id: 3,
             title: "Change Oil",
-            description: "Lorem ipsum dolor sit amet consectetur adipisicing elit. Ab sequi odit sint. Et, eum hic dolorem eius voluptatum aliquam magni temporibus sequi repellendus quaerat ducimus, iusto blanditiis, possimus tempora consequatur repudiandae ipsam consequuntur accusantium omnis iure? Magni quaerat eaque dolorum!",
+            description: "We are dedicated to preserving the performance and longevity of your vehicle by providing expert car oil change services. Regular oil changes are a fundamental aspect of car maintenance, and our team is committed to making the process easy and convenient for you. Contact us today to schedule your next oil change or to inquire about our services. Your vehicle's well-being is our priority, and we're here to ensure it runs at its best.",
             image: "/src/assets/imgs/services/service3.jpg",
         }
     ]);
