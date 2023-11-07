@@ -329,15 +329,15 @@
                                                         className: 'text-center',
                                                     },
                                                     {
-                                                        targets: [1, 2, 3, 4, 5, 6],
+                                                        targets: [1, 2, 3, 4, 5, 6, 7],
                                                         className: 'text-center align-middle',
                                                     },
                                                     {
-                                                        targets: 7,
+                                                        targets: 8,
                                                         className: 'text-center align-middle data_total_price',
                                                     },
                                                     {
-                                                        targets: 8,
+                                                        targets: 10,
                                                         className: 'text-center',
                                                         orderable: false,
                                                     }
@@ -353,6 +353,8 @@
                                                     <th>Brand</th>
                                                     <th>Category</th>
                                                     <th>Price</th>
+                                                    <th>Discounted Price</th>
+                                                    <th>Is Discounted</th>
                                                     <th>Quantity</th>
                                                     <th>Subtotal</th>
                                                     <th>Action</th>
@@ -542,7 +544,7 @@
                         <div class="col-sm-12">
                             <div class="table-responsive">
                                 <table class="table table-bordered table-sm text-dark display nowrap w-100" id="table-invoice">
-                                    <thead class="text-orange" id="table-invoice-thead" style="width: 100%">
+                                    <thead class="text-orange" id="table-invoice-thead" style="width: 100%; font-size: small;">
                                         <tr>
                                             <th>#</th>
                                             <th>Product ID</th>
@@ -550,6 +552,8 @@
                                             <th>Brand</th>
                                             <th>Category</th>
                                             <th>Price</th>
+                                            <th>Discount</th>
+                                            <th>With Disc.</th>
                                             <th>Quantity</th>
                                             <th>Subtotal</th>
                                         </tr>
@@ -567,6 +571,11 @@
                                                 <span>&#8369;</span>
                                                 {{ item.price }}
                                             </td>
+                                            <td>
+                                                <span>&#8369;</span>
+                                                {{ item.discounted_price }}
+                                            </td>
+                                            <td>{{ item.is_discounted }}</td>
                                             <td>{{ item.quantity }}</td>
                                             <td>
                                                 <span>&#8369;</span>
@@ -798,6 +807,7 @@ const search_item = () => {
                     product.value.category = response.product.category_name;
                     product.value.price = response.product.price;
                     product.value.discounted_price = response.product.discount;
+                    is_discounted.value = false;
                     product.value.stocks = response.product.stocks;
                     product.value.is_discounted = is_discounted.value;
 
@@ -822,7 +832,7 @@ const search_item = () => {
                 search_loading.value = false;
             });
 
-        }
+        } 
 
         
     }, 1000);
@@ -850,8 +860,23 @@ const add_item = () => {
         const item_index = items.value.findIndex(item => item.product_id == product.value.product_id);
         
         if(item_index != -1) {
-            items.value[item_index].quantity += item_quantity.value;
-            items.value[item_index].subtotal = is_discounted.value ? product.value.discounted_price * items.value[item_index].quantity : product.value.price * items.value[item_index].quantity;
+            if(items.value[item_index].is_discounted != is_discounted.value) {
+                items.value.unshift({
+                    id: items.value.length + 1,
+                    product_id: product.value.product_id,
+                    model_size: product.value.model_size,
+                    brand: product.value.brand,
+                    category: product.value.category,
+                    price: product.value.price,
+                    discounted_price: product.value.discounted_price,
+                    is_discounted: is_discounted.value ? 'Yes' : 'No',
+                    quantity: item_quantity.value,
+                    subtotal: is_discounted.value ? product.value.discounted_price * item_quantity.value : product.value.price * item_quantity.value,
+                });
+            } else {
+                items.value[item_index].quantity += item_quantity.value;
+                items.value[item_index].subtotal = is_discounted.value ? product.value.discounted_price * items.value[item_index].quantity : product.value.price * items.value[item_index].quantity;
+            }
         } else {
             items.value.unshift({
                 id: items.value.length + 1,
@@ -860,6 +885,8 @@ const add_item = () => {
                 brand: product.value.brand,
                 category: product.value.category,
                 price: product.value.price,
+                discounted_price: product.value.discounted_price,
+                is_discounted: is_discounted.value ? 'Yes' : 'No',
                 quantity: item_quantity.value,
                 subtotal: is_discounted.value ? product.value.discounted_price * item_quantity.value : product.value.price * item_quantity.value,
             });
@@ -933,6 +960,13 @@ const columns = ref([
             return '<span>&#8369;</span> ' + data;
         }
     },
+    {
+        data: "discounted_price",
+        render: function (data, type, row, meta) {
+            return '<span>&#8369;</span> ' + data;
+        }
+    },
+    {data: "is_discounted"},
     {
         data: "quantity",
     },
