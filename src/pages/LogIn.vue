@@ -32,9 +32,9 @@
                             </div>
                         </div>
                     </form>
-                    <p class="mb-1 mt-3">
+                    <!-- <p class="mb-1 mt-3">
                         <a href="" data-toggle="modal" data-target="#forgotPassword">Forgot password?</a>
-                    </p>
+                    </p> -->
                 </div>
             </div>
         </div>

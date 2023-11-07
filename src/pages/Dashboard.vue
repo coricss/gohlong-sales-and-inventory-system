@@ -133,7 +133,7 @@
             title: "Total Sales",
             icon: "fas fa-chart-line fa-3x text-orange widget-icon",
             count: 2590,
-            link: "/inventory/sales"
+            link: "/sales"
         },
     ]);
 

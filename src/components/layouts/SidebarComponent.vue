@@ -148,6 +148,14 @@
                   </p>
                 </router-link>
               </li>
+              <li class="nav-item">
+                <router-link class="nav-link" to="/sales">
+                  <i class="nav-icon fas fa-cash-register"></i>
+                  <p>
+                    Sales
+                  </p>
+                </router-link>
+              </li>
               <!-- <li class="nav-item">
                 <a href="#" class="nav-link">
                   <i class="nav-icon fas fa-th"></i>
@@ -186,6 +194,7 @@
         new_password: "",
         confirm_password: "",
     });
+
     const api_url = import.meta.env.VITE_LARAVEL_API_URL;
     const has_picture = ref(false);
     const is_new_user = ref(null);
@@ -200,8 +209,8 @@
     }
 
     const loadProfileData = () => {
-        profileStore.getProfileData();
-        user.value = JSON.parse(sessionStorage.getItem("user"));
+        /* profileStore.getProfileData();
+        user.value = JSON.parse(sessionStorage.getItem("user")); */
     }
 
     const submitCreatePassword = (e) => {
