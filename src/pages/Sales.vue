@@ -109,10 +109,25 @@
         onMounted
     } from "vue";
 
+    import { useToast } from "vue-toastification";
+    import { useSaleStore } from "@/store/sales.js";
+
+    const toast = useToast();
+    const saleStore = useSaleStore();
+
     DataTable.use(DataTablesCore);
     DataTable.use(Buttons);
 
-    const sales = ref([
+    const sales = ref([]);
+    const loadData = () => {
+      saleStore.getSalesData().then((response) => {
+        sales.value = response;
+      }).catch((error) => {
+        loadToast(error.message, 'error');
+      });
+    };
+
+    /* const sales = ref([
         {
             'customer_name': 'test',
             'product_id': '21qwe',
@@ -128,7 +143,7 @@
             'change': '0',
             'created_at': '2023-11-07'
         },
-    ]);
+    ]); */
 
     const columns = ref([
         {
@@ -143,16 +158,46 @@
         },
         {data: 'product_id'},
         {data: 'model_size'},
-        {data: 'brand'},
-        {data: 'category'},
-        {data: 'price'},
-        {data: 'discounted_price'},
+        {data: 'brand_name'},
+        {data: 'category_name'},
+        {
+          data: 'price',
+          render: function (data, type, row) {
+            return '<center><small>'+new Intl.NumberFormat('en-PH', { style: 'currency', currency: 'PHP' }).format(data)+'</small></center>';
+          }
+        },
+        {
+          data: 'discount',
+          render: function (data, type, row) {
+            return '<center><small>'+new Intl.NumberFormat('en-PH', { style: 'currency', currency: 'PHP' }).format(data)+'</small></center>';
+          }
+        },
         {data: 'is_discounted'},
         {data: 'quantity'},
-        {data: 'subtotal'},
-        {data: 'payment'},
-        {data: 'change'},
-        {data: 'created_at'},
+        {
+          data: 'subtotal',
+          render: function (data, type, row) {
+            return '<center><small>'+new Intl.NumberFormat('en-PH', { style: 'currency', currency: 'PHP' }).format(data)+'</small></center>';
+          }
+        },
+        {
+          data: 'payment',
+          render: function (data, type, row) {
+            return '<center><small>'+new Intl.NumberFormat('en-PH', { style: 'currency', currency: 'PHP' }).format(data)+'</small></center>';
+          }
+        },
+        {
+          data: 'change',
+          render: function (data, type, row) {
+            return '<center><small>'+new Intl.NumberFormat('en-PH', { style: 'currency', currency: 'PHP' }).format(data)+'</small></center>';
+          }
+        },
+        {
+          data: 'created_at',
+          render: function (data, type, row) {
+            return '<small>'+new Date(data).toLocaleString()+'</small>';
+          }
+        },
     ]);
 
     const buttons = ref([
@@ -167,7 +212,7 @@
           node.removeClass('dt-button');
         },
         action: function ( e, dt, node, config ) {
-          /* loadData(); */
+          loadData();
           dt.order([0, 'asc']).draw();
           dt.columns.adjust().responsive.recalc();
           /* getDT(dt); */
@@ -209,6 +254,39 @@
         '50 rows'
       ]
     ]);
+
+    const windowResize = () => {
+        window.addEventListener('resize', function() {
+            loadData();
+        });
+    };
+
+    const loadToast = (message, type) => {
+      toast(message, {
+          timeout: 2000,
+          type: type,
+          position: 'top-right',
+          closeOnClick: true,
+          pauseOnFocusLoss: true,
+          pauseOnHover: true,
+          newestOnTop: true,
+          draggable: true,
+          draggablePercent: 0.6,
+          dangerouslyHTMLString: true,
+          showCloseButtonOnHover: false,
+          hideProgressBar: true,
+          closeButton: false,
+          icon: true,
+          rtl: false,
+          theme: 'colored',
+          transition: 'bounce'
+      });
+  };
+
+  onMounted(() => {
+      windowResize();
+      loadData();
+  });
 
 </script>
 

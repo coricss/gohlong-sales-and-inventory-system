@@ -379,8 +379,10 @@
                                             <div class="d-flex justify-content-end align-items-center">
                                                 <h5 class="text-dark m-0">Total Price:</h5>
                                                 <h5 class="text-dark m-0 mx-2">
-                                                    <span>&#8369;</span>
-                                                    {{ total_price.toFixed(2) }}
+                                                    <strong>
+                                                        <span>&#8369;</span>
+                                                        {{ total_price.toFixed(2) }}
+                                                    </strong>
                                                 </h5>
                                             </div>
                                         </div>
@@ -492,7 +494,7 @@
                     </div>
                 </div>
             </Dialog>
-            <Dialog class="invoice-dialog" v-model:visible="invoice_visible" :modal="true" :closable="true" :style="{ width: '1000px' }" :dismissable-mask="true" :draggable="true" :resizable="true" wi  @hide="">
+            <Dialog class="invoice-dialog" v-model:visible="invoice_visible" :modal="true" :closable="true" :style="{ width: '1000px' }" :dismissable-mask="true" :draggable="true" :resizable="true" wi  @hide="close_invoice">
                 <template #header>
                     <div class="text-center invoice_header">
                         <h4 class="m-0 font-weight-bold">Invoice</h4>
@@ -682,8 +684,10 @@ import { Html5QrcodeScanner, Html5Qrcode, Html5QrcodeScanType  } from 'html5-qrc
 import { useConfirm } from "primevue/useconfirm";
 import { useToast } from "vue-toastification";
 import { useProductStore } from "@/store/products.js";
+import { useSaleStore } from "@/store/sales.js";
 
 const productStore = useProductStore();
+const saleStore = useSaleStore();
 const confirm = useConfirm();
 const toast = useToast();
 
@@ -733,14 +737,8 @@ const confirm_checkout = (event) => {
             acceptClass: 'p-button-success p-button-sm rounded mx-1',
             rejectClass: 'p-button-danger p-button-sm rounded mx-1',
             accept: () => {
-                loadToast('Checkout successful', 'success');
-                /* check_out_dialog.value = false;
-                clear_payment();
-                items.value = [];
-                total_price.value = 0;
-                item_found.value = false;
-                search.value = null; */
                 invoice_visible.value = true;
+                check_out();
             },
             reject: () => {
                 /* loadToast('test', 'error'); */
@@ -800,42 +798,63 @@ const search_item = () => {
             /* search function */
 
             productStore.getProductByProductCode(search.value).then(response => {
-                if(response.status == 200 ) {
-                    product.value.product_id = response.product.product_id;
-                    product.value.model_size = response.product.model_size;
-                    product.value.brand = response.product.brand_name;
-                    product.value.category = response.product.category_name;
-                    product.value.price = response.product.price;
-                    product.value.discounted_price = response.product.discount;
-                    is_discounted.value = false;
-                    product.value.stocks = response.product.stocks;
-                    product.value.is_discounted = is_discounted.value;
-
-                    items.value.forEach(item => {
-                        if(item.product_id == product.value.product_id) {
-                            item_found.value = true;
-                            product.value.stocks = product.value.stocks - item.quantity;
-                        }
-                    });
-
-                    item_found.value = true; 
-                    search_loading.value = false;
-                    
+                if(response.product == null ) {
+                    clear_item();
+                    loadToast('No product found', 'error');
                 } else {
-                    loadToast('Item not found', 'error');
-                    item_found.value = false;
-                    search_loading.value = false;
+                    if(response.status == 200 ) {
+                        product.value.product_id = response.product.product_id;
+                        product.value.model_size = response.product.model_size;
+                        product.value.brand = response.product.brand_name;
+                        product.value.category = response.product.category_name;
+                        product.value.price = response.product.price;
+                        product.value.discounted_price = response.product.discount;
+                        is_discounted.value = false;
+                        product.value.stocks = response.product.stocks;
+                        product.value.is_discounted = is_discounted.value;
+
+                        items.value.forEach(item => {
+                            if(item.product_id == product.value.product_id) {
+                                item_found.value = true;
+                                product.value.stocks = product.value.stocks - item.quantity;
+                            }
+                        });
+
+                        item_found.value = true; 
+                        search_loading.value = false;
+                        
+                    } else {
+                        loadToast('Item not found', 'error');
+                        item_found.value = false;
+                        search_loading.value = false;
+                    }
                 }
+                
                 
             }).catch(error => {
                 loadToast(`Error searching product: ${error}`, 'error');
                 search_loading.value = false;
+                clear_item();
             });
 
         } 
 
         
     }, 1000);
+}
+
+const clear_item = () => {
+    product.value.product_id = null;
+    product.value.model_size = null;
+    product.value.brand = null;
+    product.value.category = null;
+    product.value.price = 0;
+    product.value.discounted_price = 0;
+    product.value.stocks = null;
+    product.value.is_discounted = false;
+    is_discounted.value = false;
+    search_loading.value = false;
+    search.value = null;
 }
 
 const add_item = () => {
@@ -860,7 +879,8 @@ const add_item = () => {
         const item_index = items.value.findIndex(item => item.product_id == product.value.product_id);
         
         if(item_index != -1) {
-            if(items.value[item_index].is_discounted != is_discounted.value) {
+            const is_disc = is_discounted.value ? 'Yes' : 'No';
+            if(items.value[item_index].is_discounted != is_disc) {
                 items.value.unshift({
                     id: items.value.length + 1,
                     product_id: product.value.product_id,
@@ -930,8 +950,31 @@ const clear_payment = () => {
     payment.value = 0;
 }
 
-const check_out = () => {
+const close_invoice = () => {
+    check_out_dialog.value = false;
+    items.value = [];
+    total_price.value = 0;
+    item_found.value = false;
+    search.value = null;
+}
 
+const check_out = () => {
+    const sale = {
+        customer_name: customer_name.value,
+        total_price: total_price.value,
+        payment: payment.value,
+        change: payment.value - total_price.value,
+        items: items.value,
+    };
+    saleStore.addSale(sale).then(response => {
+        if(response.status == 200) {
+            loadToast('Checkout successful', 'success');
+        } else {
+            loadToast('Checkout failed', 'error');
+        }
+    }).catch(error => {
+        loadToast(`Error checking out: ${error}`, 'error');
+    });
 }
 
 const columns = ref([
@@ -956,14 +999,14 @@ const columns = ref([
     },
     {
         data: "price",
-        render: function (data, type, row, meta) {
-            return '<span>&#8369;</span> ' + data;
+        render: function (data, type, row) {
+            return '<center><small>'+new Intl.NumberFormat('en-PH', { style: 'currency', currency: 'PHP' }).format(data)+'</small></center>';
         }
     },
     {
         data: "discounted_price",
-        render: function (data, type, row, meta) {
-            return '<span>&#8369;</span> ' + data;
+        render: function (data, type, row) {
+            return '<center><small>'+new Intl.NumberFormat('en-PH', { style: 'currency', currency: 'PHP' }).format(data)+'</small></center>';
         }
     },
     {data: "is_discounted"},
@@ -972,8 +1015,8 @@ const columns = ref([
     },
     {
         data: "subtotal",
-        render: function (data, type, row, meta) {
-            return '<span>&#8369; </span>' + data.toFixed(2);
+        render: function (data, type, row) {
+            return '<center><small><strong>'+new Intl.NumberFormat('en-PH', { style: 'currency', currency: 'PHP' }).format(data)+'</strong></small></center>';
         }
     },
     {
