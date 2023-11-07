@@ -54,15 +54,9 @@
                                                     className: 'text-center',
                                                 },
                                                 {
-                                                    targets: [2, 3, 4, 5, 6, 7, 8, 9, 10],
+                                                    targets: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13],
                                                     className: 'text-center align-middle',
-                                                },
-                                                {
-                                                    targets: [1, 11],
-                                                    className: 'text-center align-middle',
-                                                    orderable: false,
-                                                    searchable: false,
-                                                },
+                                                }
                                             ],
                                             order: [[ 0, 'asc' ]]
                                         }"
@@ -76,6 +70,8 @@
                                                 <th>Brand</th>
                                                 <th>Category</th>
                                                 <th>Price</th>
+                                                <th>Discounted Price</th>
+                                                <th>Is Discounted</th>
                                                 <th>Quantity</th>
                                                 <th>Subtotal</th>
                                                 <th>Payment</th>
@@ -124,6 +120,8 @@
             'brand': 'adsqwe',
             'category': 'asd',
             'price': '100',
+            'discounted_price': '123',
+            'is_discounted': 'Yes',
             'quantity': '5',
             'subtotal': '500',
             'payment': '500',
@@ -148,6 +146,8 @@
         {data: 'brand'},
         {data: 'category'},
         {data: 'price'},
+        {data: 'discounted_price'},
+        {data: 'is_discounted'},
         {data: 'quantity'},
         {data: 'subtotal'},
         {data: 'payment'},
