@@ -365,7 +365,7 @@
                                             </tbody>
                                         </DataTable>
                                 </div>
-                                <div class="card-footer">
+                                <div class="p-5">
                                     <div class="row">
                                         <div class="col-6">
                                             <div class="d-flex justify-content-start align-items-center">
