@@ -28,7 +28,9 @@
                                         <div>
                                             <h5 class="font-weight-bold widget-title">{{ widget.title }}</h5>
                                             <h4 class="text-dark widget-count">
-                                                <vue3-autocounter ref="counter" :startAmount="0" :endAmount="widget.count" :duration="1" prefix="" suffix="" separator="," decimalSeparator="." :decimals="0" :autoinit="true" />
+                                                <vue3-autocounter ref="counter" :startAmount="0" :endAmount="widget.count" :duration="1" prefix="&#8369;"
+                                                 suffix="" separator="," decimalSeparator="." :decimals="2" :autoinit="true" v-if="widget.id == 4" />
+                                                <vue3-autocounter v-else ref="counter" :startAmount="0" :endAmount="widget.count" :duration="1" prefix="" suffix="" separator="," decimalSeparator="." :decimals="0" :autoinit="true" />
                                             </h4>
                                         </div>
                                         <i :class="widget.icon"></i>
@@ -105,37 +107,72 @@
     import FooterComponent from "@/components/layouts/FooterComponent.vue";
 
     import {ref, onMounted} from "vue";
+    import { useDashboardStore } from "@/store/dashboard";
+
+    const dashboardStore = useDashboardStore();
+
+    const count_data = ref([]);
 
     const widgets = ref([
         {
             id: 1,
             title: "Products",
             icon: "fas fa-box-open fa-3x text-orange widget-icon",
-            count: 1234,
+            count: 0,
             link: "/inventory/products"
         },
         {
             id: 2,
             title: "Categories",
             icon: "fas fa-shapes fa-3x text-orange widget-icon",
-            count: 500,
+            count: 0,
             link: "/inventory/categories"
         },
         {
             id: 3,
             title: "Brands",
             icon: "fas fa-tags fa-3x text-orange widget-icon",
-            count: 200,
+            count: 0,
             link: "/inventory/brands"
         },
         {
             id: 4,
-            title: "Total Sales",
+            title: "Total Sales "+ /* this month */ '('+new Date().toLocaleString('default', { month: 'short', year: 'numeric' })+')',
             icon: "fas fa-chart-line fa-3x text-orange widget-icon",
-            count: 2590,
+            count: 0,
             link: "/sales"
         },
     ]);
+
+    const weeklyData = [];
+    const model_size = [];
+    const total_quantity = [];
+
+    const loadDashboard = () => {
+        dashboardStore.getWidgetsData().then((response) => {
+            count_data.value = response;
+            /* replace widgets.count */
+            widgets.value[0].count = response.products;
+            widgets.value[1].count = response.categories;
+            widgets.value[2].count = response.brands;
+            widgets.value[3].count = response.sales;
+        });
+
+        dashboardStore.getWeeklySalesData().then((response) => {
+            weeklyData.this_week = response.this_week;
+            weeklyData.last_week = response.last_week;
+            weeklySalesData.value = setweeklySalesData(weeklyData.this_week, weeklyData.last_week);
+        });
+
+        dashboardStore.getTopProductsData().then((response) => {
+            for (var i = 0; i < response.length; i++) {
+                model_size.push(response[i].model_size);
+                total_quantity.push(response[i].total_quantity);
+            }
+
+            topProductData.value = setTopProductData(model_size, total_quantity);
+        });
+    }
 
     const weeklySalesData = ref();
     const weeklySalesOptions = ref();
@@ -145,13 +182,25 @@
         weeklySalesOptions.value = setweeklySalesOptions();
     }; */
 
-    const setweeklySalesData = () => {
+    const last_seven_days = ref([]);
+    const last_7_days = () => {
+        var date_now = new Date();
+
+        for (var i = 0; i < 7; i++) {
+            var date = new Date(date_now);
+            date.setDate(date_now.getDate() - i);
+            var day = date.toLocaleString('default', { weekday: 'short' });
+            last_seven_days.value.push(day);
+        }
+    }
+
+    const setweeklySalesData = (this_week, last_week) => {
         return {
-            labels: ['MON', 'TUE', 'WED', 'THU', 'FRI', 'SAT', 'SUN'],
+            labels: last_seven_days,
             datasets: [
                 {
                     label: 'This week',
-                    data: [540, 234, 213, 567, 123, 446, 333],
+                    data: this_week,
                     minBarLength: 3,
                     barPercentage: 0.5,
                     backgroundColor: ['#fed8b9'],
@@ -160,7 +209,7 @@
                 },
                 {
                     label: 'Last week',
-                    data: [213, 235, 664, 345, 865, 344, 232],
+                    data: last_week,
                     minBarLength: 3,
                     barPercentage: 0.5,
                     backgroundColor: ['#ebebeb'],
@@ -221,14 +270,14 @@
     const topProductData = ref();
     const topProductOptions = ref(null);
 
-    const setTopProductData = () => {
+    const setTopProductData = (model_size, total_quantity) => {
         const documentStyle = getComputedStyle(document.body);
 
         return {
-            labels: ['A', 'B', 'C'],
+            labels: model_size,
             datasets: [
                 {
-                    data: [540, 325, 702],
+                    data: total_quantity,
                     backgroundColor: [documentStyle.getPropertyValue('--blue-500'), documentStyle.getPropertyValue('--yellow-500'), documentStyle.getPropertyValue('--green-500')],
                     hoverBackgroundColor: [documentStyle.getPropertyValue('--blue-400'), documentStyle.getPropertyValue('--yellow-400'), documentStyle.getPropertyValue('--green-400')]
                 }
@@ -244,7 +293,7 @@
             plugins: {
                 legend: {
                     display: true,
-                    position: 'bottom',
+                    position: 'right',
                     labels: {
                         cutout: '60%',
                         color: textColor,
@@ -259,14 +308,14 @@
 
     /* update count of categories */
     const updateCount = () => {
-        widgets.value[0].count = 1000;
+        /* widgets.value[0].count = 1000; */
 
     }
 
     onMounted(() => {
-        weeklySalesData.value = setweeklySalesData();
+        loadDashboard();
+        last_7_days();
         weeklySalesOptions.value = setweeklySalesOptions();
-        topProductData.value = setTopProductData();
         topProductOptions.value = setTopProductOptions();
         updateCount();
     });
