@@ -186,7 +186,7 @@
     const last_7_days = () => {
         var date_now = new Date();
 
-        for (var i = 0; i < 7; i++) {
+        for (var i = 1; i < 8; i++) {
             var date = new Date(date_now);
             date.setDate(date_now.getDate() - i);
             var day = date.toLocaleString('default', { weekday: 'short' });
