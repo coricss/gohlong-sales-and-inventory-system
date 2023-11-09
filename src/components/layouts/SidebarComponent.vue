@@ -209,8 +209,8 @@
     }
 
     const loadProfileData = () => {
-        /* profileStore.getProfileData();
-        user.value = JSON.parse(sessionStorage.getItem("user")); */
+        profileStore.getProfileData();
+        user.value = JSON.parse(sessionStorage.getItem("user"));
     }
 
     const submitCreatePassword = (e) => {
@@ -285,7 +285,7 @@
         is_inventory_open.value = !is_inventory_open.value;
       });
 
-      loadProfileData();
+      /* loadProfileData(); */
 
       user.value = JSON.parse(sessionStorage.getItem("user"));
       user.value.picture === null ? has_picture.value = false : has_picture.value = true;
