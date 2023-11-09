@@ -169,8 +169,8 @@
                 model_size.push(response[i].model_size);
                 total_quantity.push(response[i].total_quantity);
             }
-
-            topProductData.value = setTopProductData(model_size, total_quantity);
+            
+            topProductData.value = response.length == 0 ? setTopProductData(['No data'], [1]) : setTopProductData(model_size, total_quantity);
         });
     }
 
@@ -278,8 +278,8 @@
             datasets: [
                 {
                     data: total_quantity,
-                    backgroundColor: [documentStyle.getPropertyValue('--blue-500'), documentStyle.getPropertyValue('--yellow-500'), documentStyle.getPropertyValue('--green-500')],
-                    hoverBackgroundColor: [documentStyle.getPropertyValue('--blue-400'), documentStyle.getPropertyValue('--yellow-400'), documentStyle.getPropertyValue('--green-400')]
+                    backgroundColor: [documentStyle.getPropertyValue('--blue-500'), documentStyle.getPropertyValue('--yellow-500'), documentStyle.getPropertyValue('--green-500'), documentStyle.getPropertyValue('--red-500'), documentStyle.getPropertyValue('--purple-500')],
+                    hoverBackgroundColor: [documentStyle.getPropertyValue('--blue-400'), documentStyle.getPropertyValue('--yellow-400'), documentStyle.getPropertyValue('--green-400'), documentStyle.getPropertyValue('--red-400'), documentStyle.getPropertyValue('--purple-400')],
                 }
             ]
         };
