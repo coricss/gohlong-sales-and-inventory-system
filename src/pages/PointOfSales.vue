@@ -41,10 +41,10 @@
                                         <div class="col-md-12">
                                             <div class="p-inputgroup flex-1">
                                                 <InputText 
+                                                    id="search_item"
                                                     placeholder="Scan Barcode or Enter Product ID" 
                                                     v-model.trim="search"
                                                     @keyup.enter="search_item"
-                                                    @keypress="search_item"
                                                     @keyup.delete="clear_item"
                                                     autofocus
                                                 />
@@ -927,6 +927,8 @@ const add_item = () => {
         item_found.value = false;
         search_value === 'Scan' && startScan();
     }
+
+    document.getElementById('search_item').focus();
 }
 
 const remove_item = () => {
