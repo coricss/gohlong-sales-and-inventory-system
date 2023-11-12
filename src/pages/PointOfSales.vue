@@ -25,14 +25,16 @@
                             <!-- BARCODE -->
                             <div class="card card-orange card-outline">
                                 <div class="card-header">
-                                    <!-- <h4 class="text-dark" style="font-weight: 600">Search a Product Item</h4> -->
-                                    <SelectButton 
+                                    <h4 class="text-dark" style="font-weight: 600">Search a Product Item</h4>
+                                    <!-- 
+                                        **THIS IS FOR SEARCH OR SCAN**
+                                        <SelectButton 
                                         v-model="search_value" 
                                         :options="search_option" 
                                         aria-labelledby="basic" 
                                         :unselectable="true"
                                         @change="onSwtichToScan(search_value)"
-                                    />
+                                    /> -->
                                 </div>
                                 <div class="card-body">
                                     <div class="row mb-4" v-if="search_value == 'Search'">
@@ -42,6 +44,9 @@
                                                     placeholder="Scan Barcode or Enter Product ID" 
                                                     v-model.trim="search"
                                                     @keyup.enter="search_item"
+                                                    @keypress="search_item"
+                                                    @keyup.delete="clear_item"
+                                                    autofocus
                                                 />
                                                 <Button 
                                                     icon="fas fa-barcode" 
