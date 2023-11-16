@@ -1,25 +1,18 @@
 <template>
-    <div class="content-wrapper" style="min-height: 1599.06px;">
-      <!--   <Toast /> -->
-        <HeaderComponent/>
-        <SidebarComponent/>
-            <section class="content-header">
+    <div>
+        <HeaderComponent />
+        <SidebarComponent />
+        <div class="content-wrapper">
+            <div class="content-header">
                 <div class="container-fluid">
                     <div class="row mb-2">
                         <div class="col-sm-6">
-                            <h1 class="text-dark"><i class="nav-icon fas fa-cash-register"></i> Sales</h1>
+                            <h1 class="text-dark"><i class="nav-icon fas fa-clock"></i> Logs</h1>
                         </div>
-                        <!-- <div class="col-sm-6">
-                        <ol class="breadcrumb float-sm-right">
-                        <li class="breadcrumb-item"><a href="#">Home</a></li>
-                        <li class="breadcrumb-item"><a href="#">Layout</a></li>
-                        <li class="breadcrumb-item active">Fixed Footer Layout</li>
-                        </ol>
-                        </div> -->
                     </div>
                 </div>
-            </section>
-            <section class="content">
+            </div>
+            <div class="content">
                 <div class="container-fluid">
                     <div class="row">
                         <div class="col-12">
@@ -27,9 +20,9 @@
                                 <div class="card-body" style="display: block;">
                                     <DataTable 
                                         class="table table-hover table-bordered table-sm text-dark display nowrap w-100"
-                                        id="sales-table"
-                                        ref="sales_table"
-                                        :data="sales"
+                                        id="logs-table"
+                                        ref="logs_table"
+                                        :data="logs"
                                         :columns="columns"
                                         :options="{
                                             dom:            'Bftip',
@@ -54,7 +47,7 @@
                                                     className: 'text-center',
                                                 },
                                                 {
-                                                    targets: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13],
+                                                    targets: [1, 2, 3, 4, 5, 6, 7, 8],
                                                     className: 'text-center align-middle',
                                                 }
                                             ],
@@ -64,19 +57,14 @@
                                         <thead class="bg-dark text-white">
                                             <tr>
                                                 <th>#</th>
-                                                <th>Customer Name</th>
-                                                <th>Product ID</th>
-                                                <th>Model/Size</th>
-                                                <th>Brand</th>
-                                                <th>Category</th>
-                                                <th>Price</th>
-                                                <th>Discounted Price</th>
-                                                <th>Is Discounted</th>
-                                                <th>Quantity</th>
-                                                <th>Subtotal</th>
-                                                <th>Payment</th>
-                                                <th>Change</th>
-                                                <th>Created At</th>
+                                                <th>Picture</th>
+                                                <th>Name</th>
+                                                <th>Email</th>
+                                                <th>Action</th>
+                                                <th>Module</th>
+                                                <th>IP Address</th>
+                                                <th>Browser</th>
+                                                <th>Date & Time</th>
                                             </tr>
                                         </thead>
                                         <tbody>
@@ -88,8 +76,9 @@
                         </div>
                     </div>
                 </div>
-            </section>
-        <FooterComponent/>
+            </div>
+        </div>
+        <FooterComponent />
     </div>
 </template>
 
@@ -110,93 +99,81 @@
     } from "vue";
 
     import { useToast } from "vue-toastification";
-    import { useSaleStore } from "@/store/sales.js";
+    import { useLogStore } from "@/store/logs.js";
 
     const toast = useToast();
-    const saleStore = useSaleStore();
+    const logStore = useLogStore();
 
     DataTable.use(DataTablesCore);
     DataTable.use(Buttons);
 
-    const sales = ref([]);
+    const logs = ref([]);
     const loadData = () => {
-      saleStore.getSalesData().then((response) => {
-        sales.value = response;
-      }).catch((error) => {
-        loadToast(error.message, 'error');
-      });
-    };
-
-    /* const sales = ref([
-        {
-            'customer_name': 'test',
-            'product_id': '21qwe',
-            'model_size': '123x12',
-            'brand': 'adsqwe',
-            'category': 'asd',
-            'price': '100',
-            'discounted_price': '123',
-            'is_discounted': 'Yes',
-            'quantity': '5',
-            'subtotal': '500',
-            'payment': '500',
-            'change': '0',
-            'created_at': '2023-11-07'
-        },
-    ]); */
+        logStore.getLogsData().then((response) => {
+            logs.value = response;
+        }).catch((error) => {
+            loadToast(error.message, 'error');
+        });
+    }
 
     const columns = ref([
         {
-            /* count */
             data: null,
             render: function (data, type, row, meta) {
             return meta.row + meta.settings._iDisplayStart + 1;
             }
         },
         {
-            data: 'customer_name'
-        },
-        {data: 'product_id'},
-        {data: 'model_size'},
-        {data: 'brand_name'},
-        {data: 'category_name'},
-        {
-          data: 'price',
-          render: function (data, type, row) {
-            return '<center><small>'+new Intl.NumberFormat('en-PH', { style: 'currency', currency: 'PHP' }).format(data)+'</small></center>';
-          }
+            data: 'picture',
+            render: function (data, type, row, meta) {
+                const api_url = import.meta.env.VITE_LARAVEL_API_URL+'images/'+data;
+
+                const src = data != null ? api_url : 'src/assets/imgs/users/default-150x150.png';
+                
+                return '<img src="'+src+'" class="img-circle img-fluid elevation-1" style="width: 35px; height: 35px" />';
+            }
         },
         {
-          data: 'discount',
-          render: function (data, type, row) {
-            return '<center><small>'+new Intl.NumberFormat('en-PH', { style: 'currency', currency: 'PHP' }).format(data)+'</small></center>';
-          }
-        },
-        {data: 'is_discounted'},
-        {data: 'quantity'},
-        {
-          data: 'subtotal',
-          render: function (data, type, row) {
-            return '<center><small>'+new Intl.NumberFormat('en-PH', { style: 'currency', currency: 'PHP' }).format(data)+'</small></center>';
-          }
+            data: 'name',
+            render: function (data, type, row, meta) {
+                return data;
+            }
         },
         {
-          data: 'payment',
-          render: function (data, type, row) {
-            return '<center><small>'+new Intl.NumberFormat('en-PH', { style: 'currency', currency: 'PHP' }).format(data)+'</small></center>';
-          }
+            data: 'email',
+            render: function (data, type, row, meta) {
+                return '<small><a href="mailto:'+data+'">'+data+'</a></small>';
+            }
         },
         {
-          data: 'change',
-          render: function (data, type, row) {
-            return '<center><small>'+new Intl.NumberFormat('en-PH', { style: 'currency', currency: 'PHP' }).format(data)+'</small></center>';
-          }
+            data: 'action',
+            render: function (data, type, row, meta) {
+                return data;
+            }
         },
         {
-          data: 'created_at',
-          render: function (data, type, row) {
-            return '<small>'+new Date(data).toLocaleString()+'</small>';
-          }
+            data: 'module',
+            render: function (data, type, row, meta) {
+                return data;
+            }
+        },
+        {
+            data: 'ip_address',
+            render: function (data, type, row, meta) {
+                return data;
+            }
+        },
+        {
+            data: 'browser',
+            render: function (data, type, row, meta) {
+                return data;
+            }
+        },
+        {
+            data: 'created_at',
+            render: function (data, type, row) {
+                return '<small>'+new Date(data).toLocaleString()+'</small>';
+            }
         },
     ]);
 
@@ -221,7 +198,7 @@
       {
         extend: 'csv',
         text: '<i class="fas fa-download fa-sm"></i> Export',
-        title: "Gohlong Tire and Service Sales",
+        title: "Gohlong Tire and Service Logs",
         titleAttr: 'Export',
         className: 'btn btn-sm btn-dark',
         attr:  {
@@ -231,7 +208,7 @@
           node.removeClass('dt-button');
         },
         exportOptions: {
-          columns: [ 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13 ]
+          columns: [ 0, 2, 3, 4, 5, 6, 7, 8]
         },
       },
       {
@@ -283,11 +260,11 @@
       });
     };
 
-  onMounted(() => {
-      windowResize();
-      loadData();
-  });
-
+    onMounted(() => {
+        loadData();
+        windowResize();
+    });
+    
 </script>
 
 <style>

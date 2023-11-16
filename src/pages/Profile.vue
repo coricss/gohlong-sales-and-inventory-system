@@ -201,11 +201,13 @@
     import { ref, onMounted } from "vue";
     import { useToast } from "vue-toastification";
     import { useProfileManagementStore } from "@/store/profile-management.js";
+    import { useLogStore } from "@/store/logs.js";
 
     import passwordMeter from "vue-simple-password-meter";
 
     const toast = useToast();
     const profileStore = useProfileManagementStore();
+    const logStore = useLogStore();
 
     const userDetail = ref([]);
 
@@ -248,6 +250,7 @@
             profileStore.updateUserName(userDetail.value.name).then((response) => {
                 name.value = userDetail.value.name;
                 loadToast(response.message, "success");
+                logStore.addNewLog('Updated name to '+userDetail.value.name, 'Profile');
             }).catch((error) => {
                 loadToast(error.message, "error");
             })
@@ -272,6 +275,7 @@
             sessionStorage.setItem("user", JSON.stringify(userDetail.value));
             profileStore.updateUserEmail(userDetail.value.email).then((response) => {
                 loadToast(response.message, "success");
+                logStore.addNewLog('Updated email to '+userDetail.value.email, 'Profile');
             }).catch((error) => {
                 loadToast(error.message, "error");
             })
@@ -320,6 +324,7 @@
             userDetail.value.picture = response.picture;
             picture.value = response.picture;
             sessionStorage.setItem("user", JSON.stringify(userDetail.value));
+            logStore.addNewLog('Updated profile picture', 'Profile');
         }).catch((error) => {
             loadToast(error.message, "error");
         })
@@ -367,6 +372,7 @@
                             new_password: "",
                             confirm_password: ""
                         };
+                        logStore.addNewLog('Changed password', 'Profile');
                     } else {
                         loadToast(response.message, "error");
                     }

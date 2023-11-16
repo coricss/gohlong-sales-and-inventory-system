@@ -56,6 +56,11 @@ const routes = [
       component: () => import('@/pages/Sales.vue'),
     },
     {
+      path: '/logs',
+      name: 'Logs | ' + appName,
+      component: () => import('@/pages/Logs.vue'),
+    },
+    {
         path: '/:pathMatch(.*)*',
         name: 'Page Not Found',
         component: () => import('@/components/server-error/404.vue')

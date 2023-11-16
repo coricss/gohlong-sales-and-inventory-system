@@ -156,6 +156,14 @@
                   </p>
                 </router-link>
               </li>
+              <li class="nav-item">
+                <router-link class="nav-link" to="/logs">
+                  <i class="nav-icon fas fa-clock"></i>
+                  <p>
+                    Logs
+                  </p>
+                </router-link>
+              </li>
               <!-- <li class="nav-item">
                 <a href="#" class="nav-link">
                   <i class="nav-icon fas fa-th"></i>

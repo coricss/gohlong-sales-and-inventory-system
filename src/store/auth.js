@@ -64,7 +64,7 @@ export const useAuthStore = defineStore('auth', {
                 this.authUser = null;
                 sessionStorage.removeItem('token');
                 sessionStorage.removeItem('user');
-                this.router.push('/login');
+                this.router.push('/');
             });
         },
         async loadToast (message, type) {

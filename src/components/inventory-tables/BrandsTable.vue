@@ -258,9 +258,11 @@ import { useToast } from "vue-toastification";
 
 import { useCategoryStore } from "@/store/category.js";
 import { useBrandStore } from "@/store/brands.js";
+import { useLogStore } from "@/store/logs.js";
 
 const categoryStore = useCategoryStore();
 const brandStore = useBrandStore();
+const logStore = useLogStore();
 
 DataTable.use(DataTablesCore);
 DataTable.use(Buttons);
@@ -429,6 +431,7 @@ const add_new_brand = () => {
     } else {
         brandStore.addBrand(new_brand.value, category.value).then((response) => {
             if (response.status == 200) {
+                logStore.addNewLog('Added new brand: '+new_brand.value, 'Brands');
                 new_brand_modal.value = false;
                 new_brand.value = null;
                 category.value = null;
@@ -454,6 +457,7 @@ const update_brand = () => {
     } else {
         brandStore.updateBrand(edit_brand.value, edit_category_id.value, edit_brand_id.value).then((response) => {
             if (response.status == 200) {
+                logStore.addNewLog('Updated brand: '+edit_brand.value, 'Brands');
                 edit_brand_modal.value = false;
                 clear_brand_modal();
                 loadToast(response.message, 'success');
@@ -497,6 +501,7 @@ const action = () => {
                         if (response.status == 200) {
                             loadToast(response.message, 'success');
                             loadData();
+                             logStore.addNewLog('Deleted a brand', 'Brands');
                         }
                     }).catch((error) => {
                         loadToast(error.message, 'error');

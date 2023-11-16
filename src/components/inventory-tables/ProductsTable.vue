@@ -403,10 +403,12 @@ import { useToast } from "vue-toastification";
 import { useCategoryStore } from "@/store/category.js";
 import { useBrandStore } from "@/store/brands.js";
 import { useProductStore } from "@/store/products.js";
+import { useLogStore } from "@/store/logs.js";
 
 const categoryStore = useCategoryStore();
 const brandStore = useBrandStore();
 const productStore = useProductStore();
+const logStore = useLogStore();
 
 DataTable.use(DataTablesCore);
 DataTable.use(Buttons);
@@ -659,6 +661,7 @@ const add_new_product = () => {
             new_product_modal.value = false;
             clear_product_modal();
             loadData();
+            logStore.addNewLog('Added new product: '+response.product.model_size, 'Products');
         }).catch((error) => {
             loadToast(error.message, 'error');
         });
@@ -695,6 +698,7 @@ const update_product = () => {
             edit_product_modal.value = false;
             clear_product_modal();
             loadData();
+            logStore.addNewLog('Updated details of: '+response.product.product_id, 'Products');
         }).catch((error) => {
             loadToast(error.message, 'error');
         });
@@ -736,6 +740,7 @@ const action = () => {
                         if (response.status == 200) {
                             loadToast(response.message, 'success');
                             loadData();
+                            logStore.addNewLog('Deleted a product', 'Products');
                         }
                     }).catch((error) => {
                         loadToast(error.message, 'error');

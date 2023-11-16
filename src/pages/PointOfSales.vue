@@ -690,9 +690,11 @@ import { useConfirm } from "primevue/useconfirm";
 import { useToast } from "vue-toastification";
 import { useProductStore } from "@/store/products.js";
 import { useSaleStore } from "@/store/sales.js";
+import { useLogStore } from "@/store/logs.js";
 
 const productStore = useProductStore();
 const saleStore = useSaleStore();
+const logStore = useLogStore();
 const confirm = useConfirm();
 const toast = useToast();
 
@@ -744,6 +746,7 @@ const confirm_checkout = (event) => {
             accept: () => {
                 invoice_visible.value = true;
                 check_out();
+                logStore.addNewLog('Confirmed Checkout','Point of Sales');
             },
             reject: () => {
                 /* loadToast('test', 'error'); */

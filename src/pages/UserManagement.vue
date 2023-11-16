@@ -205,8 +205,10 @@
     import { ref, onMounted, inject } from "vue";
 
     import { useUserManagementStore } from "@/store/user-management.js";
+    import { useLogStore } from "@/store/logs.js";
 
     const users = useUserManagementStore();
+    const logStore = useLogStore();
   
     DataTable.use(DataTablesCore);
     DataTable.use(Buttons);
@@ -418,6 +420,7 @@
           const closeModal = document.querySelector('.btn-close-modal');
           closeModal.click();
           loadToast(response.message, 'success');
+          logStore.addNewLog('Added new user: '+addUserForm.value.name, 'User Management');
         } else {
           loadToast(response.message, 'error');
         }
@@ -455,6 +458,7 @@
           const closeModal = document.querySelector('.btn-close-edit-modal');
           closeModal.click();
           loadToast(response.message, 'success');
+          logStore.addNewLog('Updated details of '+editUserForm.value.name, 'User Management');
         } else {
           loadToast(response.message, 'error');
         }
@@ -500,6 +504,7 @@
                 if (response.status == 200) {
                   loadData();
                   loadToast(response.message, 'success');
+                  logStore.addNewLog('Reset password of '+response.name, 'User Management');
                 } else {
                   loadToast(response.message, 'error');
                 }
@@ -529,6 +534,7 @@
                 if (response.status == 200) {
                   loadData();
                   loadToast(response.message, 'success');
+                  logStore.addNewLog('Removed a user', 'User Management');
                 } else {
                   loadToast(response.message, 'error');
                 }

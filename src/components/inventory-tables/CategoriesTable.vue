@@ -223,8 +223,10 @@ import { useConfirm } from "primevue/useconfirm";
 import { useToast } from "vue-toastification";
 
 import { useCategoryStore } from "@/store/category.js";
+import { useLogStore } from "@/store/logs.js";
 
 const categoryStore = useCategoryStore();
+const logStore = useLogStore();
 
 DataTable.use(DataTablesCore);
 DataTable.use(Buttons);
@@ -375,10 +377,11 @@ const new_category = ref('');
 const add_new_category = () => {
     categoryStore.addCategory(new_category.value).then((response) => {
         if (response.status == 200) {
-            new_category_modal.value = false;
-            new_category.value = '';
             loadToast(response.message, 'success');
             loadData();
+            logStore.addNewLog('Added new category: '+new_category.value,'Categories');
+            new_category_modal.value = false;
+            new_category.value = '';
         }
     }).catch((error) => {
         loadToast(error.message, 'error');
@@ -393,6 +396,7 @@ const edit_category_loading = ref(true);
 const update_category = () => {
     categoryStore.updateCategory(edit_category.value, category_id.value).then((response) => {
         if (response.status == 200) {
+            logStore.addNewLog('Update category: '+edit_category.value,'Categories');
             edit_category_modal.value = false;
             edit_category.value = '';
             category_id.value = '';
@@ -435,6 +439,7 @@ const action = () => {
                         if (response.status == 200) {
                             loadToast(response.message, 'success');
                             loadData();
+                            logStore.addNewLog('Deleted a category', 'Categories');
                         }
                     }).catch((error) => {
                         loadToast(error.message, 'error');
