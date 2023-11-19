@@ -239,6 +239,7 @@
                                                             buttonLayout="horizontal"
                                                             showButtons 
                                                             :min="1"
+                                                           
                                                             decrementButtonClass="p-button-danger" 
                                                             incrementButtonClass="p-button-success" 
                                                             incrementButtonIcon="pi pi-plus" 
@@ -376,7 +377,7 @@
                                             <div class="d-flex justify-content-start align-items-center">
                                                 <h5 class="text-dark m-0">Total Items:</h5>
                                                 <h5 class="text-dark m-0 mx-2">
-                                                    {{items.length}}
+                                                    {{total_quantity}}
                                                 </h5>
                                             </div>
                                         </div>
@@ -399,8 +400,8 @@
                                                     icon="pi pi-cart-plus"
                                                     class="w-50 mt-3 rounded" 
                                                     size="large"
-                                                    :disabled="items.length == 0"
-                                                    @click="check_out_dialog = true"
+                                                    :disabled="total_quantity == 0"
+                                                    @click="checkout_dialog"
                                                 >
                                                     <i class="pi pi-cart-plus mr-2" style="font-size: 18px"></i>
                                                     Checkout
@@ -421,6 +422,9 @@
                     </div>
                 </template>
                 <div class="row">
+                    <strong>Transaction ID:&nbsp;</strong> {{ transaction_id }}
+                </div>
+                <div class="row">
                     <div class="col-sm-12 mt-2">
                         <div class="d-flex justify-content-center align-items-center flex-column">
                             <!-- payment icon -->
@@ -432,8 +436,18 @@
 
                             <h6 class="text-dark m-0 mt-3">
                                 <span>Total Items:</span>
-                                {{ items.length }}
+                                {{ total_quantity }}
                             </h6>
+                            <div class="flex-auto mt-3 w-100">
+                                <label for="cashier_name" class="font-bold block"> Cashier Name: </label>
+                                <InputText
+                                    placeholder="Enter cashier name"
+                                    id="cashier_name"
+                                    v-model.trim="cashier_name"
+                                    style="width: 100%; height: 40px; font-size: 15px; word-break: break-all; white-space: normal;"
+                                    readonly
+                                />
+                            </div>
                             <div class="flex-auto mt-3 w-100">
                                 <label for="customer_name" class="font-bold block"> Customer Name: </label>
                                 <InputText
@@ -479,7 +493,7 @@
                                 icon="pi pi-check"
                                 class="w-100 mt-2 mx-1 rounded" 
                                 size="large"
-                                :disabled="items.length == 0"
+                                :disabled="total_quantity == 0"
                                 @click="confirm_checkout($event)"
                             >
                                 <span><i class="pi pi-check mr-2" style="font-size: 15px"></i></span>
@@ -489,7 +503,7 @@
                                 icon="pi pi-check"
                                 class="w-100 mt-2 mx-1 rounded p-button-danger d-flex justify-content-center align-items-center"
                                 size="large"
-                                :disabled="items.length == 0"
+                                :disabled="total_quantity == 0"
                                 @click="check_out_dialog = false"
                             >
                                 <span><i class="pi pi-times mr-2" style="font-size: 15px"></i></span>
@@ -499,7 +513,7 @@
                     </div>
                 </div>
             </Dialog>
-            <Dialog class="invoice-dialog" v-model:visible="invoice_visible" :modal="true" :closable="true" :style="{ width: '1000px' }" :dismissable-mask="true" :draggable="true" :resizable="true" wi  @hide="close_invoice">
+            <Dialog class="invoice-dialog" v-model:visible="invoice_visible" :modal="true" :closable="true" :style="{ width: '1000px' }" :dismissable-mask="false" :draggable="true" :resizable="true" wi  @hide="close_invoice">
                 <template #header>
                     <div class="text-center invoice_header">
                         <h4 class="m-0 font-weight-bold">Invoice</h4>
@@ -515,7 +529,15 @@
                     </div>
                     <div class="row mt-3">
                         <div class="col-sm-4 mt-2">
-                            <div class="d-flex justify-content-between align-items-center">
+                             <div class="d-flex justify-content-between align-items-center py-2">
+                                <div class="flex-auto">
+                                    <h6 class="text-dark m-0">
+                                        <span>Cashier: </span>
+                                        <strong class="text-uppercase">{{ cashier_name }}</strong>
+                                    </h6>
+                                </div>
+                            </div>
+                            <div class="d-flex justify-content-between align-items-center py-2">
                                 <div class="flex-auto">
                                     <h6 class="text-dark m-0">
                                         <span>Billing to: </span>
@@ -525,7 +547,15 @@
                             </div>
                         </div>
                         <div class="col-sm-4 mt-2">
-                            <div class="d-flex justify-content-between align-items-center">
+                            <div class="d-flex justify-content-between align-items-center py-2">
+                                <div class="flex-auto">
+                                    <h6 class="text-dark m-0">
+                                        <span>Trasaction ID: </span>
+                                        <strong>{{ transaction_id }}</strong>
+                                    </h6>
+                                </div>
+                            </div>
+                            <div class="d-flex justify-content-between align-items-center py-2">
                                 <div class="flex-auto">
                                     <h6 class="text-dark m-0">
                                         <span>Date of Issue: </span>
@@ -622,15 +652,25 @@
                     </div>
                 </div>
                 <template #footer>
+                    <ConfirmDialog></ConfirmDialog>
                     <div class="text-center invoice_footer d-flex align-items-center justify-content-center">
                         <Button 
                             icon="pi pi-print"
-                            class="w-25 mt-2 mx-1 rounded" 
+                            class="w-25 mt-2 mx-1 rounded p-button-success d-flex justify-content-center align-items-center"
                             size="sm"
                             @click="print_invoice"
                         >
                             <span><i class="pi pi-print mr-2" style="font-size: 15px"></i></span>
                             <span>Print</span>
+                        </Button>
+                        <Button 
+                            icon="pi pi-undo"
+                            class="w-25 mt-2 mx-1 rounded p-button-primary d-flex justify-content-center align-items-center"
+                            size="sm"
+                            @click="revert_transcation()"
+                        >
+                            <span><i class="pi pi-undo mr-2" style="font-size: 15px"></i></span>
+                            <span>Revert</span>
                         </Button>
                         <Button
                             icon="pi pi-check"
@@ -718,9 +758,12 @@ const items = ref([]);
 const item_found = ref(false);
 const item_quantity = ref(1);
 const is_discounted = ref(false);
+const total_quantity = ref(0);
 const total_price = ref(0);
 const check_out_dialog = ref(false);
+const transaction_id = ref(null);
 const input_customer_name = ref();
+const cashier_name = ref(null);
 const customer_name = ref(null);
 const payment = ref(0);
 const invoice_visible = ref(false);
@@ -872,16 +915,19 @@ const add_item = () => {
     * else if stocks < item_quantity then item_quantity = stocks
     * then stocks -= item_quantity
     */
-
+   
     if(product.value.stocks == 0) {
         loadToast('Item is out of stock', 'error');
+    } else if (product.value.stocks < item_quantity.value) {
+        loadToast('Insufficient stocks', 'error');
+
     } else {
         
-        if(product.value.stocks < item_quantity.value) {
+       /*  if(product.value.stocks < item_quantity.value) {
             item_quantity.value = product.value.stocks;
         }
 
-        product.value.stocks -= item_quantity.value;
+        product.value.stocks -= item_quantity.value; */
 
         /* find product.value.product_id in items */
         const item_index = items.value.findIndex(item => item.product_id == product.value.product_id);
@@ -924,7 +970,12 @@ const add_item = () => {
             return accumulator + item.subtotal;
         }, 0);
 
+        const total_quantity_column = items.value.reduce((accumulator, item) => {
+            return accumulator + item.quantity;
+        }, 0);
+
         item_quantity.value = 1;
+        total_quantity.value = total_quantity_column;
         total_price.value = total_price_of_column;
         search.value = null;
         item_found.value = false;
@@ -945,6 +996,13 @@ const remove_item = () => {
             total_price.value = items.value.reduce((accumulator, item) => {
                 return accumulator + item.subtotal;
             }, 0);
+
+            total_quantity.value = items.value.reduce((accumulator, item) => {
+                return accumulator + item.quantity;
+            }, 0);
+
+            item_found.value = false;
+            search.value = null;
         }
     });
 
@@ -956,6 +1014,7 @@ const mark_value = () => {
 }
 
 const clear_payment = () => {
+    cashier_name.value = null;
     customer_name.value = null;
     payment.value = 0;
 }
@@ -964,12 +1023,15 @@ const close_invoice = () => {
     check_out_dialog.value = false;
     items.value = [];
     total_price.value = 0;
+    total_quantity.value = 0;
     item_found.value = false;
     search.value = null;
 }
 
 const check_out = () => {
     const sale = {
+        cashier_name: cashier_name.value,
+        transaction_id: transaction_id.value,
         customer_name: customer_name.value,
         total_price: total_price.value,
         payment: payment.value,
@@ -1058,6 +1120,7 @@ const confirm_remove_all = (event) => {
            loadToast('Removed all items', 'success');
             items.value = [];
             total_price.value = 0;
+            total_quantity.value = 0;
             item_found.value = false;
             search.value = null;
         },
@@ -1158,6 +1221,54 @@ const windowResize = () => {
 /* const initComplete = (settings, json) => {
     
 }; */
+
+const checkout_dialog = () => {
+    count_sales();
+    check_out_dialog.value = true;
+    cashier_name.value = JSON.parse(sessionStorage.getItem('user')).name;
+}
+
+const count_sales = () => {
+    saleStore.countSales().then(response => {
+        var count = response + 1;
+        transaction_id.value = (new Date().getMonth() + 1) + '-' + new Date().getDate() + '-' + new Date().getFullYear() + '-ST-' + count.toString().padStart(4, '0');
+    }).catch(error => {
+        loadToast(`Error getting transaction ID: ${error}`, 'error');
+    });
+}
+
+const revert_transcation = () => {
+    confirm.require({
+        header: 'Revert this transaction: ' + transaction_id.value,
+        message: 'Are you sure you want to revert this transaction?',
+        icon: 'pi pi-question-circle',
+        acceptLabel: 'Yes, revert!',
+        rejectLabel: 'No',
+        acceptClass: 'p-button-success p-button-sm rounded mx-1',
+        rejectClass: 'p-button-danger p-button-sm rounded mx-1',
+        accept: () => {
+            saleStore.revertTransaction(transaction_id.value).then(response => {
+                if(response.status == 200) {
+                    loadToast('Transaction reverted', 'success');
+                    invoice_visible.value = false;
+                    items.value = [];
+                    total_price.value = 0;
+                    item_found.value = false;
+                    search.value = null;
+                    logStore.addNewLog('Reverted Transaction','Point of Sales');
+                } else {
+                    loadToast('Transaction not reverted', 'error');
+                }
+            }).catch(error => {
+                loadToast(`Error reverting transaction: ${error}`, 'error');
+            });
+        },
+        reject: () => {
+            /* loadToast('Cancelled', 'error'); */
+        }
+    });
+
+}
 
 onMounted(() => {
     windowResize();

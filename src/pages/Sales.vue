@@ -54,7 +54,7 @@
                                                     className: 'text-center',
                                                 },
                                                 {
-                                                    targets: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13],
+                                                    targets: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15],
                                                     className: 'text-center align-middle',
                                                 }
                                             ],
@@ -64,6 +64,8 @@
                                         <thead class="bg-dark text-white">
                                             <tr>
                                                 <th>#</th>
+                                                <th>Cashier Name</th>
+                                                <th>Transaction ID</th>
                                                 <th>Customer Name</th>
                                                 <th>Product ID</th>
                                                 <th>Model/Size</th>
@@ -154,6 +156,12 @@
             }
         },
         {
+            data: 'cashier_name'
+        },
+        {
+            data: 'transaction_id'
+        },
+        {
             data: 'customer_name'
         },
         {data: 'product_id'},
@@ -231,7 +239,7 @@
           node.removeClass('dt-button');
         },
         exportOptions: {
-          columns: [ 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13 ]
+          columns: [ 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15 ]
         },
       },
       {

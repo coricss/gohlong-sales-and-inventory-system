@@ -29,5 +29,23 @@ export const useSaleStore = defineStore('sales', {
                 });
             });
         },
+        countSales() {
+            return new Promise ((resolve, reject) => {
+                axios.get('api/count-sales').then((response) => {
+                    resolve(response.data);
+                }).catch((error) => {
+                    reject(error);
+                });
+            });
+        }, 
+        revertTransaction(data) {
+            return new Promise ((resolve, reject) => {
+                axios.post('api/revert-transaction', {transaction_id: data}).then((response) => {
+                    resolve(response.data);
+                }).catch((error) => {
+                    reject(error);
+                });
+            });
+        }
     }
 });
