@@ -861,7 +861,7 @@ const search_item = () => {
                         product.value.price = response.product.price;
                         product.value.discounted_price = response.product.discount;
                         is_discounted.value = false;
-                        product.value.stocks = response.product.stocks;
+                        product.value.stocks = response.product.stocks + response.product.old_stocks;
                         product.value.is_discounted = is_discounted.value;
 
                         items.value.forEach(item => {

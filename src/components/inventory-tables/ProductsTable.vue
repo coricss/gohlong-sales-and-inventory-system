@@ -53,11 +53,11 @@
                                                     className: 'text-center',
                                                 },
                                                 {
-                                                    targets: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11],
+                                                    targets: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13],
                                                     className: 'text-center align-middle',
                                                 },
                                                 {
-                                                    targets: 12,
+                                                    targets: 13,
                                                     className: 'text-center',
                                                     orderable: false,
                                                 }
@@ -66,13 +66,15 @@
                                             }"
                                         >
                                             <thead class="bg-dark text-white">
-                                                <tr>
+                                                <tr style="font-size: 12px;">
                                                     <th>#</th>
                                                     <th>Product ID</th>
                                                     <th>Model/Size</th>
                                                     <th>Brand</th>
                                                     <th>Category</th>
                                                     <th>Stocks</th>
+                                                    <th>Old Stocks</th>
+                                                    <th>New Stocks Added At</th>
                                                     <th>Price</th>
                                                     <th>Discounted Price</th>
                                                     <th>Total Price Stocks</th>
@@ -496,6 +498,25 @@ const columns = ref([
         }
     },
     {
+        data: "old_stocks",
+        render: function (data, type, row) {
+            if (data <= 10) {
+                return '<center><span class="badge badge-danger">'+data+'</span></center>';
+            } else if (data <= 20) {
+                return '<center><span class="badge badge-warning">'+data+'</span></center>';
+            } else {
+                return '<center><span class="badge badge-success">'+data+'</span></center>';
+            }
+        }
+    },
+    {
+        data: "stock_added_at",
+        render: function (data, type, row) {
+          /* return date format yyyy-mm-dd */
+            return '<small>'+new Date(data).toLocaleString('en-PH', { year: 'numeric', month: 'numeric', day: 'numeric' })+'</small>';
+        }
+    },
+    {
         data: "price",
         render: function (data, type, row) {
             return '<center><small>'+new Intl.NumberFormat('en-PH', { style: 'currency', currency: 'PHP' }).format(data)+'</small></center>';
@@ -605,7 +626,7 @@ const buttons = ref([
             node.removeClass('dt-button');
         },
         exportOptions: {
-            columns: [ 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10]
+            columns: [ 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12]
         },
     },
     {
