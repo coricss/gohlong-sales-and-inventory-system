@@ -121,12 +121,6 @@
                 </a>
                 <ul class="nav nav-treeview" style="padding-left: 1rem">
                   <li class="nav-item">
-                    <router-link class="nav-link sub-link" to="/inventory/products" :class="{'active': $route.path.includes('/inventory/products')}">
-                      <i class="fas fa-box-open mx-2"></i>
-                      <p>Products</p>
-                    </router-link>
-                  </li>
-                  <li class="nav-item">
                     <router-link class="nav-link sub-link" to="/inventory/categories" :class="{'active': $route.path.includes('/inventory/categories')}">
                       <i class="fas fa-shapes mx-2"></i>
                       <p>Categories</p>
@@ -136,6 +130,12 @@
                     <router-link class="nav-link sub-link" to="/inventory/brands" :class="{'active': $route.path.includes('/inventory/brands')}">
                       <i class="fas fa-tags mx-2"></i>
                       <p>Brands</p>
+                    </router-link>
+                  </li>
+                  <li class="nav-item">
+                    <router-link class="nav-link sub-link" to="/inventory/products" :class="{'active': $route.path.includes('/inventory/products')}">
+                      <i class="fas fa-box-open mx-2"></i>
+                      <p>Products</p>
                     </router-link>
                   </li>
                 </ul>
