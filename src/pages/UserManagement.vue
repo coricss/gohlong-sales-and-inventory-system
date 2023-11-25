@@ -47,11 +47,11 @@
                                 className: 'text-center',
                             },
                             {
-                                targets: [2, 3, 4, 5],
+                                targets: [2, 3, 4, 5, 6],
                                 className: 'text-center align-middle',
                             },
                             {
-                                targets: [1, 6],
+                                targets: [1, 7],
                                 className: 'text-center align-middle',
                                 orderable: false,
                                 searchable: false,
@@ -66,6 +66,7 @@
                           <th>Picture</th>
                           <th>Name</th>
                           <th>Email</th>
+                          <th>Role</th>
                           <th>Created At</th>
                           <th>Updated At</th>
                           <th>Action</th>
@@ -115,6 +116,15 @@
                     <div class="mb-3">
                       <label for="email" class="form-label">Email</label>
                       <input type="email" class="form-control" id="email" name="email" placeholder="Enter email" required v-model="addUserForm.email">
+                    </div>
+                    <div class="mb-3">
+                      <label for="role" class="form-label">Role</label>
+                      <select class="form-control" id="role" name="role" v-model="addUserForm.role">
+                        <option class="selected" value="" disabled selected>Select role</option>
+                        <option value="user">User</option>
+                        <option value="admin">Admin</option>
+                        <option v-if="isSuperAdmin" value="super_admin">Super Admin</option>
+                      </select>
                     </div>
                   </div>
                 </div>
@@ -167,6 +177,15 @@
                       <label for="email" class="form-label">Email</label>
                       <input type="email" class="form-control" id="email" name="email" placeholder="Enter email" required v-model="editUserForm.email">
                     </div>
+                    <div class="mb-3">
+                      <label for="role" class="form-label">Role</label>
+                      <select class="form-control" id="edit_role" name="role" v-model="editUserForm.role">
+                        <option class="selected" value="" disabled selected>Select role</option>
+                        <option value="user">User</option>
+                        <option value="admin">Admin</option>
+                        <option v-if="isSuperAdmin" value="super_admin">Super Admin</option>
+                      </select>
+                    </div>
                   </div>
                 </div>
               </div>  
@@ -209,6 +228,8 @@
 
     const users = useUserManagementStore();
     const logStore = useLogStore();
+
+    const isSuperAdmin = JSON.parse(sessionStorage.getItem('user')).role === 'super_admin' ? true : false;
   
     DataTable.use(DataTablesCore);
     DataTable.use(Buttons);
@@ -241,6 +262,18 @@
         data: 'email',
         render: function (data, type, row) {
           return '<a href="mailto:'+data+'">'+data+'</a>';
+        }
+      },
+      {
+        data: 'role',
+        render: function (data, type, row) {
+          if(data === 'user') {
+            return '<span class="badge bg-success">User</span>';
+          } else if(data === 'admin') {
+            return '<span class="badge bg-danger">Admin</span>';
+          } else {
+            return '<span class="badge bg-warning">Super Admin</span>';
+          }
         }
       },
       {data: 'created_at',
@@ -325,7 +358,7 @@
           node.removeClass('dt-button');
         },
         exportOptions: {
-          columns: [ 0, 2, 3, 4, 5 ]
+          columns: [ 0, 2, 3, 4, 5, 6 ]
         },
       },
       {
@@ -393,6 +426,7 @@
     const addUserForm = ref({
         name: '',
         email: '',
+        role: '',
         password: 'GTSC@'+new Date().getFullYear(),
         password_confirmation: 'GTSC@'+new Date().getFullYear()
     });
@@ -410,6 +444,7 @@
       formData.append('picture',addPhoto.value);
       formData.append('name', addUserForm.value.name);
       formData.append('email', addUserForm.value.email);
+      formData.append('role', addUserForm.value.role);
       formData.append('password', addUserForm.value.password);
       formData.append('password_confirmation', addUserForm.value.password_confirmation);
  
@@ -433,7 +468,8 @@
     const editUserForm = ref({
         id: '',
         name: '',
-        email: ''
+        email: '',
+        role: '',
     });
 
     const editPhoto = ref(null);
@@ -450,6 +486,7 @@
       formData.append('id', editUserForm.value.id);
       formData.append('name', editUserForm.value.name);
       formData.append('email', editUserForm.value.email);
+      formData.append('role', editUserForm.value.role);
       
       users.updateUser(formData).then((response) => {
         if (response.status == 200) {
@@ -550,13 +587,14 @@
     const clearAddForm = () => {
       document.querySelector('#add-display-picture').src = 'http://localhost:3000/src/assets/imgs/users/default-150x150.png';
       document.querySelector('#new-user-form').reset();
-      addPhoto.value = null
+      addPhoto.value = null;
+      document.querySelector('#role').innerHTML = '<option class="selected" value="" disabled selected>Select role</option><option value="user">User</option><option value="admin">Admin</option><option value="super_admin">Super Admin</option>';
     };
 
     const clearEditForm = () => {
       document.querySelector('#edit-display-picture').src = 'http://localhost:3000/src/assets/imgs/users/default-150x150.png';
       document.querySelector('#edit-user-form').reset();
-      editPhoto.value = null
+      editPhoto.value = null;
     };
 
     const loadToast = (message, type) => {

@@ -99,6 +99,10 @@ input.form-control:focus {
     border-color: #f58634 !important;
 }
 
+select.form-control:focus {
+    border-color: #f58634 !important;
+}
+
 .p-highlight {
     background-color: #f58634;
     color: #fff;

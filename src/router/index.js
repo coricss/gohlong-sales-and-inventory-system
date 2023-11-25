@@ -95,4 +95,18 @@ router.afterEach((to, from) => {
   }
 })
 
+/* roles */
+router.afterEach((to, from, next) => {
+  const user = JSON.parse(sessionStorage.getItem("user"))
+  if (to.name === 'User Management | ' + appName || to.name === 'Manage Products | ' + appName || to.name === 'Manage Categories | ' + appName || to.name === 'Manage Brands | ' + appName || to.name === 'Logs | ' + appName) {
+    if (user.role === 'user') {
+      window.location.href = '/dashboard'
+    }
+  } else if (to.name === 'Point of Sales | ' + appName) {
+    if (user.role === 'admin') {
+      window.location.href = '/dashboard'
+    }
+  }
+});
+
 export default router
