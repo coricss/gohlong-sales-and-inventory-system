@@ -513,7 +513,7 @@
                     </div>
                 </div>
             </Dialog>
-            <Dialog class="invoice-dialog" v-model:visible="invoice_visible" :modal="true" :closable="true" :style="{ width: '1000px' }" :dismissable-mask="false" :draggable="true" :resizable="true" wi  @hide="close_invoice">
+            <Dialog class="invoice-dialog" v-model:visible="invoice_visible" :modal="true" :closable="true" :style="{ width: '800px' }" :dismissable-mask="false" :draggable="true" :resizable="true" wi  @hide="close_invoice">
                 <template #header>
                     <div class="text-center invoice_header">
                         <h4 class="m-0 font-weight-bold">Invoice</h4>
@@ -523,130 +523,147 @@
                     <div class="row">
                         <div class="col-sm-12">
                             <div class="company-logo text-center">
-                                <img src="@/assets/imgs/logos/gohlong-logo.png" alt="Company Logo" class="img-fluid" style="width: 280px; height: 100px; pointer-events: none;">
+                                <img src="@/assets/imgs/logos/gohlong-logo.png" alt="Company Logo" class="img-fluid" style="width: 300px; height: 100px; pointer-events: none;">
                             </div>
                         </div>
                     </div>
-                    <div class="row mt-3">
-                        <div class="col-sm-4 mt-2">
-                             <div class="d-flex justify-content-between align-items-center py-2">
-                                <div class="flex-auto">
-                                    <h6 class="text-dark m-0">
-                                        <span>Cashier: </span>
-                                        <strong class="text-uppercase">{{ cashier_name }}</strong>
-                                    </h6>
-                                </div>
-                            </div>
-                            <div class="d-flex justify-content-between align-items-center py-2">
-                                <div class="flex-auto">
-                                    <h6 class="text-dark m-0">
-                                        <span>Billing to: </span>
-                                        <strong class="text-uppercase">{{ customer_name }}</strong>
-                                    </h6>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="col-sm-4 mt-2">
-                            <div class="d-flex justify-content-between align-items-center py-2">
-                                <div class="flex-auto">
-                                    <h6 class="text-dark m-0">
-                                        <span>Trasaction ID: </span>
-                                        <strong>{{ transaction_id }}</strong>
-                                    </h6>
-                                </div>
-                            </div>
-                            <div class="d-flex justify-content-between align-items-center py-2">
-                                <div class="flex-auto">
-                                    <h6 class="text-dark m-0">
-                                        <span>Date of Issue: </span>
-                                        <strong>{{ new Date().toLocaleDateString() }}</strong>
-                                    </h6>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="col-sm-4 mt-2">
-                            <div class="invoice-total text-md-right">
-                                <h6>Invoice Total: </h6>
-                                <h1>
-                                    <strong>
-                                        <span>&#8369;</span>
-                                        {{ total_price.toFixed(2) }}
-                                    </strong>
-                                </h1>
-                            </div>
+                    <div class="row mt-3 mb-5">
+                        <div class="col-sm-12">
+                            <p style="font-size: 15px" class="text-center store-address m-0">National Highway, Parian Calamba City, Laguna 4027</p>
                         </div>
                     </div>
-                    <hr class="mt-4 mb-1" style="border-top: 3px solid #ff7300">
-                    <div class="row">
-                        <div class="col-sm-12">
-                            <div class="table-responsive">
-                                <table class="table table-bordered table-sm text-dark display nowrap w-100" id="table-invoice">
-                                    <thead class="text-orange" id="table-invoice-thead" style="width: 100%; font-size: small;">
-                                        <tr>
-                                            <th>#</th>
-                                            <th>Product ID</th>
-                                            <th>Model/Size</th>
-                                            <th>Brand</th>
-                                            <th>Category</th>
-                                            <th>Price</th>
-                                            <th>Discount</th>
-                                            <th>With Disc.</th>
-                                            <th>Quantity</th>
-                                            <th>Subtotal</th>
-                                        </tr>
-                                    </thead>
-                                    <tbody id="table-invoice-tbody">
-                                        <tr v-for="(item, index) in items" :key="index">
-                                            <td>{{ index + 1 }}</td>
-                                            <td style="word-break: break-all; white-space: normal;">
-                                                {{ item.product_id }}
-                                            </td>
-                                            <td>{{ item.model_size }}</td>
-                                            <td>{{ item.brand }}</td>
-                                            <td>{{ item.category }}</td>
-                                            <td>
-                                                <span>&#8369;</span>
-                                                {{ item.price }}
-                                            </td>
-                                            <td>
-                                                <span>&#8369;</span>
-                                                {{ item.discounted_price }}
-                                            </td>
-                                            <td>{{ item.is_discounted }}</td>
-                                            <td>{{ item.quantity }}</td>
-                                            <td>
-                                                <span>&#8369;</span>
-                                                {{ item.subtotal.toFixed(2) }}
-                                            </td>
-                                        </tr>
-                                    </tbody>
-                                </table>
+                    <div class="content px-5">
+                        <div class="row mt-2">
+                            <div class="col-sm-8 mt-2">
+                                <div class="d-flex justify-content-between align-items-center py-2">
+                                    <div class="flex-auto">
+                                        <h6 class="text-dark m-0">
+                                            <span>Trasaction ID: </span>
+                                            <strong>{{ transaction_id }}</strong>
+                                        </h6>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-sm-4 mt-2">
+                                <div class="d-flex justify-content-between align-items-center py-2">
+                                    <div class="flex-auto">
+                                        <h6 class="text-dark m-0">
+                                            <span>Date of Issue: </span>
+                                            <strong>{{ new Date().toLocaleDateString() }}</strong>
+                                        </h6>
+                                    </div>
+                                </div>
                             </div>
                         </div>
-                    </div>
-                     <div class="row">
-                        <div class="col-sm-12">
-                            <div class="payment-summary text-md-right">
-                                <h5>
-                                    Payment: 
-                                    <strong>
-                                        <span>&#8369;</span>
-                                        {{ payment.toFixed(2) }}
-                                    </strong>
-                                </h5>
+                        <div class="row mt-2">
+                                <div class="col-sm-12 mt-1">
+                                    <div class="d-flex justify-content-between align-items-center py-2">
+                                    <div class="flex-auto" >
+                                        <h6 class="text-dark m-0">
+                                            <span>Cashier: </span>
+                                            <strong class="text-uppercase">{{ cashier_name }}</strong>
+                                        </h6>
+                                    </div>
+                                </div>
                             </div>
                         </div>
-                     </div>
-                    <div class="row">
-                        <div class="col-sm-12">
-                            <div class="change-summary text-md-right">
-                                <h5>
-                                    Change: 
-                                    <strong>
-                                        <span>&#8369;</span>
-                                        {{ (payment - total_price).toFixed(2) }}
-                                    </strong>
-                                </h5>
+                        <div class="row mt-1">
+                            <div class="col-sm-12 mt-1">
+                                <div class="d-flex justify-content-between align-items-center py-2">
+                                    <div class="flex-auto">
+                                        <h6 class="text-dark m-0">
+                                            <span>Customer: </span>
+                                            <strong class="text-uppercase">{{ customer_name }}</strong>
+                                        </h6>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <hr class="mt-4 mb-1" style="border-top: 3px solid #ff7300">
+                        <div class="row">
+                            <div class="col-sm-12">
+                                <div class="table-responsive">
+                                    <table class="table table-bordered table-sm text-dark display nowrap w-100" id="table-invoice">
+                                        <thead class="text-orange" id="table-invoice-thead" style="width: 100%; font-size: small;">
+                                            <tr>
+                                                <th>#</th>
+                                                <th>Quantity</th>
+                                                <th>Product Name</th>
+                                                <th>Price</th>
+                                                <th>Amount</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody id="table-invoice-tbody">
+                                            <tr v-for="(item, index) in items" :key="index">
+                                                <td>{{ index + 1 }}</td>
+                                                <td>{{ item.quantity }}</td>
+                                                <td style="word-break: break-all; white-space: normal;">
+                                                    {{ item.product_id }}
+                                                </td>
+                                                <td>
+                                                    <span>&#8369;</span>
+                                                    {{ item.price }}
+                                                </td>
+                                                <td>
+                                                    <span>&#8369;</span>
+                                                    {{ item.subtotal.toFixed(2) }}
+                                                </td>
+                                            </tr>
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row mt-3">
+                            <div class="col-sm-12">
+                                <div class="d-flex justify-content-end align-items-center py-2">
+                                    <table class="p-5">
+                                        <tbody>
+                                            <tr>
+                                                <td>
+                                                    Subtotal: 
+                                                    <span>&#8369;</span>
+                                                    {{ subtotal.toFixed(2) }}
+                                                </td>
+                                            </tr>
+                                            <tr>
+                                                <td>
+                                                    Discount: 
+                                                    <span>&#8369;</span>
+                                                    {{ (subtotal - total_price).toFixed(2) }}
+                                                </td>
+                                            </tr>
+                                            <tr>
+                                                <td>
+                                                    Payment: 
+                                                    <span>&#8369;</span>
+                                                    {{ payment.toFixed(2) }}
+                                                </td>
+                                            </tr>
+                                            <tr v-if="payment >= total_price">
+                                                <td>
+                                                    Change: 
+                                                    <span>&#8369;</span>
+                                                    {{ (payment - total_price).toFixed(2) }}
+                                                </td>
+                                            </tr>
+                                            <tr>
+                                                <td>
+                                                    <strong>Total Amount:
+                                                    <span>&#8369;</span>
+                                                    {{ total_price.toFixed(2) }}
+                                                    </strong> 
+                                                </td>
+                                            </tr>
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+                        <hr class="mt-4 mb-1" style="border-top: 3px solid #ff7300">
+                        <div class="row mt-3 mb-5">
+                            <div class="col-sm-12">
+                                <p style="font-size: 15px" class="text-center store-address m-0">If you have any question please contact: gohlong.tire@yahoo.com</p>
                             </div>
                         </div>
                     </div>
@@ -707,7 +724,7 @@ const print_invoice = () => {
 
     invoice_window.document.write('<html><head><title></title>');
     invoice_window.document.write('<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.5.2/css/bootstrap.css">');
-    invoice_window.document.write('</head><body >');
+    invoice_window.document.write('</head><style>.store-address {font-size: 15px}</style><body >');
     invoice_window.document.write(invoice_body);
     invoice_window.document.write('</body></html>');
     invoice_window.document.close();
@@ -760,13 +777,14 @@ const item_quantity = ref(1);
 const is_discounted = ref(false);
 const total_quantity = ref(0);
 const total_price = ref(0);
+const subtotal = ref(0);
 const check_out_dialog = ref(false);
 const transaction_id = ref(null);
 const input_customer_name = ref();
 const cashier_name = ref(null);
 const customer_name = ref(null);
 const payment = ref(0);
-const invoice_visible = ref(false);
+const invoice_visible = ref(true);
 
 const confirm_checkout = (event) => {
     if(customer_name.value == '' || customer_name.value == null) {
@@ -1038,6 +1056,17 @@ const check_out = () => {
         change: payment.value - total_price.value,
         items: items.value,
     };
+
+    var item_total = [];
+
+    items.value.forEach(item => {
+        item_total.push(item.quantity * parseFloat(item.price));
+    });
+
+    subtotal.value = item_total.reduce((accumulator, item) => {
+        return accumulator + item;
+    }, 0);
+
     saleStore.addSale(sale).then(response => {
         if(response.status == 200) {
             loadToast('Checkout successful', 'success');
@@ -1298,7 +1327,6 @@ onMounted(() => {
     border-bottom: 0 !important;
     border-color: #ced4da !important;
 }
-
 
 input#item_quantity {
     border-radius: 0px !important;
