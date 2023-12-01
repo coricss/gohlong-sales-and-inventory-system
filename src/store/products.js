@@ -65,6 +65,15 @@ export const useProductStore = defineStore('products', {
                 });
             });
         },
+        updateActualStocks(data, id) {
+            return new Promise ((resolve, reject) => {
+                axios.put(`api/update-actual-stocks/${id}`, data).then((response) => {
+                    resolve(response.data);
+                }).catch((error) => {
+                    reject(error);
+                });
+            });
+        },
         printBarcode(id) {
             return new Promise ((resolve, reject) => {
                 axios.get(`api/print-barcode/${id}`).then((response) => {

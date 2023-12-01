@@ -383,6 +383,143 @@
                     </template>
                     <iframe ref="print_frame" id="print_frame" name="print_frame" src="" style="display:block; width:100%; height: 500px; border: none;"></iframe>
                 </Dialog>
+
+                <!-- ADMIN STAFF COMPARISON -->
+                <Dialog
+                    v-model:visible="adminStaffComparisonModal"
+                    :modal="true" 
+                    :closable="true" 
+                    :dismissable-mask="false" 
+                    :draggable="false" 
+                    :resizable="true"  
+                    @hide="clear_product_modal"
+                    :style="{ width: '80rem', }"
+                >
+                    <template #header>
+                        <div class="text-center">
+                            <h4 class="m-0 font-weight-bold">Admin-Staff Inventory Comparison</h4>
+                        </div>
+                    </template>
+                    <div class="row">
+                        <div class="col-sm-12">
+                            <DataTable
+                                class="table table-hover table-bordered table-sm text-dark display nowrap w-100"
+                                id="discrepancy-management-table"
+                                @click="get_actual_stocks($event)"
+                                :data="discrepancy_items"
+                                :columns="discrepancy_columns"
+                                :options="{
+                                    dom:            'Bftip',
+                                    scrollY:        '60vh',
+                                    scrollX:        true,
+                                    scrollCollapse: true,
+                                    destroy:        true,
+                                    responsive:     true,
+                                    autoWidth:      true,
+                                    serverSide:     false,  
+                                    processing:     true,
+                                    language:       {search: 'Search'},
+                                    buttons:        discrepancy_buttons,
+                                    lengthMenu:     lengthMenu,
+                                    deferRender:    true,
+                                    lengthChange:   false,
+                                    columnDefs: [
+                                    { responsivePriority: 1, targets: 0 },
+                                    { responsivePriority: 2, targets: -1 },
+                                    {
+                                        targets: 0,
+                                        className: 'text-center',
+                                    },
+                                    {
+                                        targets: [1, 2, 3, 4, 5, 6, 7, 8],
+                                        className: 'text-center align-middle',
+                                    },
+                                    {
+                                        targets: 9,
+                                        className: 'text-center',
+                                        orderable: false,
+                                    }
+                                    ],
+                                    order: [[ 0, 'asc' ]]
+                                }"
+                            >
+                                <thead class="bg-dark text-white">
+                                    <tr style="font-size: 12px;">
+                                        <th>#</th>
+                                        <th>Product ID</th>
+                                        <th>Model/Size</th>
+                                        <th>Brand</th>
+                                        <th>Category</th>
+                                        <th>Total Recorded Stocks</th>
+                                        <th>Actual Stocks</th>
+                                        <th>Discrepancy</th>
+                                        <th>Created At</th>
+                                        <th>Action</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                </tbody>
+                            </DataTable>
+                        </div>
+                    </div>  
+                </Dialog>
+                <Dialog
+                    v-model:visible="edit_actual_stocks_modal"
+                    :modal="true" 
+                    :closable="true" 
+                    :dismissable-mask="false" 
+                    :draggable="false" 
+                    :resizable="true"  
+                    @hide="clear_actual_stocks_modal"
+                    :style="{ width: '25rem', }"
+                >
+                    <template #header>
+                        <div class="text-start">
+                            <span class="m-0 font-weight-bold">Update <span style="text-decoration: underline; font-weight: bold;">{{ product_name ? product_name : 'product' }}'s</span> actual stocks</span>
+                        </div>
+                    </template>
+                    <form @submit.prevent="update_actual_stocks" id="update-actual-stocks-form">
+                        <div class="row">
+                            <div class="col-sm-12 mt-2">
+                                <InputNumber
+                                    class="w-100"
+                                    inputId="actual-stocks"
+                                    v-model="edit_actual_stocks"
+                                    placeholder="Enter actual stocks"
+                                    :min="0"
+                                    suffix=" pc(s)"
+                                    showButtons
+                                    required
+                                    decrementButtonClass="p-button-secondary" 
+                                    incrementButtonClass="p-button-secondary" 
+                                />
+                            </div>
+                        </div>
+                    </form>
+                    <template #footer>
+                        <div class="text-center">
+                            <Button 
+                                icon="pi pi-check"
+                                class=" mt-2 mx-1 rounded p-button-success"
+                                size="small"
+                                type="submit"
+                                form="update-actual-stocks-form"
+                            >
+                                <i class="fas fa-save mr-1"></i> Save
+                            </Button>
+                            <Button 
+                                icon="pi pi-check"
+                                class=" mt-2 mx-1 rounded p-button-danger"
+                                size="small"
+                                outlined 
+                                @click="edit_actual_stocks_modal = false"
+                            >
+                                <i class="fas fa-times mr-1"></i>
+                                Cancel
+                            </Button>
+                        </div>
+                    </template>
+                </Dialog>
         <FooterComponent/>
     </div>
 </template>
@@ -399,7 +536,7 @@ import 'datatables.net-buttons/js/buttons.html5';
 import 'datatables.net-responsive';
 import 'datatables.net-select';
 
-import { ref, onMounted, inject } from "vue";
+import { ref, onMounted, inject, defineExpose } from "vue";
 import { useConfirm } from "primevue/useconfirm";
 import { useToast } from "vue-toastification";
 import { useCategoryStore } from "@/store/category.js";
@@ -420,6 +557,7 @@ const toast = useToast();
 const swal = inject("$swal");
 const counter = ref(0);
 const product_items = ref(null);
+const discrepancy_items = ref(null);
 
 /* loadData */
 const loadData = () => {
@@ -630,6 +768,28 @@ const buttons = ref([
         },
     },
     {
+        extend: 'csv',
+        text: '<i class="fas fa-exchange-alt fa-sm"></i> Admin-Staff Inventory Comparison',
+        title: "Gohlong Tire and Service Inventory Products",
+        titleAttr: 'Admin-Staff Inventory Comparison',
+        className: 'btn btn-sm btn-dark',
+        attr:  {
+            id: 'btn-csv'
+        },
+        init: function (api, node, config) {
+            node.removeClass('dt-button');
+        },
+        action: function ( e, dt, node, config ) {
+            productStore.getProductData().then((response) => {
+                discrepancy_items.value = response;
+                adminStaffComparisonModal.value = true;
+                get_actual_stocks();
+            }).catch((error) => {
+                loadToast(error.message, 'error');
+            });
+        }
+    },
+    {
         text: '<i class="fas fa-eye fa-sm"></i> Show entries',
         extend: "pageLength",
         titleAttr: 'Show entries',
@@ -639,6 +799,7 @@ const buttons = ref([
         },
     },
 ]);
+
 /* lengthmenu */
 const lengthMenu = ref([
     [  -1, 10, 25, 50 ],
@@ -804,6 +965,168 @@ const clear_product_modal = () => {
     edit_discounted_price.value = null;
 };
 
+const adminStaffComparisonModal = ref(false);
+
+const discrepancy_buttons = ref([
+    {
+        /* print */
+        extend: 'csv',
+        text: '<i class="fas fa-download fa-sm"></i> Export',
+        title: "Admin-Staff Inventory Comparison",
+        titleAttr: 'Export',
+        className: 'btn btn-sm btn-dark',
+        attr:  {
+            id: 'btn-csv'
+        },
+        init: function (api, node, config) {
+            node.removeClass('dt-button');
+        },
+        exportOptions: {
+            columns: [ 0, 1, 2, 3, 4, 5, 6, 7, 8]
+        },
+    },
+    {
+        text: '<i class="fas fa-eye fa-sm"></i> Show entries',
+        extend: "pageLength",
+        titleAttr: 'Show entries',
+        className: "btn btn-sm btn-dark",
+        init: function (api, node, config) {
+            node.removeClass('dt-button');
+        },
+    },
+]);
+
+
+const discrepancy_columns = ref([
+    {
+        /* count */
+        data: null,
+        render: function (data, type, row, meta) {
+            return meta.row + meta.settings._iDisplayStart + 1;
+        }
+    },
+    {
+        data: "product_id"
+    },
+    {
+        data: "model_size"
+    },
+    {
+        data: "brand_name"
+    },
+    {
+        data: "category_name"
+    },
+    {
+        /* add two columns */
+        data: null,
+        render: function (data, type, row) {
+            return row.old_stocks + row.stocks;
+        }
+    },
+    {
+        data: "actual_stocks",
+        render: function (data, type, row) {
+            return data == null ? '<center><span class="badge badge-danger">No items checked</span></center>' : data;
+        }
+    },
+    {
+        data: null,
+        render: function (data, type, row) {
+            var total_stocks = row.old_stocks + row.stocks;
+            var actual_stocks = row.actual_stocks;
+
+            if(actual_stocks !== null) {
+                if(actual_stocks > total_stocks) {
+                    return '<center><span class="badge badge-info">+'+(actual_stocks - total_stocks)+'</span></center>'
+                } else if(actual_stocks < total_stocks) {
+                        return '<center><span class="badge badge-danger">-'+(total_stocks - actual_stocks)+'</span></center>'
+                } else {
+                        return '<center><span class="badge badge-success">No discrepancy</span></center>'
+                }
+            } else {
+                return '<center><span class="badge badge-warning">Update actual stocks</span></center>'
+           }  
+        }
+    },
+    {
+        data: "created_at",
+        render: function (data, type, row) {
+          return '<small>'+new Date(data).toLocaleString()+'</small>';
+        }
+    },
+    {
+        data: "id",
+        render: function (data, type, row) {
+            var product_id = row.product_id;
+            var actual_stocks = row.actual_stocks;
+
+            var btn_update_actual_stocks = document.createElement("button");
+            btn_update_actual_stocks.setAttribute("class", "btn btn-md btn-primary btn-update-actual-stocks");
+            btn_update_actual_stocks.setAttribute("title", "Update actual stocks");
+            btn_update_actual_stocks.setAttribute("data-id", data);
+            btn_update_actual_stocks.setAttribute("data-product", product_id);
+            btn_update_actual_stocks.setAttribute("data-actual-stocks", actual_stocks);
+            btn_update_actual_stocks.innerHTML = `<i class=\"fas fa-cubes\" data-id="${data}" data-product="${product_id}" data-actual-stocks="${actual_stocks}"></i>`;
+
+            return '<center>'+btn_update_actual_stocks.outerHTML+'</center>';
+        }
+    }  
+]);
+
+const edit_actual_stocks_modal = ref(false);
+const actual_stocks_id = ref(null);
+const product_name = ref(null);
+const edit_actual_stocks = ref(null);
+
+const get_actual_stocks = (e) => {
+    if(e !== undefined) {
+        if(e.target.classList.contains('btn-update-actual-stocks') || e.target.classList.contains('fa-cubes')) {
+            edit_actual_stocks_modal.value = true;
+
+            const id = e.target.getAttribute('data-id');
+            const product_id = e.target.getAttribute('data-product');
+            const actual_stocks = e.target.getAttribute('data-actual-stocks');
+
+            actual_stocks_id.value = id;
+            product_name.value = product_id;
+            edit_actual_stocks.value = !parseInt(actual_stocks) ? 0 : parseInt(actual_stocks);
+        }
+    }
+}
+
+const update_actual_stocks = () => {
+    if(edit_actual_stocks.value === null) {
+        loadToast('Please enter details properly', 'error');
+        return false;
+    } else {
+        const data = {
+            actual_stocks: edit_actual_stocks.value,
+        };
+        productStore.updateActualStocks(data, actual_stocks_id.value).then((response) => {
+            if(response.status == 200) {
+                productStore.getProductData().then((response) => {
+                    discrepancy_items.value = response;
+                    clear_actual_stocks_modal();
+                }).catch((error) => {
+                    loadToast(error.message, 'error');
+                });
+                logStore.addNewLog('Updated actual stocks of: '+response.product, 'Products');
+                loadToast(response.message, 'success');
+            } else {
+                loadToast(response.message, 'error');
+            }
+        }).catch((error) => {
+            loadToast(error.message, 'error');
+        });
+    }
+}
+
+const clear_actual_stocks_modal = () => {
+    product_name.value = null;
+    edit_actual_stocks.value = null;
+    edit_actual_stocks_modal.value = false;
+}
 
 const loadToast = (message, type) => {
     toast(message, {
@@ -841,7 +1164,7 @@ onMounted(() => {
 @import 'datatables.net-responsive-dt';
 @import 'datatables.net-select-dt';
 
-#new-stocks, #new-price, #new-discounted-price, #edit-stocks, #edit-price, #edit-discounted-price {
+#new-stocks, #new-price, #new-discounted-price, #edit-stocks, #edit-price, #edit-discounted-price, #actual-stocks {
     width: 100% !important;
 }
 
