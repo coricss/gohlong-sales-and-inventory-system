@@ -536,7 +536,7 @@ import 'datatables.net-buttons/js/buttons.html5';
 import 'datatables.net-responsive';
 import 'datatables.net-select';
 
-import { ref, onMounted, inject, defineExpose } from "vue";
+import { ref, onMounted, inject } from "vue";
 import { useConfirm } from "primevue/useconfirm";
 import { useToast } from "vue-toastification";
 import { useCategoryStore } from "@/store/category.js";
