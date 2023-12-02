@@ -784,7 +784,7 @@ const input_customer_name = ref();
 const cashier_name = ref(null);
 const customer_name = ref(null);
 const payment = ref(0);
-const invoice_visible = ref(true);
+const invoice_visible = ref(false);
 
 const confirm_checkout = (event) => {
     if(customer_name.value == '' || customer_name.value == null) {
