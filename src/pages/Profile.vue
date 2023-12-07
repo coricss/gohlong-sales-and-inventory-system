@@ -21,7 +21,7 @@
                             <div class="card card-orange card-outline p-5">
                                 <div class="row justify-content-center">
                                     <div class="text-center position-relative" >
-                                        <img v-if="has_picture" class="img-fluid img-circle profile-pic" :src="BASE_URL+'images/'+userDetail.picture" alt="User profile picture" style="width: 200px; height:200px;">
+                                        <img v-if="has_picture" class="img-fluid img-circle profile-pic" :src="BASE_URL+'storage/images/'+userDetail.picture" alt="User profile picture" style="width: 200px; height:200px;">
                                         <img v-else class="img-fluid img-circle profile-pic" src="@/assets/imgs/users/default-150x150.png" alt="User profile picture" style="width: 200px; height:200px;">
                                         <input 
                                             type="file" 
@@ -340,7 +340,7 @@
             img.src = "src/assets/imgs/users/default-150x150.png";
         } else {
             has_picture.value = true;
-            img.src = BASE_URL+'images/'+userDetail.value.picture;
+            img.src = BASE_URL+'storage/images/'+userDetail.value.picture;
         }
 
     }

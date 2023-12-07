@@ -126,7 +126,7 @@
         {
             data: 'picture',
             render: function (data, type, row, meta) {
-                const api_url = import.meta.env.VITE_LARAVEL_API_URL+'images/'+data;
+                const api_url = import.meta.env.VITE_LARAVEL_API_URL+'storage/images/'+data;
 
                 const src = data != null ? api_url : 'src/assets/imgs/users/default-150x150.png';
                 

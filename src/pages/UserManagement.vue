@@ -250,7 +250,7 @@
       {
         data: 'picture',
         render: function (data, type, row) {
-          const api_url = import.meta.env.VITE_LARAVEL_API_URL+'images/'+data;
+          const api_url = import.meta.env.VITE_LARAVEL_API_URL+'storage/images/'+data;
 
           const src = data != null ? api_url : 'src/assets/imgs/users/default-150x150.png';
           
@@ -513,7 +513,7 @@
           users.getUser(id).then((response) => {
 
             if(response.picture != null) {
-              document.getElementById('edit-display-picture').src = import.meta.env.VITE_LARAVEL_API_URL+'images/'+response.picture;
+              document.getElementById('edit-display-picture').src = import.meta.env.VITE_LARAVEL_API_URL+'storage/images/'+response.picture;
             }
 
             editUserForm.value = response;
