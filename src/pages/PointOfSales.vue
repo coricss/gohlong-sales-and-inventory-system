@@ -1039,9 +1039,9 @@ const clear_payment = () => {
 
 const close_invoice = () => {
     check_out_dialog.value = false;
-    items.value = [];
+    /* items.value = [];
     total_price.value = 0;
-    total_quantity.value = 0;
+    total_quantity.value = 0; */
     item_found.value = false;
     search.value = null;
 }
@@ -1280,10 +1280,10 @@ const revert_transcation = () => {
                 if(response.status == 200) {
                     loadToast('Transaction reverted', 'success');
                     invoice_visible.value = false;
-                    items.value = [];
-                    total_price.value = 0;
-                    item_found.value = false;
-                    search.value = null;
+                    /* items.value = [];
+                    total_price.value = 0; */
+                    /* item_found.value = false;
+                    search.value = null; */
                     logStore.addNewLog('Reverted Transaction','Point of Sales');
                 } else {
                     loadToast('Transaction not reverted', 'error');
