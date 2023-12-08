@@ -43,7 +43,6 @@ import Vue3Autocounter from 'vue3-autocounter';
 import Chart from 'primevue/chart';
 
 axios.defaults.withCredentials = true;
-axios.defaults.withXSRFToken = true;
 axios.defaults.baseURL = import.meta.env.VITE_LARAVEL_API_URL;
 
 const pinia = createPinia();
