@@ -12,7 +12,7 @@
                     <div class="col-md-4 p-2" v-for="item in items" :key="item.id">
                         <div class="service">
                             <div class="service-image">
-                                <img :src="item.image" :alt="item.title" />
+                                <img :src="getImageURL(item.image)" :alt="item.title" />
                             </div>
                             <div class="service-info text-lg-center">
                                 <h3>{{ item.title }}</h3>
@@ -33,22 +33,25 @@
             id: 1,
             title: "Tire Repair",
             description: "We take pride in providing top-notch tire repair services to keep your vehicle safe and running smoothly. Our team of experienced technicians is dedicated to ensuring that your tires are in the best possible condition, and we offer a range of services to meet your specific needs.",
-            image: "/src/assets/imgs/services/service1.jpg",
+            image: "service1.jpg",
         },
         {
             id: 2,
             title: "Car Air Conditioning",
             description: "We understand the importance of a properly functioning car air conditioning system, especially during hot summer months. Our dedicated team of automotive technicians is here to provide a comprehensive range of car air conditioning services to keep you comfortable while on the road.",
-            image: "/src/assets/imgs/services/service2.jpg",
+            image: "service2.jpg",
         },
         {
             id: 3,
             title: "Change Oil",
             description: "We are dedicated to preserving the performance and longevity of your vehicle by providing expert car oil change services. Regular oil changes are a fundamental aspect of car maintenance, and our team is committed to making the process easy and convenient for you. Contact us today to schedule your next oil change or to inquire about our services. Your vehicle's well-being is our priority, and we're here to ensure it runs at its best.",
-            image: "/src/assets/imgs/services/service3.jpg",
+            image: "service3.jpg",
         }
     ]);
 
+    const getImageURL = (image) => {
+        return new URL(`/src/assets/imgs/services/${image}`, import.meta.url).href;
+    };
 </script>
 
 <style scoped>

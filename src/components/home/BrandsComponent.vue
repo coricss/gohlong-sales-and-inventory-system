@@ -11,7 +11,7 @@
             <Splide :options="splideOptions" aria-label="Brands">
                 <SplideSlide v-for="item in items" :key="item.id">
                     <div class="carousel__item">
-                        <img :src="item.image" :alt="item.name" />
+                        <img :src="getImageURL(item.image)" :alt="item.name" />
                     </div>
                 </SplideSlide>
             </Splide>
@@ -63,116 +63,118 @@
         {
             id: 1,
             name: "Good Year",
-            image: "/src/assets/imgs/brands/goodyear.png",
+            image: "goodyear.png",
         },
         {
             id: 2,
             name: "GAJAHTUNGGAL",
-            image: "/src/assets/imgs/brands/GAJAHTUNGGAL.png",
+            image: "GAJAHTUNGGAL.png",
         },
         {
             id: 3,
             name: "Dunlop",
-            image: "/src/assets/imgs/brands/dunlop.png",
+            image: "dunlop.png",
         },
         {
             id: 4,
             name: "Yokohama",
-            image: "/src/assets/imgs/brands/yokohama.png",
+            image: "yokohama.png",
         },
         {
             id: 5,
             name: "MRF",
-            image: "/src/assets/imgs/brands/mrf.png",
+            image: "mrf.png",
         },
         {
             id: 6,
             name: "Birla",
-            image: "/src/assets/imgs/brands/birla.png",
+            image: "birla.png",
         },
         {
             id: 7,
             name: "Achilles",
-            image: "/src/assets/imgs/brands/achilles.png",
+            image: "achilles.png",
         },
         {
             id: 8,
             name: "Accelera",
-            image: "/src/assets/imgs/brands/accelera.png",
+            image: "accelera.png",
         },
         {
             id: 9,
             name: "Delium",
-            image: "/src/assets/imgs/brands/delium.png",
+            image: "delium.png",
         },
         {
             id: 10,
             name: "Sailun Tires",
-            image: "/src/assets/imgs/brands/sailun.png",
+            image: "sailun.png",
         },
         {
             id: 11,
             name: "Aeolus",
-            image: "/src/assets/imgs/brands/aeolus.png",
+            image: "aeolus.png",
         },
         {
             id: 12,
             name: "Nankang",
-            image: "/src/assets/imgs/brands/nankang.png",
+            image: "nankang.png",
         },
         {
             id: 12,
             name: "Skyfire",
-            image: "/src/assets/imgs/brands/skyfire.png",
+            image: "skyfire.png",
         },
         {
             id: 13,
             name: "Thunderer",
-            image: "/src/assets/imgs/brands/thunderer.png",
+            image: "thunderer.png",
         },
         {
             id: 14,
             name: "CEAT",
-            image: "/src/assets/imgs/brands/CEAT.png",
+            image: "CEAT.png",
         },
         {
             id: 15,
             name: "Michelin",
-            image: "/src/assets/imgs/brands/michelin.png",
+            image: "michelin.png",
         },
         {
             id: 16,
             name: "Nexen",
-            image: "/src/assets/imgs/brands/nexen.png",
+            image: "nexen.png",
         },
         {
             id: 17,
             name: "Apollo",
-            image: "/src/assets/imgs/brands/apollo.png",
+            image: "apollo.png",
         },
         {
             id: 17,
             name: "Laufenn",
-            image: "/src/assets/imgs/brands/laufenn.png",
+            image: "laufenn.png",
         },
         {
             id: 18,
             name: "Yeada Tire",
-            image: "/src/assets/imgs/brands/yeada-tire.png",
+            image: "yeada-tire.png",
         },
         {
             id: 19,
             name: "Firestone",
-            image: "/src/assets/imgs/brands/firestone.png",
+            image: "firestone.png",
         },
         {
             id: 20,
             name: "Alliance",
-            image: "/src/assets/imgs/brands/alliance.png",
+            image: "alliance.png",
         },
     ]);
 
-
+    const getImageURL = (image) => {
+        return new URL(`/src/assets/imgs/brands/${image}`, import.meta.url).href;
+    };
 
 </script>
 

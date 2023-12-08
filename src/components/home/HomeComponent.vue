@@ -3,7 +3,7 @@
         <Splide :options="splideOptions">
             <SplideSlide v-for="item in items" :key="item.id">
                 <div class="carousel__item">
-                    <img v-bind:src="getImageURL(item.image)" alt="" />
+                    <img v-bind:src="getImageURL(item.image)" :alt="item.name" />
                 </div>
             </SplideSlide>
         </Splide>
