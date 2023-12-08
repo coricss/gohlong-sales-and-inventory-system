@@ -3,7 +3,7 @@
         <Splide :options="splideOptions">
             <SplideSlide v-for="item in items" :key="item.id">
                 <div class="carousel__item">
-                    <img :src="`src/assets/imgs/slideshow/${item.image}`" alt="slide" />
+                    <img v-bind:src="getImageURL(item.image)" alt="" />
                 </div>
             </SplideSlide>
         </Splide>
@@ -72,7 +72,7 @@
     ]);
 
     const getImageURL = (image) => {
-        return require(`@/assets/imgs/slide/show/${image}`);
+        return `/src/assets/imgs/slideshow/${image}`;
     };
 
 
