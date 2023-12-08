@@ -23,8 +23,7 @@ export default defineConfig({
     chunkSizeWarningLimit: 1600,
     rollupOptions: {
       input: {
-        main: path.resolve(__dirname, 'index.html'),
-        nested: path.resolve(__dirname, 'nested/index.html'),
+        main: path.resolve(__dirname, 'index.html')
       },
     }
   }
