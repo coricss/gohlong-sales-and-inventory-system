@@ -72,7 +72,7 @@
     ]);
 
     const getImageURL = (image) => {
-        return `/src/assets/imgs/slideshow/${image}`;
+        return new URL(`/src/assets/imgs/slideshow/${image}`, import.meta.url).href;
     };
 
 
