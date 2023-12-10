@@ -44,9 +44,7 @@ export const useAuthStore = defineStore('auth', {
                     .then((response) => {
                         this.authUser = response.data;
                         sessionStorage.setItem('user', JSON.stringify(response.data));
-                        setTimeout(() => {
-                            this.router.push('/dashboard');
-                        }, 1000);
+                        this.router.push('/dashboard');
                     }).catch((error) => {
                         if (error.response.status === 401) {
                             this.loadToast('Please log in first', 'error');
