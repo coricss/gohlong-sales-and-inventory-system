@@ -40,9 +40,10 @@ export const useAuthStore = defineStore('auth', {
                 if (response.status === 200) {
                     this.isLoggedIn = true;
                     sessionStorage.setItem('token', response.data.token);
-                    this.getUser();
+                    
                     setTimeout(() => {
                         this.router.push('/dashboard');
+                        this.getUser();
                     }, 1000);
                 } else {
                     this.loadToast('Invalid credentials!', 'error');
