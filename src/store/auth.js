@@ -40,10 +40,19 @@ export const useAuthStore = defineStore('auth', {
                 if (response.status === 200) {
                     this.isLoggedIn = true;
                     sessionStorage.setItem('token', response.data.token);
-                    
+                    axios.get('api/user')
+                    .then((response) => {
+                        this.authUser = response.data;
+                        sessionStorage.setItem('user', JSON.stringify(response.data));
+                    }).catch((error) => {
+                        if (error.response.status === 401) {
+                            this.loadToast('Please log in first', 'error');
+                            this.router.push('/login');
+                        }
+                    });
                     setTimeout(() => {
                         this.router.push('/dashboard');
-                        this.getUser();
+                       
                     }, 1000);
                 } else {
                     this.loadToast('Invalid credentials!', 'error');
