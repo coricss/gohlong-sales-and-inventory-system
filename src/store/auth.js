@@ -38,10 +38,9 @@ export const useAuthStore = defineStore('auth', {
                 password: data.password
             }).then((response) => {
                 if (response.status === 200) {
-                    this.getUser();
                     this.isLoggedIn = true;
                     sessionStorage.setItem('token', response.data.token);
-                    
+                    this.getUser();
                     setTimeout(() => {
                         this.router.push('/dashboard');
                     }, 1000);
