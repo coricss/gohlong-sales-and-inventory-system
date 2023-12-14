@@ -3,7 +3,7 @@
         <Splide :options="splideOptions">
             <SplideSlide v-for="item in items" :key="item.id">
                 <div class="carousel__item">
-                    <img :src="item.image" :alt="item.name" />
+                    <img v-bind:src="getImageURL(item.image)" :alt="item.name" />
                 </div>
             </SplideSlide>
         </Splide>
@@ -52,26 +52,28 @@
         {
             id: 1,
             name: "Calling Card",
-            image: "/src/assets/imgs/slideshow/calling-card.jpg",
+            image: "calling-card.jpg",
         },
         {
             id: 2,
             name: "Goh Long Slideshow 1",
-            image: "/src/assets/imgs/slideshow/gohlong-slideshow1.jpg",
+            image: "gohlong-slideshow1.jpg",
         },
         {
             id: 3,
             name: "Goh Long Slideshow 2",
-            image: "/src/assets/imgs/slideshow/gohlong-slideshow2.jpg",
+            image: "gohlong-slideshow2.jpg",
         },
         {
             id: 4,
             name: "Tires",
-            image: "/src/assets/imgs/slideshow/tires.jpg",
+            image: "tires.jpg",
         },
     ]);
 
-    
+    const getImageURL = (image) => {
+        return new URL(`/src/assets/imgs/slideshow/${image}`, import.meta.url).href;
+    };
 
 
 </script>

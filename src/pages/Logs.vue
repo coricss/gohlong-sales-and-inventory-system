@@ -116,6 +116,14 @@
         });
     }
 
+    const getImageURL = (image) => {
+        if (image == null) {
+            return new URL(`/src/assets/imgs/users/default-150x150.png`, import.meta.url).href;
+        } else {
+            return new URL(import.meta.env.VITE_LARAVEL_API_URL+'storage/images/'+image, import.meta.url).href;
+        }
+    };
+
     const columns = ref([
         {
             data: null,
@@ -126,9 +134,7 @@
         {
             data: 'picture',
             render: function (data, type, row, meta) {
-                const api_url = import.meta.env.VITE_LARAVEL_API_URL+'images/'+data;
-
-                const src = data != null ? api_url : 'src/assets/imgs/users/default-150x150.png';
+                const src = getImageURL(data);
                 
                 return '<img src="'+src+'" class="img-circle img-fluid elevation-1" style="width: 35px; height: 35px" />';
             }

@@ -69,6 +69,7 @@ const routes = [
 
 const router = createRouter({
     history: createWebHistory(),
+    mode: 'history',
     routes,
     scrollBehavior(to, from, savedPosition) {
       if (savedPosition) {
@@ -90,7 +91,8 @@ router.afterEach((to, from) => {
   var checkToken = sessionStorage.getItem("token")
   if ((to.name !== 'Login | ' + appName) && (to.name !== appName)) {
       if (!checkToken) {
-          window.location.href = '/login'
+         /* got to route /login not using window.location.href */
+          router.push({ name: 'Login | ' + appName })
       }
   }
 })
@@ -100,11 +102,13 @@ router.afterEach((to, from, next) => {
   const user = JSON.parse(sessionStorage.getItem("user"))
   if (to.name === 'User Management | ' + appName || to.name === 'Manage Products | ' + appName || to.name === 'Manage Categories | ' + appName || to.name === 'Manage Brands | ' + appName || to.name === 'Logs | ' + appName) {
     if (user.role === 'user') {
-      window.location.href = '/dashboard'
+     /* window.location.href = '/dashboard' */
+      router.push({ name: 'Dashboard | ' + appName })
     }
   } else if (to.name === 'Point of Sales | ' + appName) {
     if (user.role === 'admin') {
-      window.location.href = '/dashboard'
+     /*  window.location.href = '/dashboard' */
+      router.push({ name: 'Dashboard | ' + appName })
     }
   }
 });

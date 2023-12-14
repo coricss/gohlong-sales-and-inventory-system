@@ -934,12 +934,13 @@ const action = () => {
             });
         } else if (e.target.classList.contains('btn-print-barcode') || e.target.classList.contains('fa-barcode')) {
             const id = e.target.getAttribute('data-id');
-            print_barcode_modal.value = true;
+            /* print_barcode_modal.value = true; */
 
             productStore.printBarcode(id).then((response) => {
                 if (response.status == 200) {
                     loadToast(response.message, 'success');
-                    print_frame.value.src = import.meta.env.VITE_LARAVEL_API_URL + 'barcodes/' + response.product.product_id+'.pdf';
+                    window.open(import.meta.env.VITE_LARAVEL_API_URL + 'storage/barcodes/' + response.product.product_id+'.pdf', '_blank');
+                    /* print_frame.value.src = import.meta.env.VITE_LARAVEL_API_URL + 'barcodes/' + response.product.product_id+'.pdf'; */
                     loadData();
                 }
             }).catch((error) => {
