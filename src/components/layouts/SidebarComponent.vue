@@ -134,7 +134,7 @@
                 </router-link>
               </li>
               <li class="nav-item">
-                <router-link class="nav-link" to="/user-management" v-if="user.role === 'admin' || user.role === 'super_admin'">
+                <router-link class="nav-link" to="/user-management" v-if="user.role === 'super_admin'">
                   <i class="nav-icon fas fa-users"></i>
                   <p>
                     User Management
@@ -144,7 +144,7 @@
               <li class="nav-item" 
                 id="inventory_menu"
                 :class="{'menu-open': $route.path.includes('/inventory') || is_inventory_open}"
-                v-if="user.role === 'admin' || user.role === 'super_admin'"
+                v-if="user.role === 'admin'"
               >
                 <a style="cursor: pointer;" class="inventory nav-link" :class="{'active': $route.path.includes('/inventory')}">
                   <i class="nav-icon fas fa-boxes"></i>
@@ -174,7 +174,7 @@
                   </li>
                 </ul>
               </li>
-              <li class="nav-item" v-if="user.role === 'user' || user.role === 'super_admin'">
+              <li class="nav-item" v-if="user.role === 'user'">
                 <router-link class="nav-link" to="/point-of-sales">
                   <i class="nav-icon fas fa-shopping-cart"></i>
                   <p>
@@ -182,7 +182,7 @@
                   </p>
                 </router-link>
               </li>
-              <li class="nav-item">
+              <li class="nav-item" v-if="user.role !== 'super_admin'">
                 <router-link class="nav-link" to="/sales">
                   <i class="nav-icon fas fa-cash-register"></i>
                   <p>
@@ -190,7 +190,7 @@
                   </p>
                 </router-link>
               </li>
-              <li class="nav-item" v-if="user.role !== 'user'">
+              <li class="nav-item" v-if="user.role == 'super_admin'">
                 <router-link class="nav-link" to="/logs">
                   <i class="nav-icon fas fa-clock"></i>
                   <p>
@@ -339,7 +339,7 @@
       user.value.picture === null ? has_picture.value = false : has_picture.value = true;
       user.value.is_new_user === 1 ? is_new_user.value = true : is_new_user.value = false;
 
-      if(user.value.role !== 'user') {
+      if(user.value.role == 'admin') {
         document.getElementById("inventory_menu").addEventListener("click", function(){
           is_inventory_open.value = !is_inventory_open.value;
         });

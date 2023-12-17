@@ -103,14 +103,21 @@ router.beforeEach((to, from, next) => {
 /* roles */
 router.afterEach((to, from, next) => {
   const user = JSON.parse(sessionStorage.getItem("user"))
-  if (to.name === 'User Management | ' + appName || to.name === 'Manage Products | ' + appName || to.name === 'Manage Categories | ' + appName || to.name === 'Manage Brands | ' + appName || to.name === 'Logs | ' + appName) {
-    if (user.role === 'user') {
-     /* window.location.href = '/dashboard' */
+
+  if(to.name === 'User Management | ' + appName || to.name === 'Logs | ' + appName) {
+    if (user.role !== 'super_admin') {
+      router.push({ name: 'Dashboard | ' + appName })
+    }
+  } else if (to.name === 'Manage Products | ' + appName || to.name === 'Manage Categories | ' + appName || to.name === 'Manage Brands | ' + appName ) {
+    if (user.role !== 'admin') {
       router.push({ name: 'Dashboard | ' + appName })
     }
   } else if (to.name === 'Point of Sales | ' + appName) {
-    if (user.role === 'admin') {
-     /*  window.location.href = '/dashboard' */
+    if (user.role !== 'user') {
+      router.push({ name: 'Dashboard | ' + appName })
+    }
+  } else if (to.name === 'Sales | ' + appName) {
+    if (user.role === 'super_admin') {
       router.push({ name: 'Dashboard | ' + appName })
     }
   }
