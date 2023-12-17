@@ -82,6 +82,15 @@ export const useProductStore = defineStore('products', {
                     reject(error);
                 });
             });
+        },
+        printAllBarcode() {
+            return new Promise ((resolve, reject) => {
+                axios.get(`api/print-all-barcode`).then((response) => {
+                    resolve(response.data);
+                }).catch((error) => {
+                    reject(error);
+                });
+            });
         }
     }
 });
