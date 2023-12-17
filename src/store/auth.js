@@ -19,7 +19,7 @@ export const useAuthStore = defineStore('auth', {
             await axios.get('sanctum/csrf-cookie');
         },
         async getUser() {
-            this.getToken();
+            /* this.getToken(); */
             await axios.get('api/user')
             .then((response) => {
                 this.authUser = response.data;
@@ -37,10 +37,12 @@ export const useAuthStore = defineStore('auth', {
                 email: data.email,
                 password: data.password
             }).then((response) => {
+                
                 if (response.status === 200) {
                     this.isLoggedIn = true;
                     sessionStorage.setItem('token', response.data.token);
-                    axios.get('api/user')
+                    sessionStorage.setItem('user', JSON.stringify(response.data.user));
+                    /* axios.get('api/user')
                     .then((response) => {
                         this.authUser = response.data;
                         sessionStorage.setItem('user', JSON.stringify(response.data));
@@ -49,7 +51,7 @@ export const useAuthStore = defineStore('auth', {
                             this.loadToast('Please log in first', 'error');
                             this.router.push('/login');
                         }
-                    });
+                    }); */
                     setTimeout(() => {
                         this.router.push('/dashboard');
                     }, 1000);
@@ -67,12 +69,24 @@ export const useAuthStore = defineStore('auth', {
                 }
             });
         },
-        async handleLogout() {
-            await axios.post('logout').then(() => {
+        /* async handleLogout() {
+            await axios.post('logout').then((response) => {
                 this.authUser = null;
                 sessionStorage.removeItem('token');
                 sessionStorage.removeItem('user');
                 this.router.push('/');
+            });
+        }, */
+        async handleLogout() {
+            await axios.post('api/logout').then((response) => {
+                if(response.status === 200) {
+                    this.authUser = null;
+                    sessionStorage.removeItem('token');
+                    sessionStorage.removeItem('user');
+                    this.router.push('/');
+                } else {
+                    this.loadToast('Server error!', 'error');
+                }
             });
         },
         async loadToast (message, type) {

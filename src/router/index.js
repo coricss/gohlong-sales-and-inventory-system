@@ -87,13 +87,16 @@ router.beforeEach((to, from, next) => {
   next();
 });
 
-router.afterEach((to, from) => {
+router.beforeEach((to, from, next) => {
   var checkToken = sessionStorage.getItem("token")
   if ((to.name !== 'Login | ' + appName) && (to.name !== appName)) {
-      if (!checkToken) {
-         /* got to route /login not using window.location.href */
-          router.push({ name: 'Login | ' + appName })
-      }
+    if (!checkToken) {
+      next({ name: 'Login | ' + appName })
+    } else {
+      next()
+    }
+  } else {
+    next()
   }
 })
 

@@ -23,7 +23,7 @@
               />
             </div>
             <div class="col-12 my-2">
-              <InputText 
+              <!-- <InputText 
                 v-model="password_form.new_password" 
                 :type="show_password ? 'text' : 'password'"
                 placeholder="Enter new password" 
@@ -33,7 +33,40 @@
               <passwordMeter 
                   :password="password_form.new_password" :show="true" 
                   @score="onScore"
-              />
+              /> -->
+                <Password 
+                  v-model="password_form.new_password"
+                  class="w-100"
+                  inputId="reset_password"
+                  :pt="{
+                      input: {
+                          type: show_password ? 'text' : 'password',
+                          placeholder: 'New Password',
+                          class: 'form-control',
+                          required: true,
+                         /* type event */
+                         onInput: getStrengthPassword
+                      },
+                      info: {
+                          class: 'text-muted',
+                          style: 'font-size: 0.8rem'
+                      }
+                  }"
+              >
+                  <template #header>
+                      <h6>Pick a password</h6>
+                  </template>
+                  <template #footer>
+                      <Divider />
+                      <p class="mt-2">Suggestions</p>
+                      <ul class="pl-2 ml-2 mt-0" style="line-height: 1.5">
+                          <li>At least one lowercase</li>
+                          <li>At least one uppercase</li>
+                          <li>At least one numeric</li>
+                          <li>Minimum 8 characters</li>
+                      </ul>
+                  </template>
+              </Password>
             </div>
             <div class="col-12 my-2">
               <InputText 
@@ -213,8 +246,16 @@
     const toast = useToast();
     const profileStore = useProfileManagementStore();
 
-    const onScore = (score) => {
+    /* const onScore = (score) => {
         strength.value = score.strength;
+    } */
+
+    const getStrengthPassword = () => {
+        const password = document.getElementById('reset_password');
+        password.addEventListener('keyup', () => {
+            const passwordLabel = document.querySelector('.p-password-info').innerHTML;
+            strength.value = passwordLabel;
+        });
     }
 
     const loadProfileData = () => {
@@ -223,10 +264,13 @@
     }
 
     const submitCreatePassword = (e) => {
-      if(password_form.value.new_password !== password_form.value.confirm_password) {
+      if(password_form.value.old_password === "" || password_form.value.new_password === "" || password_form.value.confirm_password === "") {
+          loadToast("Please fill up all fields!", "error");
+      } else if(password_form.value.new_password !== password_form.value.confirm_password) {
           loadToast("New password and confirm password does not match!", "error");
       } else {
-        if((strength.value !== 'risky') && (strength.value !== 'guessable') && (strength.value !== 'weak')) {
+        /* if((strength.value !== 'risky') && (strength.value !== 'guessable') && (strength.value !== 'weak')) { */
+        if((strength.value !== 'Weak') && (strength.value !== 'Medium')) {
             profileStore.changePassword(password_form.value).then((response) => {
                 if(response.status == 200){
                     loadToast(response.message, "success");
@@ -236,14 +280,13 @@
                         confirm_password: ""
                     };
                     loadProfileData();
+                    is_new_user.value = false;
                 } else {
                     loadToast(response.message, "error");
                 }
             
             }).catch((error) => {
                 loadToast(error.message, "error");
-            }).finally(() => {
-                is_new_user.value = false;
             });
         } else {
             loadToast("Password is not strong enough!", "error");
@@ -290,6 +333,7 @@
     }
 
     onMounted(() => {
+      /* getStrengthPassword(); */
       /* loadProfileData(); */
       user.value = JSON.parse(sessionStorage.getItem("user"));
       user.value.picture === null ? has_picture.value = false : has_picture.value = true;

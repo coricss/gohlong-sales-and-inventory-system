@@ -35,6 +35,8 @@ import TabPanel from 'primevue/tabpanel';
 import Checkbox from 'primevue/checkbox';
 import SelectButton from 'primevue/selectbutton';
 import Skeleton from 'primevue/skeleton';
+import Password from 'primevue/password';
+import Divider from 'primevue/divider';
 
 import ToastService from 'primevue/toastservice';
 import ConfirmationService from 'primevue/confirmationservice';
@@ -75,6 +77,8 @@ Vue.component('TabPanel', TabPanel);
 Vue.component('Checkbox', Checkbox);
 Vue.component('SelectButton', SelectButton);
 Vue.component('Skeleton', Skeleton);
+Vue.component('Password', Password);
+Vue.component('Divider', Divider);
 Vue.component('vue3-autocounter', Vue3Autocounter)
 Vue.component('Chart', Chart)
 Vue.mount('#app');

@@ -21,7 +21,7 @@
                             </li>
                         </ul>
                         <div class="ml-auto">
-                        <button class="btn btn-outline-primary mr-1 btn-login font-weight" @click="login()" data-toggle="modal" data-target="#"><strong>Log in</strong></button>
+                        <!-- <button class="btn btn-outline-primary mr-1 btn-login font-weight" @click="login()" data-toggle="modal" data-target="#"><strong>Log in</strong></button> -->
                         <button class="btn btn-primary ml-auto btn-get-quote font-weight" data-toggle="modal" data-target="#"><strong>Get a Quote</strong></button>
                         </div>
                     </div>
