@@ -1254,7 +1254,7 @@ const windowResize = () => {
 const checkout_dialog = () => {
     count_sales();
     check_out_dialog.value = true;
-    cashier_name.value = JSON.parse(sessionStorage.getItem('user')).name;
+    cashier_name.value = JSON.parse(localStorage.getItem('user')).name;
 }
 
 const count_sales = () => {

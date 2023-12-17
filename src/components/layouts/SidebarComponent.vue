@@ -230,7 +230,7 @@
     import passwordMeter from "vue-simple-password-meter";
 
     const is_inventory_open = ref(false);
-    const user = ref(JSON.parse(sessionStorage.getItem("user")));
+    const user = ref(JSON.parse(localStorage.getItem("user")));
     const password_form = ref({
         old_password: "",
         new_password: "",
@@ -260,7 +260,7 @@
 
     const loadProfileData = () => {
         profileStore.getProfileData();
-        user.value = JSON.parse(sessionStorage.getItem("user"));
+        user.value = JSON.parse(localStorage.getItem("user"));
     }
 
     const submitCreatePassword = (e) => {
@@ -335,7 +335,7 @@
     onMounted(() => {
       /* getStrengthPassword(); */
       /* loadProfileData(); */
-      user.value = JSON.parse(sessionStorage.getItem("user"));
+      user.value = JSON.parse(localStorage.getItem("user"));
       user.value.picture === null ? has_picture.value = false : has_picture.value = true;
       user.value.is_new_user === 1 ? is_new_user.value = true : is_new_user.value = false;
 

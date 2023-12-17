@@ -3,7 +3,7 @@ import axios from 'axios';
 import { useToast } from "vue-toastification";
 const toast = useToast();
 
-axios.defaults.headers.common.Authorization = `Bearer ${sessionStorage.getItem('token')}`;
+axios.defaults.headers.common.Authorization = `Bearer ${localStorage.getItem('token')}`;
 
 export const useAuthStore = defineStore('auth', {
     state: () => ({
@@ -23,7 +23,7 @@ export const useAuthStore = defineStore('auth', {
             await axios.get('api/user')
             .then((response) => {
                 this.authUser = response.data;
-                sessionStorage.setItem('user', JSON.stringify(response.data));
+                localStorage.setItem('user', JSON.stringify(response.data));
             }).catch((error) => {
                 if (error.response.status === 401) {
                     this.loadToast('Please log in first', 'error');
@@ -43,8 +43,8 @@ export const useAuthStore = defineStore('auth', {
                     }).then((response) => {
                         if(response.data.status == 200) {
                             this.isLoggedIn = true;
-                            sessionStorage.setItem('token', res.data.token);
-                            sessionStorage.setItem('user', JSON.stringify(res.data.user));
+                            localStorage.setItem('token', res.data.token);
+                            localStorage.setItem('user', JSON.stringify(res.data.user));
                             this.router.push('/dashboard');
                         } else if (response.data.status == 401) {
                             this.loadToast(response.data.message, 'error');
@@ -82,8 +82,8 @@ export const useAuthStore = defineStore('auth', {
             await axios.post('api/logout').then((response) => {
                 if(response.status === 200) {
                     this.authUser = null;
-                    sessionStorage.removeItem('token');
-                    sessionStorage.removeItem('user');
+                    localStorage.removeItem('token');
+                    localStorage.removeItem('user');
                     this.router.push('/');
                 } else {
                     this.loadToast('Server error!', 'error');

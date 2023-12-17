@@ -88,7 +88,7 @@ router.beforeEach((to, from, next) => {
 });
 
 router.beforeEach((to, from, next) => {
-  var checkToken = sessionStorage.getItem("token")
+  var checkToken = localStorage.getItem("token")
   if ((to.name !== 'Login | ' + appName) && (to.name !== appName)) {
     if (!checkToken) {
       next({ name: 'Login | ' + appName })
@@ -102,7 +102,7 @@ router.beforeEach((to, from, next) => {
 
 /* roles */
 router.afterEach((to, from, next) => {
-  const user = JSON.parse(sessionStorage.getItem("user"))
+  const user = JSON.parse(localStorage.getItem("user"))
 
   if(to.name === 'User Management | ' + appName || to.name === 'Logs | ' + appName) {
     if (user.role !== 'super_admin') {
