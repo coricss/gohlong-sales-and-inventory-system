@@ -150,16 +150,50 @@
                                                 >
                                             </div>
                                             <div class="col-md-4 mt-2">
-                                                <input 
+                                               <!--  <input 
                                                     :type="showPassword ? 'text' : 'password'" class="form-control" 
                                                     v-model="changePasswordForm.new_password"
                                                     placeholder="New Password"
                                                     required
+                                                > -->
+                                               
+                                                <Password 
+                                                    v-model="changePasswordForm.new_password"
+                                                    class="w-100"
+                                                    inputId="profile_change_password"
+                                                    :change="getStrengthPassword"
+                                                    :pt="{
+                                                        input: {
+                                                            type: showPassword ? 'text' : 'password',
+                                                            placeholder: 'New Password',
+                                                            class: 'form-control',
+                                                            required: true
+                                                        },
+                                                        info: {
+                                                            class: 'text-muted',
+                                                            style: 'font-size: 0.8rem'
+                                                        }
+                                                    }"
                                                 >
-                                                <passwordMeter 
+                                                    <template #header>
+                                                        <h6>Pick a password</h6>
+                                                    </template>
+                                                    <template #footer>
+                                                        <Divider />
+                                                        <p class="mt-2">Suggestions</p>
+                                                        <ul class="pl-2 ml-2 mt-0" style="line-height: 1.5">
+                                                            <li>At least one lowercase</li>
+                                                            <li>At least one uppercase</li>
+                                                            <li>At least one numeric</li>
+                                                            <li>Minimum 8 characters</li>
+                                                        </ul>
+                                                    </template>
+                                                </Password>
+                                                <!-- <passwordMeter 
                                                     :password="changePasswordForm.new_password" :show="true" 
+                                                    class="d-none"
                                                     @score="onScore"
-                                                />
+                                                /> -->
                                             </div>
                                             <div class="col-md-4 mt-2">
                                                 <input 
@@ -235,18 +269,18 @@
 
     const loadProfileData = () => {
         profileStore.getProfileData();
-        userDetail.value = JSON.parse(sessionStorage.getItem("user"));
+        userDetail.value = JSON.parse(localStorage.getItem("user"));
     }
 
     /* edit name */
     const isNameHovered = ref(false);
     const isNameEditing = ref(false);
-    const name = ref(JSON.parse(sessionStorage.getItem("user")).name);
+    const name = ref(JSON.parse(localStorage.getItem("user")).name);
 
     const updateName = () => {
         if(userDetail.value.name !== '') {
             isNameEditing.value = false;
-            sessionStorage.setItem("user", JSON.stringify(userDetail.value));
+            localStorage.setItem("user", JSON.stringify(userDetail.value));
             profileStore.updateUserName(userDetail.value.name).then((response) => {
                 name.value = userDetail.value.name;
                 loadToast(response.message, "success");
@@ -262,7 +296,7 @@
     const cancelEditName = () => {
         isNameEditing.value = false;
         isNameHovered.value = false;
-        userDetail.value.name = JSON.parse(sessionStorage.getItem("user")).name;
+        userDetail.value.name = JSON.parse(localStorage.getItem("user")).name;
     }
 
     /* edit email */
@@ -272,7 +306,7 @@
     const updateEmail = () => {
         if(userDetail.value.email !== '') {
             isEmailEditing.value = false;
-            sessionStorage.setItem("user", JSON.stringify(userDetail.value));
+            localStorage.setItem("user", JSON.stringify(userDetail.value));
             profileStore.updateUserEmail(userDetail.value.email).then((response) => {
                 loadToast(response.message, "success");
                 logStore.addNewLog('Updated email to '+userDetail.value.email, 'Profile');
@@ -287,14 +321,14 @@
     const cancelEditEmail = () => {
         isEmailEditing.value = false;
         isEmailHovered.value = false;
-        userDetail.value.email = JSON.parse(sessionStorage.getItem("user")).email;
+        userDetail.value.email = JSON.parse(localStorage.getItem("user")).email;
     }
 
     /* edit picture */
     const has_picture = ref(false);
     const BASE_URL = import.meta.env.VITE_LARAVEL_API_URL;
     const isPictureEditing = ref(false);
-    const picture = ref(JSON.parse(sessionStorage.getItem("user")).picture);
+    const picture = ref(JSON.parse(localStorage.getItem("user")).picture);
 
     const pictureEditing = () => {
         
@@ -323,7 +357,7 @@
             isPictureEditing.value = false;
             userDetail.value.picture = response.picture;
             picture.value = response.picture;
-            sessionStorage.setItem("user", JSON.stringify(userDetail.value));
+            localStorage.setItem("user", JSON.stringify(userDetail.value));
             logStore.addNewLog('Updated profile picture', 'Profile');
         }).catch((error) => {
             loadToast(error.message, "error");
@@ -356,14 +390,26 @@
     const strength = ref(null);
 
     const onScore = (score) => {
-        strength.value = score.strength;
+        /* strength.value = score.strength; */
     }
 
+    const getStrengthPassword = () => {
+        const password = document.querySelector('#profile_change_password');
+    
+        
+        password.addEventListener('keyup', () => {
+            const passwordLabel = document.querySelector('.p-password-info').innerHTML;
+            strength.value = passwordLabel;
+        });
+    }
+
+    onScore(strength.value);
     const submitChangePassword = (e) => {
         if(changePasswordForm.value.new_password !== changePasswordForm.value.confirm_password) {
             loadToast("New password and confirm password does not match!", "error");
         } else {
-            if((strength.value !== 'risky') && (strength.value !== 'guessable') && (strength.value !== 'weak')) {
+            /* if((strength.value !== 'risky') && (strength.value !== 'guessable') && (strength.value !== 'weak')) { */
+            if((strength.value !== 'Weak') && (strength.value !== 'Medium')) {
                 profileStore.changePassword(changePasswordForm.value).then((response) => {
                     if(response.status == 200){
                         loadToast(response.message, "success");
@@ -389,6 +435,7 @@
 
 
     onMounted(() => {
+        getStrengthPassword();
         loadProfileData();
         userDetail.value.picture === null ? has_picture.value = false : has_picture.value = true;
     })

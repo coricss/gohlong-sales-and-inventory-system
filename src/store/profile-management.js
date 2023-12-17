@@ -1,7 +1,7 @@
 import { defineStore } from 'pinia';
 import axios from 'axios';
 
-axios.defaults.headers.common.Authorization = `Bearer ${sessionStorage.getItem('token')}`;
+axios.defaults.headers.common.Authorization = `Bearer ${localStorage.getItem('token')}`;
 
 export const useProfileManagementStore = defineStore('profile-management', {
     state: () => ({
@@ -20,7 +20,7 @@ export const useProfileManagementStore = defineStore('profile-management', {
                 .then((response) => {
                     resolve(response.data);
                     /* this.profileData = response.data; */
-                    sessionStorage.setItem('user', JSON.stringify(response.data));
+                    localStorage.setItem('user', JSON.stringify(response.data));
                 }).catch((error) => {
                     reject(error);
                 });

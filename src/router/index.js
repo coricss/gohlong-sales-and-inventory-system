@@ -87,27 +87,37 @@ router.beforeEach((to, from, next) => {
   next();
 });
 
-router.afterEach((to, from) => {
-  var checkToken = sessionStorage.getItem("token")
+router.beforeEach((to, from, next) => {
+  var checkToken = localStorage.getItem("token")
   if ((to.name !== 'Login | ' + appName) && (to.name !== appName)) {
-      if (!checkToken) {
-         /* got to route /login not using window.location.href */
-          router.push({ name: 'Login | ' + appName })
-      }
+    if (!checkToken) {
+      next({ name: 'Login | ' + appName })
+    } else {
+      next()
+    }
+  } else {
+    next()
   }
 })
 
 /* roles */
 router.afterEach((to, from, next) => {
-  const user = JSON.parse(sessionStorage.getItem("user"))
-  if (to.name === 'User Management | ' + appName || to.name === 'Manage Products | ' + appName || to.name === 'Manage Categories | ' + appName || to.name === 'Manage Brands | ' + appName || to.name === 'Logs | ' + appName) {
-    if (user.role === 'user') {
-     /* window.location.href = '/dashboard' */
+  const user = JSON.parse(localStorage.getItem("user"))
+
+  if(to.name === 'User Management | ' + appName || to.name === 'Logs | ' + appName) {
+    if (user.role !== 'super_admin') {
+      router.push({ name: 'Dashboard | ' + appName })
+    }
+  } else if (to.name === 'Manage Products | ' + appName || to.name === 'Manage Categories | ' + appName || to.name === 'Manage Brands | ' + appName ) {
+    if (user.role !== 'admin') {
       router.push({ name: 'Dashboard | ' + appName })
     }
   } else if (to.name === 'Point of Sales | ' + appName) {
-    if (user.role === 'admin') {
-     /*  window.location.href = '/dashboard' */
+    if (user.role !== 'user') {
+      router.push({ name: 'Dashboard | ' + appName })
+    }
+  } else if (to.name === 'Sales | ' + appName) {
+    if (user.role === 'super_admin') {
       router.push({ name: 'Dashboard | ' + appName })
     }
   }

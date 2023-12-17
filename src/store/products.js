@@ -1,7 +1,7 @@
 import { defineStore } from 'pinia'
 import axios from 'axios';
 
-axios.defaults.headers.common.Authorization = `Bearer ${sessionStorage.getItem('token')}`;
+axios.defaults.headers.common.Authorization = `Bearer ${localStorage.getItem('token')}`;
 
 export const useProductStore = defineStore('products', {
     state: () => ({
@@ -77,6 +77,15 @@ export const useProductStore = defineStore('products', {
         printBarcode(id) {
             return new Promise ((resolve, reject) => {
                 axios.get(`api/print-barcode/${id}`).then((response) => {
+                    resolve(response.data);
+                }).catch((error) => {
+                    reject(error);
+                });
+            });
+        },
+        printAllBarcode() {
+            return new Promise ((resolve, reject) => {
+                axios.get(`api/print-all-barcode`).then((response) => {
                     resolve(response.data);
                 }).catch((error) => {
                     reject(error);

@@ -790,6 +790,26 @@ const buttons = ref([
         }
     },
     {
+        text: '<i class="fas fa-print fa-sm"></i> Print All Barcode',
+        titleAttr: 'Print',
+        className: "btn btn-sm btn-dark",
+        init: function (api, node, config) {
+            node.removeClass('dt-button');
+        },
+        action: function ( e, dt, node, config ) {
+            productStore.printAllBarcode().then((response) => {
+                if (response.status == 200) {
+                    loadToast(response.message, 'success');
+                    window.open(import.meta.env.VITE_LARAVEL_API_URL + 'storage/barcodes/Product Barcodes.pdf', '_blank');
+                    /* print_frame.value.src = import.meta.env.VITE_LARAVEL_API_URL + 'barcodes/' + response.product.product_id+'.pdf'; */
+                    loadData();
+                }
+            }).catch((error) => {
+                loadToast(error.message, 'error');
+            });
+        }
+    },
+    {
         text: '<i class="fas fa-eye fa-sm"></i> Show entries',
         extend: "pageLength",
         titleAttr: 'Show entries',
@@ -797,7 +817,7 @@ const buttons = ref([
         init: function (api, node, config) {
             node.removeClass('dt-button');
         },
-    },
+    }
 ]);
 
 /* lengthmenu */

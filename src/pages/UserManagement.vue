@@ -229,7 +229,7 @@
     const users = useUserManagementStore();
     const logStore = useLogStore();
 
-    const isSuperAdmin = JSON.parse(sessionStorage.getItem('user')).role === 'super_admin' ? true : false;
+    const isSuperAdmin = JSON.parse(localStorage.getItem('user')).role === 'super_admin' ? true : false;
   
     DataTable.use(DataTablesCore);
     DataTable.use(Buttons);

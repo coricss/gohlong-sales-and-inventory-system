@@ -23,7 +23,7 @@
               />
             </div>
             <div class="col-12 my-2">
-              <InputText 
+              <!-- <InputText 
                 v-model="password_form.new_password" 
                 :type="show_password ? 'text' : 'password'"
                 placeholder="Enter new password" 
@@ -33,7 +33,40 @@
               <passwordMeter 
                   :password="password_form.new_password" :show="true" 
                   @score="onScore"
-              />
+              /> -->
+                <Password 
+                  v-model="password_form.new_password"
+                  class="w-100"
+                  inputId="reset_password"
+                  :pt="{
+                      input: {
+                          type: show_password ? 'text' : 'password',
+                          placeholder: 'New Password',
+                          class: 'form-control',
+                          required: true,
+                         /* type event */
+                         onInput: getStrengthPassword
+                      },
+                      info: {
+                          class: 'text-muted',
+                          style: 'font-size: 0.8rem'
+                      }
+                  }"
+              >
+                  <template #header>
+                      <h6>Pick a password</h6>
+                  </template>
+                  <template #footer>
+                      <Divider />
+                      <p class="mt-2">Suggestions</p>
+                      <ul class="pl-2 ml-2 mt-0" style="line-height: 1.5">
+                          <li>At least one lowercase</li>
+                          <li>At least one uppercase</li>
+                          <li>At least one numeric</li>
+                          <li>Minimum 8 characters</li>
+                      </ul>
+                  </template>
+              </Password>
             </div>
             <div class="col-12 my-2">
               <InputText 
@@ -101,7 +134,7 @@
                 </router-link>
               </li>
               <li class="nav-item">
-                <router-link class="nav-link" to="/user-management" v-if="user.role === 'admin' || user.role === 'super_admin'">
+                <router-link class="nav-link" to="/user-management" v-if="user.role === 'super_admin'">
                   <i class="nav-icon fas fa-users"></i>
                   <p>
                     User Management
@@ -111,7 +144,7 @@
               <li class="nav-item" 
                 id="inventory_menu"
                 :class="{'menu-open': $route.path.includes('/inventory') || is_inventory_open}"
-                v-if="user.role === 'admin' || user.role === 'super_admin'"
+                v-if="user.role === 'admin'"
               >
                 <a style="cursor: pointer;" class="inventory nav-link" :class="{'active': $route.path.includes('/inventory')}">
                   <i class="nav-icon fas fa-boxes"></i>
@@ -141,7 +174,7 @@
                   </li>
                 </ul>
               </li>
-              <li class="nav-item" v-if="user.role === 'user' || user.role === 'super_admin'">
+              <li class="nav-item" v-if="user.role === 'user'">
                 <router-link class="nav-link" to="/point-of-sales">
                   <i class="nav-icon fas fa-shopping-cart"></i>
                   <p>
@@ -149,7 +182,7 @@
                   </p>
                 </router-link>
               </li>
-              <li class="nav-item">
+              <li class="nav-item" v-if="user.role !== 'super_admin'">
                 <router-link class="nav-link" to="/sales">
                   <i class="nav-icon fas fa-cash-register"></i>
                   <p>
@@ -157,7 +190,7 @@
                   </p>
                 </router-link>
               </li>
-              <li class="nav-item" v-if="user.role !== 'user'">
+              <li class="nav-item" v-if="user.role == 'super_admin'">
                 <router-link class="nav-link" to="/logs">
                   <i class="nav-icon fas fa-clock"></i>
                   <p>
@@ -197,7 +230,7 @@
     import passwordMeter from "vue-simple-password-meter";
 
     const is_inventory_open = ref(false);
-    const user = ref(JSON.parse(sessionStorage.getItem("user")));
+    const user = ref(JSON.parse(localStorage.getItem("user")));
     const password_form = ref({
         old_password: "",
         new_password: "",
@@ -213,20 +246,31 @@
     const toast = useToast();
     const profileStore = useProfileManagementStore();
 
-    const onScore = (score) => {
+    /* const onScore = (score) => {
         strength.value = score.strength;
+    } */
+
+    const getStrengthPassword = () => {
+        const password = document.getElementById('reset_password');
+        password.addEventListener('keyup', () => {
+            const passwordLabel = document.querySelector('.p-password-info').innerHTML;
+            strength.value = passwordLabel;
+        });
     }
 
     const loadProfileData = () => {
         profileStore.getProfileData();
-        user.value = JSON.parse(sessionStorage.getItem("user"));
+        user.value = JSON.parse(localStorage.getItem("user"));
     }
 
     const submitCreatePassword = (e) => {
-      if(password_form.value.new_password !== password_form.value.confirm_password) {
+      if(password_form.value.old_password === "" || password_form.value.new_password === "" || password_form.value.confirm_password === "") {
+          loadToast("Please fill up all fields!", "error");
+      } else if(password_form.value.new_password !== password_form.value.confirm_password) {
           loadToast("New password and confirm password does not match!", "error");
       } else {
-        if((strength.value !== 'risky') && (strength.value !== 'guessable') && (strength.value !== 'weak')) {
+        /* if((strength.value !== 'risky') && (strength.value !== 'guessable') && (strength.value !== 'weak')) { */
+        if((strength.value !== 'Weak') && (strength.value !== 'Medium')) {
             profileStore.changePassword(password_form.value).then((response) => {
                 if(response.status == 200){
                     loadToast(response.message, "success");
@@ -236,14 +280,13 @@
                         confirm_password: ""
                     };
                     loadProfileData();
+                    is_new_user.value = false;
                 } else {
                     loadToast(response.message, "error");
                 }
             
             }).catch((error) => {
                 loadToast(error.message, "error");
-            }).finally(() => {
-                is_new_user.value = false;
             });
         } else {
             loadToast("Password is not strong enough!", "error");
@@ -290,12 +333,13 @@
     }
 
     onMounted(() => {
+      /* getStrengthPassword(); */
       /* loadProfileData(); */
-      user.value = JSON.parse(sessionStorage.getItem("user"));
+      user.value = JSON.parse(localStorage.getItem("user"));
       user.value.picture === null ? has_picture.value = false : has_picture.value = true;
       user.value.is_new_user === 1 ? is_new_user.value = true : is_new_user.value = false;
 
-      if(user.value.role !== 'user') {
+      if(user.value.role == 'admin') {
         document.getElementById("inventory_menu").addEventListener("click", function(){
           is_inventory_open.value = !is_inventory_open.value;
         });
