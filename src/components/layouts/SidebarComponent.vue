@@ -109,7 +109,7 @@
           <div class="user-panel mt-3 pb-3 mb-3 d-flex">
             <div class="image">
               <img 
-                :src="picture != null ? api_url+'storage/images/'+picture : (user.picture != null ? api_url+'storage/images/'+user.picture : new URL(`/src/assets/imgs/users/default-150x150.png`, import.meta.url).href)"
+                :src="getImageURL(user.picture)"
                 class="img-circle elevation-0" 
                 :alt="picture" 
                 style="width: 35px; height: 35px"
@@ -245,6 +245,14 @@
 
     const toast = useToast();
     const profileStore = useProfileManagementStore();
+
+    const getImageURL = (image) => {
+        if (image == null) {
+            return new URL(`/src/assets/imgs/users/default-150x150.png`, import.meta.url).href;
+        } else {
+            return new URL(import.meta.env.VITE_LARAVEL_API_URL+'storage/images/'+image, import.meta.url).href;
+        }
+    };
 
     /* const onScore = (score) => {
         strength.value = score.strength;
