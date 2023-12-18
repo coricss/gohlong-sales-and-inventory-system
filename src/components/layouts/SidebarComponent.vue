@@ -109,7 +109,7 @@
           <div class="user-panel mt-3 pb-3 mb-3 d-flex">
             <div class="image">
               <img 
-                :src="picture != null ? api_url+'storage/images/'+picture : (user.picture != null ? api_url+'storage/images/'+user.picture : '@/assets/imgs/users/default-150x150.png')"
+                :src="picture != null ? api_url+'storage/images/'+picture : (user.picture != null ? api_url+'storage/images/'+user.picture : new URL(`/src/assets/imgs/users/default-150x150.png`, import.meta.url).href"
                 class="img-circle elevation-0" 
                 :alt="picture" 
                 style="width: 35px; height: 35px"
