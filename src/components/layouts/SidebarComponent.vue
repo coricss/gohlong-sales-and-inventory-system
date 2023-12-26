@@ -109,7 +109,7 @@
           <div class="user-panel mt-3 pb-3 mb-3 d-flex">
             <div class="image">
               <img 
-                :src="picture != null ? api_url+'storage/images/'+picture : (user.picture != null ? api_url+'storage/images/'+user.picture : 'http://localhost:3000/src/assets/imgs/users/default-150x150.png')"
+                :src="picture != null ? api_url+'storage/images/'+picture : (user.picture != null ? api_url+'storage/images/'+user.picture : getImageURL(user.picture))"
                 class="img-circle elevation-0" 
                 :alt="picture" 
                 style="width: 35px; height: 35px"
@@ -245,6 +245,12 @@
 
     const toast = useToast();
     const profileStore = useProfileManagementStore();
+
+    const getImageURL = (image) => {
+        if (image == null) {
+            return new URL(`/src/assets/imgs/users/default-150x150.png`, import.meta.url).href;
+        } 
+    };
 
     /* const onScore = (score) => {
         strength.value = score.strength;
