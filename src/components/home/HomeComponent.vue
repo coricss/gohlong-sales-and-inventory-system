@@ -80,12 +80,14 @@
 
 <style scoped>
     .carousel__item {
-        height: 90vh;
+        height: 75vh;
+        padding-right: 0.9rem;
+        padding-left: 0.9rem;
     }
     .splide__slide img {
         width: 100%;
         height: 100%;
-        object-fit: stretch !important;
+        object-fit: fill !important;
     }
 
     @media screen and (max-width: 1024px) {
