@@ -53,11 +53,11 @@
                                                     className: 'text-center',
                                                 },
                                                 {
-                                                    targets: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13],
+                                                    targets: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10],
                                                     className: 'text-center align-middle',
                                                 },
                                                 {
-                                                    targets: 13,
+                                                    targets: 11,
                                                     className: 'text-center',
                                                     orderable: false,
                                                 }
@@ -72,9 +72,9 @@
                                                     <th>Model/Size</th>
                                                     <th>Brand</th>
                                                     <th>Category</th>
-                                                    <th>Stocks</th>
+                                                   <!--  <th>Stocks</th>
                                                     <th>Old Stocks</th>
-                                                    <th>New Stocks Added At</th>
+                                                    <th>New Stocks Added At</th> -->
                                                     <th>Price</th>
                                                     <th>Discounted Price</th>
                                                     <th>Total Price Stocks</th>
@@ -118,7 +118,7 @@
                     </template>
                     <form @submit.prevent="add_new_product" id="new-product-form">
                         <div class="row">
-                            <div class="col-sm-8 mt-2">
+                            <div class="col-sm-12 mt-2">
                                 <InputText 
                                     v-model.trim="new_product"
                                     class="w-100"
@@ -128,7 +128,7 @@
                                     autofocus
                                 />
                             </div>
-                             <div class="col-sm-4 mt-2">
+                             <!-- <div class="col-sm-4 mt-2">
                                 <InputNumber
                                     inputId="new-stocks"
                                     v-model="new_stocks"
@@ -140,7 +140,7 @@
                                     decrementButtonClass="p-button-secondary" 
                                     incrementButtonClass="p-button-secondary" 
                                 />
-                            </div>
+                            </div> -->
                         </div>
                         <div class="row">
                             <div class="col-sm-6 mt-2">
@@ -251,7 +251,7 @@
                     </template>
                     <form @submit.prevent="update_product" id="edit-product-form">
                         <div class="row">
-                            <div class="col-sm-8 mt-2">
+                            <div class="col-sm-12 mt-2">
                                 <InputText 
                                     v-model.trim="edit_product"
                                     class="w-100"
@@ -260,7 +260,7 @@
                                     required
                                 />
                             </div>
-                             <div class="col-sm-4 mt-2">
+                             <!-- <div class="col-sm-4 mt-2">
                                 <InputNumber
                                     inputId="edit-stocks"
                                     v-model="edit_stocks"
@@ -272,7 +272,7 @@
                                     decrementButtonClass="p-button-secondary" 
                                     incrementButtonClass="p-button-secondary" 
                                 />
-                            </div>
+                            </div> -->
                         </div>
                         <div class="row">
                             <div class="col-sm-6 mt-2">
@@ -623,7 +623,7 @@ const columns = ref([
     {
         data: "category_name",
     },
-    {
+    /* {
         data: "stocks",
         render: function (data, type, row) {
             if (data <= 10) {
@@ -650,10 +650,9 @@ const columns = ref([
     {
         data: "stock_added_at",
         render: function (data, type, row) {
-          /* return date format yyyy-mm-dd */
             return '<small>'+new Date(data).toLocaleString('en-PH', { year: 'numeric', month: 'numeric', day: 'numeric' })+'</small>';
         }
-    },
+    }, */
     {
         data: "price",
         render: function (data, type, row) {
@@ -764,10 +763,10 @@ const buttons = ref([
             node.removeClass('dt-button');
         },
         exportOptions: {
-            columns: [ 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12]
+            columns: [ 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10]
         },
     },
-    {
+    /* {
         extend: 'csv',
         text: '<i class="fas fa-exchange-alt fa-sm"></i> Admin-Staff Inventory Comparison',
         title: "Gohlong Tire and Service Inventory Products",
@@ -788,7 +787,7 @@ const buttons = ref([
                 loadToast(error.message, 'error');
             });
         }
-    },
+    }, */
     {
         text: '<i class="fas fa-print fa-sm"></i> Print All Barcode',
         titleAttr: 'Print',
@@ -846,7 +845,7 @@ const new_price = ref(null);
 const new_discounted_price = ref(null);
 
 const add_new_product = () => {
-    if ((new_product.value === null) || (new_stocks.value === null) || (new_brand.value === null) || (new_category.value === null) || (new_price.value === null) || (new_discounted_price.value === null)) {
+    if ((new_product.value === null) /* || (new_stocks.value === null) */ || (new_brand.value === null) || (new_category.value === null) || (new_price.value === null) || (new_discounted_price.value === null)) {
         loadToast('Please enter details properly', 'error');
         return false;
     } else {
@@ -883,7 +882,7 @@ const print_barcode_modal = ref(false);
 const print_frame = ref([]);
 
 const update_product = () => {
-    if ((edit_product.value === null) || (edit_stocks.value === null) || (edit_brand.value === null) || (edit_category.value === null) || (edit_price.value === null) || (edit_discounted_price.value === null)) {
+    if ((edit_product.value === null) /* || (edit_stocks.value === null) */ || (edit_brand.value === null) || (edit_category.value === null) || (edit_price.value === null) || (edit_discounted_price.value === null)) {
         loadToast('Please enter details properly', 'error');
         return false;
     } else {

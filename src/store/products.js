@@ -56,6 +56,15 @@ export const useProductStore = defineStore('products', {
                 });
             });
         },
+        updateInventoryStocks(data, id) {
+            return new Promise ((resolve, reject) => {
+                axios.put(`api/update-inventory-stocks/${id}`, data).then((response) => {
+                    resolve(response.data);
+                }).catch((error) => {
+                    reject(error);
+                });
+            });
+        },
         deleteProduct(id) {
             return new Promise ((resolve, reject) => {
                 axios.delete(`api/delete-product/${id}`).then((response) => {

@@ -36,6 +36,11 @@ const routes = [
       component: () => import('@/components/inventory-tables/ProductsTable.vue'),
     },
     {
+      path: '/inventory-stocks',
+      name: 'Inventory Stocks | ' + appName,
+      component: () => import('@/components/inventory-tables/InventoryStocks.vue'),
+    },
+    {
       path: '/inventory/categories',
       name: 'Manage Categories | ' + appName,
       component: () => import('@/components/inventory-tables/CategoriesTable.vue'),
@@ -108,7 +113,7 @@ router.afterEach((to, from, next) => {
     if (user.role !== 'super_admin') {
       router.push({ name: 'Dashboard | ' + appName })
     }
-  } else if (to.name === 'Manage Products | ' + appName || to.name === 'Manage Categories | ' + appName || to.name === 'Manage Brands | ' + appName ) {
+  } else if (to.name === 'Inventory Stocks | ' + appName || to.name === 'Manage Products | ' + appName || to.name === 'Manage Categories | ' + appName || to.name === 'Manage Brands | ' + appName ) {
     if (user.role !== 'admin') {
       router.push({ name: 'Dashboard | ' + appName })
     }
