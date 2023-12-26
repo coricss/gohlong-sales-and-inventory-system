@@ -172,6 +172,12 @@
                       <p>Products</p>
                     </router-link>
                   </li>
+                  <li class="nav-item">
+                    <router-link class="nav-link sub-link" to="/inventory-stocks" :class="{'active': $route.path.includes('/inventory-stocks')}">
+                      <i class="fas fa-boxes mx-2"></i>
+                      <p>Inventory Stocks</p>
+                    </router-link>
+                  </li>
                 </ul>
               </li>
               <li class="nav-item" v-if="user.role === 'user'">

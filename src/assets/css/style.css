@@ -129,6 +129,13 @@ select.form-control:focus {
     color: #fff !important;
 }
 
+.p-datepicker-trigger {
+    outline: none;
+    border: none;
+    box-shadow: none;
+    background-color: #5a6268;
+}
+
 .p-inputtext:focus, .p-inputwrapper-focus{
     border-color: #f58634;
     box-shadow: none;
