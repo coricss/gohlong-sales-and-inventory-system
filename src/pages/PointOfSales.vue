@@ -460,6 +460,29 @@
                                 />
                             </div>
                             <div class="flex-auto mt-3 w-100">
+                                <label for="mode_of_payment" class="font-bold block"> Mode of Payment: </label>
+                                <Dropdown 
+                                    id="mode_of_payment"
+                                    inputId="select_mode_of_payment"
+                                    v-model="mode_of_payment"
+                                    :options="mode_of_payment_option"
+                                    @change="showReferenceNumber"
+                                    optionLabel="label"
+                                    optionValue="value"
+                                    placeholder="Select payment mode"
+                                    style="width: 100%; height: 40px; font-size: 15px; word-break: break-all; white-space: normal;"
+                                />
+                            </div>
+                            <div class="flex-auto mt-3 w-100 d-none" id="ref_number">
+                                <label for="reference_number" class="font-bold block"> Reference Number: </label>
+                                <InputText
+                                    placeholder="Enter reference number"
+                                    id="reference_number"
+                                    v-model.trim="reference_number"
+                                    style="width: 100%; height: 40px; font-size: 15px; word-break: break-all; white-space: normal;"
+                                />
+                            </div>
+                            <div class="flex-auto mt-3 w-100">
                                 <label for="payment" class="font-bold block"> Payment: </label>
                                 <InputNumber
                                     @click="mark_value"
@@ -635,6 +658,22 @@
                                             </tr>
                                             <tr>
                                                 <td>
+                                                    Mode of Payment:
+                                                    <strong>
+                                                        {{ mode_of_payment }}
+                                                    </strong>
+                                                </td>
+                                            </tr>
+                                            <tr v-if="mode_of_payment != 'Cash'">
+                                                <td>
+                                                    Reference No:
+                                                    <strong>
+                                                        {{ reference_number }}
+                                                    </strong>
+                                                </td>
+                                            </tr>
+                                            <tr>
+                                                <td>
                                                     Payment: 
                                                     <span>&#8369;</span>
                                                     {{ payment.toFixed(2) }}
@@ -783,13 +822,37 @@ const transaction_id = ref(null);
 const input_customer_name = ref();
 const cashier_name = ref(null);
 const customer_name = ref(null);
+const mode_of_payment = ref(null);
+const mode_of_payment_option = ref([
+    {label: 'Cash', value: 'Cash'},
+    {label: 'Credit Card', value: 'Credit Card'},
+    {label: 'Debit Card', value: 'Debit Card'},
+    {label: 'Gcash', value: 'Gcash'},
+    {label: 'Paymaya', value: 'Paymaya'},
+    {label: 'Others', value: 'Others'},
+]);
+const reference_number = ref(null);
 const payment = ref(0);
 const invoice_visible = ref(false);
+
+const showReferenceNumber = () => {
+    if(mode_of_payment.value == 'Cash') {
+        document.getElementById('ref_number').classList.add('d-none');
+    } else {
+        document.getElementById('ref_number').classList.remove('d-none');
+    }
+}
 
 const confirm_checkout = (event) => {
     if(customer_name.value == '' || customer_name.value == null) {
         loadToast('Please enter customer name', 'error');
         document.getElementById('customer_name').focus();
+    } else if (mode_of_payment.value == '' || mode_of_payment.value == null) {
+        loadToast('Please select mode of payment', 'error');
+        document.getElementById('select_mode_of_payment').focus();
+    } else if (mode_of_payment.value != 'Cash' && (reference_number.value == '' || reference_number.value == null)) {
+        loadToast('Please enter reference number', 'error');
+        document.getElementById('reference_number').focus();
     }
     else if(payment.value < total_price.value) {
         loadToast('Insufficient payment', 'error');
@@ -1035,6 +1098,8 @@ const clear_payment = () => {
     cashier_name.value = null;
     customer_name.value = null;
     payment.value = 0;
+    mode_of_payment.value = null;
+    reference_number.value = null;
 }
 
 const close_invoice = () => {
@@ -1052,6 +1117,8 @@ const check_out = () => {
         transaction_id: transaction_id.value,
         customer_name: customer_name.value,
         total_price: total_price.value,
+        mode_of_payment: mode_of_payment.value,
+        reference_number: reference_number.value,
         payment: payment.value,
         change: payment.value - total_price.value,
         items: items.value,
@@ -1339,7 +1406,6 @@ input#item_quantity {
 
 tbody#table-invoice-tbody {
     display:block;
-    height:200px;
     overflow:auto;
 }
 thead#table-invoice-thead, tbody#table-invoice-tbody tr {
