@@ -37,7 +37,7 @@
                                             scrollX:        true,
                                             scrollCollapse: true,
                                             destroy:        true,
-                                            responsive:     true,
+                                            responsive:     false,
                                             autoWidth:      true,
                                             serverSide:     false,  
                                             processing:     true,
@@ -47,14 +47,12 @@
                                             deferRender:    true,
                                             lengthChange:   false,
                                             columnDefs: [
-                                                { responsivePriority: 1, targets: 0 },
-                                                { responsivePriority: 2, targets: -1 },
                                                 {
                                                     targets: 0,
                                                     className: 'text-center',
                                                 },
                                                 {
-                                                    targets: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15],
+                                                    targets: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17],
                                                     className: 'text-center align-middle',
                                                 }
                                             ],
@@ -76,6 +74,8 @@
                                                 <th>Is Discounted</th>
                                                 <th>Quantity</th>
                                                 <th>Subtotal</th>
+                                                <th>Mode of Payment</th>
+                                                <th>Reference No.</th>
                                                 <th>Payment</th>
                                                 <th>Change</th>
                                                 <th>Created At</th>
@@ -189,6 +189,18 @@
           }
         },
         {
+          data: 'mode_of_payment',
+          render: function (data, type, row) {
+            return '<center><small>'+data+'</small></center>';
+          }
+        },
+        {
+          data: 'ref_no',
+          render: function (data, type, row) {
+            return data === null ? '<center><small>No reference no.</small></center>' : '<center><small>'+data+'</small></center>';
+          }
+        },
+        {
           data: 'payment',
           render: function (data, type, row) {
             return '<center><small>'+new Intl.NumberFormat('en-PH', { style: 'currency', currency: 'PHP' }).format(data)+'</small></center>';
@@ -239,7 +251,7 @@
           node.removeClass('dt-button');
         },
         exportOptions: {
-          columns: [ 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15 ]
+          columns: [ 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17 ]
         },
       },
       {
