@@ -1,6 +1,6 @@
 <template>
     <div id="services"></div>
-        <div class="container">
+        <div class="container-fluid">
             <div class="services">
                 <div class="row">
                     <div class="col-md-12">
@@ -56,12 +56,12 @@
 
 <style scoped>
 
-    .container {
-        margin-top: 120px;
+    .container-fluid {
+        margin-top: 150px;
        /*  min-height: 100vh !important; */
     }
     .services {
-        padding: 100px 0;
+        padding: 100px;
     }
     .service {
         padding: 20px;   
@@ -70,7 +70,7 @@
         height: 100%;
     }
     .service-image {
-        height: 200px;
+        height: 300px;
         overflow: hidden;
     }
     .service-image img {
