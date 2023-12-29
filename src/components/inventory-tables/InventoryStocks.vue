@@ -190,6 +190,19 @@
                     <form @submit.prevent="update_actual_stocks" id="update-actual-stocks-form">
                         <div class="row">
                             <div class="col-sm-12 mt-2">
+                               <InputText
+                                    class="w-100"
+                                    inputId="product_name_barcode"
+                                    type="hidden"
+                                    v-model="product_name_barcode"
+                                    placeholder="Enter product name or barcode"
+                                    autofocus
+                                    @keyup="scan_product_barcode"
+                                />
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-sm-12 mt-2">
                                 <InputNumber
                                     class="w-100"
                                     inputId="actual-stocks"
@@ -617,6 +630,7 @@ const discrepancy_columns = ref([
 const edit_actual_stocks_modal = ref(false);
 const actual_stocks_id = ref(null);
 const product_name = ref(null);
+const product_name_barcode = ref(null);
 const edit_actual_stocks = ref(null);
 
 const get_actual_stocks = (e) => {
@@ -627,11 +641,21 @@ const get_actual_stocks = (e) => {
             const id = e.target.getAttribute('data-id');
             const product_id = e.target.getAttribute('data-product');
             const actual_stocks = e.target.getAttribute('data-actual-stocks');
-
+ 
             actual_stocks_id.value = id;
             product_name.value = product_id;
             edit_actual_stocks.value = !parseInt(actual_stocks) ? 0 : parseInt(actual_stocks);
         }
+    }
+}
+
+const scan_product_barcode = () => {
+    if(product_name_barcode.value === product_name.value) {
+        edit_actual_stocks.value = !parseInt(edit_actual_stocks.value) ? 0 : parseInt(edit_actual_stocks.value);
+        edit_actual_stocks.value += 1;
+        product_name_barcode.value = null;
+    } else {
+        loadToast('Barcode does not match', 'error');
     }
 }
 
