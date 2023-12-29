@@ -47,6 +47,15 @@ export const useProductStore = defineStore('products', {
                 });
             });
         },
+        getProductByBarcode(barcode) {
+            return new Promise ((resolve, reject) => {
+                axios.get(`api/search-product-barcode/${barcode}`).then((response) => {
+                    resolve(response.data);
+                }).catch((error) => {
+                    reject(error);
+                });
+            });
+        },
         updateProduct(data, id) {
             return new Promise ((resolve, reject) => {
                 axios.put(`api/update-product/${id}`, data).then((response) => {
@@ -77,6 +86,15 @@ export const useProductStore = defineStore('products', {
         updateActualStocks(data, id) {
             return new Promise ((resolve, reject) => {
                 axios.put(`api/update-actual-stocks/${id}`, data).then((response) => {
+                    resolve(response.data);
+                }).catch((error) => {
+                    reject(error);
+                });
+            });
+        },
+        addActualStocks(data, id) {
+            return new Promise ((resolve, reject) => {
+                axios.put(`api/add-actual-stocks/${id}`, data).then((response) => {
                     resolve(response.data);
                 }).catch((error) => {
                     reject(error);

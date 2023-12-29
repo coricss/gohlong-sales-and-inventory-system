@@ -986,6 +986,7 @@ const clear_item = () => {
     product.value.is_discounted = false;
     is_discounted.value = false;
     search_loading.value = false;
+    item_found.value = false;
     search.value = null;
 }
 

@@ -103,12 +103,23 @@
                     :draggable="false" 
                     :resizable="true"  
                     :style="{ width: '80rem', }"
+                    @hide="clear_actual_stocks_modal"
                 >
                     <template #header>
                         <div class="text-center">
                             <h4 class="m-0 font-weight-bold">Admin-Staff Inventory Comparison</h4>
                         </div>
                     </template>
+                    <InputText
+                        class="w-100 mb-3"
+                        style="opacity: 0; position: absolute;"
+                        id="product_name_barcode"
+                        type="text"
+                        v-model="product_name_barcode"
+                        placeholder="Enter product name or barcode"
+                        autofocus
+                        @change="scan_product_barcode"
+                    />
                     <div class="row">
                         <div class="col-sm-12">
                             <DataTable
@@ -188,19 +199,6 @@
                         </div>
                     </template>
                     <form @submit.prevent="update_actual_stocks" id="update-actual-stocks-form">
-                        <div class="row">
-                            <div class="col-sm-12 mt-2">
-                               <InputText
-                                    class="w-100"
-                                    inputId="product_name_barcode"
-                                    type="hidden"
-                                    v-model="product_name_barcode"
-                                    placeholder="Enter product name or barcode"
-                                    autofocus
-                                    @keyup="scan_product_barcode"
-                                />
-                            </div>
-                        </div>
                         <div class="row">
                             <div class="col-sm-12 mt-2">
                                 <InputNumber
@@ -650,13 +648,39 @@ const get_actual_stocks = (e) => {
 }
 
 const scan_product_barcode = () => {
-    if(product_name_barcode.value === product_name.value) {
-        edit_actual_stocks.value = !parseInt(edit_actual_stocks.value) ? 0 : parseInt(edit_actual_stocks.value);
-        edit_actual_stocks.value += 1;
-        product_name_barcode.value = null;
-    } else {
-        loadToast('Barcode does not match', 'error');
-    }
+    productStore.getProductByBarcode(product_name_barcode.value).then((response) => {
+        if(response.status == 200) {
+            edit_actual_stocks.value = !parseInt(edit_actual_stocks.value) ? 0 : parseInt(edit_actual_stocks.value);
+            edit_actual_stocks.value += 1;
+
+            /* update actual stocks in db */
+            const data = {
+                actual_stocks: edit_actual_stocks.value,
+            };
+
+            productStore.addActualStocks(data, response.product.id).then((response) => {
+                if(response.status == 200) {
+                    productStore.getProductData().then((response) => {
+                        discrepancy_items.value = response;
+                        clear_actual_stocks_modal();
+                        product_name_barcode.value = null;
+                    }).catch((error) => {
+                        loadToast(error.message, 'error');
+                    });
+                    loadToast(response.message, 'success');
+                } else {
+                    loadToast(response.message, 'error');
+                }
+            }).catch((error) => {
+                loadToast(error.message, 'error');
+            });
+        } else {
+            loadToast(response.message, 'error');
+            product_name_barcode.value = null;
+        }
+    }).catch((error) => {
+        loadToast(error.message, 'error');
+    });
 }
 
 const update_actual_stocks = () => {
@@ -679,6 +703,7 @@ const update_actual_stocks = () => {
             } else {
                 loadToast(response.message, 'error');
             }
+            document.querySelector('#product_name_barcode').focus();
         }).catch((error) => {
             loadToast(error.message, 'error');
         });
@@ -689,6 +714,7 @@ const clear_actual_stocks_modal = () => {
     product_name.value = null;
     edit_actual_stocks.value = null;
     edit_actual_stocks_modal.value = false;
+    product_name_barcode.value = null;
 }
 
 const clear_product_modal = () => {
