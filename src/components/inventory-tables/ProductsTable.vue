@@ -181,7 +181,7 @@
                                     inputId="new-price"
                                     v-model="new_price"
                                     placeholder="Enter price"
-                                    :min="0"
+                                    :min="1000"
                                     prefix="Price: "
                                     showButtons
                                     required
@@ -196,6 +196,7 @@
                                     inputId="new-discounted-price"
                                     v-model="new_discounted_price"
                                     placeholder="Enter discounted price"
+                                    :max="new_price"
                                     :min="0"
                                     prefix="Discount: "
                                     showButtons
