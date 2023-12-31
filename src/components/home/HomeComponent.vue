@@ -56,16 +56,36 @@
         },
         {
             id: 2,
+            name: "GohLong Renew Tires",
+            image: "gohlong-slideshow3.png",
+        },
+        {
+            id: 3,
+            name: "GohLong Renew Tires",
+            image: "gohlong-slideshow4.jpg",
+        },
+        {
+            id: 4,
+            name: "GohLong Renew Tires",
+            image: "gohlong-slideshow5.jpg",
+        },
+        {
+            id: 5,
+            name: "GohLong Renew Tires",
+            image: "gohlong-slideshow6.jpg",
+        },
+        {
+            id: 6,
             name: "Goh Long Slideshow 1",
             image: "gohlong-slideshow1.jpg",
         },
         {
-            id: 3,
+            id: 7,
             name: "Goh Long Slideshow 2",
             image: "gohlong-slideshow2.jpg",
         },
         {
-            id: 4,
+            id: 8,
             name: "Tires",
             image: "tires.jpg",
         },
@@ -80,7 +100,7 @@
 
 <style scoped>
     .carousel__item {
-        height: 75vh;
+        height: 80vh;
         padding-right: 0.9rem;
         padding-left: 0.9rem;
     }
