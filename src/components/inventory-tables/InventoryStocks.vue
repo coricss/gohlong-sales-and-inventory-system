@@ -53,11 +53,11 @@
                                                     className: 'text-center',
                                                 },
                                                 {
-                                                    targets: [1, 2, 3, 4, 5, 6, 7, 8],
+                                                    targets: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11],
                                                     className: 'text-center align-middle',
                                                 },
                                                 {
-                                                    targets: 8,
+                                                    targets: 11,
                                                     className: 'text-center',
                                                     orderable: false,
                                                 }
@@ -69,6 +69,9 @@
                                                 <tr style="font-size: 12px;">
                                                     <th>#</th>
                                                     <th>Product ID</th>
+                                                    <th>Category</th>
+                                                    <th>Brand</th>
+                                                    <th>Model/Size</th>
                                                     <th>Stocks</th>
                                                     <th>Old Stocks</th>
                                                     <th>New Stocks Added At</th>
@@ -364,6 +367,15 @@ const columns = ref([
     },
     {
         data: "product_id",
+    },
+    {
+        data: "category_name",
+    },
+    {
+        data: "brand_name",
+    },
+    {
+        data: "model_size",
     },
     {
         data: "stocks",
