@@ -50,11 +50,6 @@
 
     const items = ref([
         {
-            id: 1,
-            name: "Calling Card",
-            image: "calling-card.jpg",
-        },
-        {
             id: 2,
             name: "GohLong Renew Tires",
             image: "gohlong-slideshow3.png",
