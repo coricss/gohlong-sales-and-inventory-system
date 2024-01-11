@@ -122,6 +122,7 @@
                       <select class="form-control" id="role" name="role" v-model="addUserForm.role">
                         <option class="selected" value="" disabled selected>Select role</option>
                         <option value="user">User</option>
+                        <option value="clerk">Secretary/Clerk</option>
                         <option value="admin">Admin</option>
                         <option v-if="isSuperAdmin" value="super_admin">Super Admin</option>
                       </select>
@@ -182,6 +183,7 @@
                       <select class="form-control" id="edit_role" name="role" v-model="editUserForm.role">
                         <option class="selected" value="" disabled selected>Select role</option>
                         <option value="user">User</option>
+                        <option value="clerk">Secretary/Clerk</option>
                         <option value="admin">Admin</option>
                         <option v-if="isSuperAdmin" value="super_admin">Super Admin</option>
                       </select>
@@ -275,6 +277,8 @@
         render: function (data, type, row) {
           if(data === 'user') {
             return '<span class="badge bg-success">User</span>';
+          } else if(data === 'clerk') {
+            return '<span class="badge bg-info">Secretary/Clerk</span>';
           } else if(data === 'admin') {
             return '<span class="badge bg-danger">Admin</span>';
           } else {
