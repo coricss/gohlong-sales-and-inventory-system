@@ -144,7 +144,7 @@
               <li class="nav-item" 
                 id="inventory_menu"
                 :class="{'menu-open': $route.path.includes('/inventory') || is_inventory_open}"
-                v-if="user.role === 'admin'"
+                v-if="(user.role === 'admin') || (user.role === 'clerk')"
               >
                 <a style="cursor: pointer;" class="inventory nav-link" :class="{'active': $route.path.includes('/inventory')}">
                   <i class="nav-icon fas fa-boxes"></i>
@@ -172,10 +172,16 @@
                       <p>Products</p>
                     </router-link>
                   </li>
-                  <li class="nav-item">
+                  <li class="nav-item" v-if="(user.role === 'admin')">
                     <router-link class="nav-link sub-link" to="/inventory-stocks" :class="{'active': $route.path.includes('/inventory-stocks')}">
                       <i class="fas fa-boxes mx-2"></i>
                       <p>Inventory Stocks</p>
+                    </router-link>
+                  </li>
+                  <li class="nav-item" v-else-if="(user.role === 'clerk')">
+                    <router-link class="nav-link sub-link" to="/inventory-comparison" :class="{'active': $route.path.includes('/inventory-comparison')}">
+                      <i class="fas fa-exchange-alt mx-2"></i>
+                      <p class="fa-sm">Inventory Comparison</p>
                     </router-link>
                   </li>
                 </ul>
@@ -351,7 +357,7 @@
       user.value.picture === null ? has_picture.value = false : has_picture.value = true;
       user.value.is_new_user === 1 ? is_new_user.value = true : is_new_user.value = false;
 
-      if(user.value.role == 'admin') {
+      if(user.value.role == 'admin' || user.value.role == 'clerk') {
         document.getElementById("inventory_menu").addEventListener("click", function(){
           is_inventory_open.value = !is_inventory_open.value;
         });

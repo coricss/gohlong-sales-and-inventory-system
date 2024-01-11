@@ -41,6 +41,11 @@ const routes = [
       component: () => import('@/components/inventory-tables/InventoryStocks.vue'),
     },
     {
+      path: '/inventory-comparison',
+      name: 'Inventory Comparison | ' + appName,
+      component: () => import('@/components/inventory-tables/InventoryComparison.vue'),
+    },
+    {
       path: '/inventory/categories',
       name: 'Manage Categories | ' + appName,
       component: () => import('@/components/inventory-tables/CategoriesTable.vue'),
@@ -113,8 +118,16 @@ router.afterEach((to, from, next) => {
     if (user.role !== 'super_admin') {
       router.push({ name: 'Dashboard | ' + appName })
     }
-  } else if (to.name === 'Inventory Stocks | ' + appName || to.name === 'Manage Products | ' + appName || to.name === 'Manage Categories | ' + appName || to.name === 'Manage Brands | ' + appName ) {
-    if (user.role !== 'admin') {
+  } else if (to.name === 'Manage Products | ' + appName || to.name === 'Manage Categories | ' + appName || to.name === 'Manage Brands | ' + appName ) {
+    if ((user.role !== 'admin') && (user.role !== 'clerk')) {
+      router.push({ name: 'Dashboard | ' + appName })
+    }
+  } else if(to.name === 'Inventory Stocks | ' + appName) {
+    if ((user.role !== 'admin')) {
+      router.push({ name: 'Dashboard | ' + appName })
+    }
+  } else if(to.name === 'Inventory Comparison | ' + appName) {
+    if ((user.role !== 'clerk')) {
       router.push({ name: 'Dashboard | ' + appName })
     }
   } else if (to.name === 'Point of Sales | ' + appName) {
