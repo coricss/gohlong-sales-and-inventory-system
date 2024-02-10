@@ -84,7 +84,7 @@ export const useAuthStore = defineStore('auth', {
                     this.authUser = null;
                     localStorage.removeItem('token');
                     localStorage.removeItem('user');
-                    this.router.push('/');
+                    this.router.push('/login');
                 } else {
                     this.loadToast('Server error!', 'error');
                 }
