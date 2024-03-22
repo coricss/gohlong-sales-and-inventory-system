@@ -392,11 +392,6 @@
       ]
     ]);
 
-    const windowResize = () => {
-      window.addEventListener('resize', function() {
-        loadData();
-      });
-    };
 
     const addImage = () => {
         document.getElementById('add-picture').click();
@@ -631,7 +626,6 @@
 
     onMounted(() => {
       action();
-      windowResize();
       loadData();
     });
 

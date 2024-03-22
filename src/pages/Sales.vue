@@ -275,11 +275,7 @@
       ]
     ]);
 
-    const windowResize = () => {
-        window.addEventListener('resize', function() {
-            loadData();
-        });
-    };
+    
 
     const loadToast = (message, type) => {
       toast(message, {
@@ -304,7 +300,7 @@
     };
 
   onMounted(() => {
-      windowResize();
+      
       loadData();
   });
 

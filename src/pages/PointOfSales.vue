@@ -1308,12 +1308,6 @@ const loadToast = (message, type) => {
       });
     };
 
-const windowResize = () => {
-    window.addEventListener('resize', function() {
-        /* loadData(); */
-        document.getElementById('btn-refresh').click();
-    });
-};
 
 /* const initComplete = (settings, json) => {
     
@@ -1368,7 +1362,6 @@ const revert_transcation = () => {
 }
 
 onMounted(() => {
-    windowResize();
     remove_item();
 });
 

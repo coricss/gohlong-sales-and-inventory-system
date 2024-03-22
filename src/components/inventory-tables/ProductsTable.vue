@@ -831,11 +831,7 @@ const lengthMenu = ref([
     ]
 ]);
 
-const windowResize = () => {
-    window.addEventListener('resize', function() {
-        loadData();
-    });
-};
+
 
 /* Add new product */
 const new_product_modal = ref(false);
@@ -1173,7 +1169,6 @@ const loadToast = (message, type) => {
 
 onMounted(() => {
     action();
-    windowResize();
     loadData();
 });
 

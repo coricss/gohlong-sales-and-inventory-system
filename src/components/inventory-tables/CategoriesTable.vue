@@ -363,11 +363,7 @@ const lengthMenu = ref([
     ]
 ]);
 
-const windowResize = () => {
-    window.addEventListener('resize', function() {
-        loadData();
-    });
-};
+
 
 /* Adding New Category */
 
@@ -486,7 +482,6 @@ const loadToast = (message, type) => {
 
 onMounted(() => {
     action();
-    windowResize();
     loadData();
 });
 

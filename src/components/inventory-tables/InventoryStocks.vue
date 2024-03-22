@@ -768,15 +768,10 @@ const lengthMenu = ref([
     ]
 ]);
 
-const windowResize = () => {
-    window.addEventListener('resize', function() {
-        loadData();
-    });
-};
+
 
 onMounted(() => {
     action();
-    windowResize();
     loadData(); 
 });
 
